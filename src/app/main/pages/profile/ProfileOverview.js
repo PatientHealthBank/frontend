@@ -1,23 +1,13 @@
 import Grid from '@material-ui/core/Grid';
 import React from 'react';
 import withReducer from 'app/store/withReducer';
-import reducer from './store';
 import AllergiesWidget from './widgets/AllergiesWidget';
 import MedicinesWidget from './widgets/MedicinesWidget';
 import StrengthWidget from './widgets/StrengthWidget';
 import ImmunizationWidget from './widgets/ImmunizationWidget';
-import { listVaccines } from './store/vaccinesSlice'
-import { useDispatch, useSelector } from 'react-redux';
-import Vaccines from './Vaccines';
 
 function ProfileOverview() {
-	const vaccines = useSelector(( {ProfilesApp} ) => ProfilesApp.vaccines);
-	const dispatch = useDispatch();
-	React.useEffect(()=>{
-		if(vaccines.length == 0){
-			dispatch(listVaccines())
-		}
-	},[])
+
 	var allergies = [
 		{
 			id: '1',
@@ -38,19 +28,6 @@ function ProfileOverview() {
 			id: '4',
 			description: 'Peanuts',
 			type: 'Food Allergy'
-		}
-	];
-
-	var medicines = [
-		{
-			id: '1',
-			description: 'Ventolin HFA',
-			quantity: '2 Times a day'
-		},
-		{
-			id: '2',
-			description: 'Nexium',
-			quantity: '1 Pill'
 		}
 	];
 
@@ -140,15 +117,15 @@ function ProfileOverview() {
 			</Grid>
 			<Grid container spacing={3}>
 				<Grid item xs={6}>
-					<ImmunizationWidget data={vaccines} />
+					<ImmunizationWidget/>
 					{/* <VaccinesTakenWidget data={takenVaccines} /> */}
 				</Grid>
 				<Grid item xs={6}>
-					<MedicinesWidget data={medicines} />
+					<MedicinesWidget />
 				</Grid>
 			</Grid>
 		</div>
 	);
 }
 
-export default withReducer('ProfilesApp', reducer)(ProfileOverview);
+export default ProfileOverview;

@@ -26,6 +26,13 @@ const ProfileNavigation = {
 			icon: 'ballot',
 		},
 		{
+			id: 'medicines',
+			title: 'Medicines',
+			type: 'item',
+			url: '/pages/profile/medicines',
+			icon: 'ballot',
+		},
+		{
 			id: 'allergies',
 			title: 'Allergies',
 			type: 'item',

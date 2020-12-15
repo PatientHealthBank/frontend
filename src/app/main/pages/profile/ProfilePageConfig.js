@@ -16,6 +16,10 @@ const ProfilePageConfig = {
 					component: React.lazy(() => import('./Vaccines'))
 				},
 				{
+					path: '/pages/profile/medicines',
+					component: React.lazy(() => import('./Medicines'))
+				},
+				{
 					path: '/pages/profile/allergies',
 					component: React.lazy(() => import('./Allergies'))
 				},
