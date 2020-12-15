@@ -1,0 +1,59 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "parser": "babel-eslint",
+    "extends": [
+        "airbnb",
+        "plugin:prettier/recommended",
+        "prettier/react"
+    ],
+    "plugins": [
+        "prettier"
+    ],
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "paths": [
+                    "src"
+                ]
+            }
+        }
+    },
+    "rules": {
+        "prettier/prettier": [
+            "error"
+        ],
+        "react/jsx-filename-extension": [
+            "warn",
+            {
+                "extensions": [
+                    ".js",
+                    ".jsx"
+                ]
+            }
+        ],
+        "no-unused-vars": "warn",
+        "no-param-reassign": "warn",
+        "no-console": "warn",
+        "no-use-before-define": "warn",
+        "no-nested-ternary": "warn",
+        "no-underscore-dangle": "warn",
+        "import/no-unresolved": "warn",
+        "no-constant-condition": "warn",
+        "global-require": "warn",
+        "react/no-array-index-key": "warn",
+        "react/no-unescaped-entities": "warn",
+        "react/destructuring-assignment": "warn",
+        "react/jsx-props-no-spreading": "warn",
+        "react/state-in-constructor": "warn",
+        "react/no-danger": "warn",
+        "react/prop-types": "warn",
+        "react/forbid-prop-types": "warn",
+        "react/require-default-props": "warn",
+        "react/default-props-match-prop-types": "warn",
+        "react/no-unused-prop-types": "warn"
+    }
+}
