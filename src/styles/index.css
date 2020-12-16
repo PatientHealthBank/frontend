@@ -107,6 +107,17 @@ input:-webkit-autofill {
     -webkit-box-shadow:0 0 0 100px transparent inset!important;
 }
 
+table.sticky-table{
+    position: relative;
+}
+table.sticky-table th{
+    position: sticky;
+    top:0;
+    background:white
+}
+
+
+
 @import 'print.css';
 
 @import 'tables.css';

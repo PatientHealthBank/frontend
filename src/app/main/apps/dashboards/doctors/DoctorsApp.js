@@ -53,11 +53,11 @@ function DoctorsApp(props) {
 				setProviders(res.data.providers)
 				setClinic(res.data.clinic)
 			}
-		}).
-			catch(err => {
+		})
+		.catch(err => {
 				dispatch(closeLoading())
 			})
-	},[])
+	},[clinicalInterest, dispatch, routeParams.clinicId, specialty ])
 
 
 	return (

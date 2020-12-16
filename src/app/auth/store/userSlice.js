@@ -4,7 +4,8 @@ import history from '@history';
 import _ from '@lodash';
 import { setInitialSettings, setDefaultSettings } from 'app/store/fuse/settingsSlice';
 import { listVaccines } from 'app/main/pages/profile/store/vaccinesSlice';
-
+import { listAllergies } from 'app/main/pages/profile/store/allergiesSlice';
+import { listMedicines } from 'app/main/pages/profile/store/medicinesSlice';
 import { showMessage } from 'app/store/fuse/messageSlice';
 import auth0Service from 'app/services/auth0Service';
 import firebaseService from 'app/services/firebaseService';
@@ -176,6 +177,9 @@ export const setCurrentUser = currentUser => (dispatch, getState) =>{
 	dependents.push(oldCurrentUser);
 	dispatch(setUser({...state, dependents, currentUser: newCurrentUser}))
 	dispatch(listVaccines())
+	dispatch(listAllergies())
+	dispatch(listMedicines())
+
 }
 
 export const updateUserData = user => async (dispatch, getState) => {

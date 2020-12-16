@@ -7,48 +7,44 @@ import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/lo
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingModal from 'app/fuse-layouts/shared-components/loadingModal/LoadingModal';
 import { useTranslation } from "react-i18next";
+import withReducer from 'app/store/withReducer';
+import reducer from './store';
+import {listAllergies} from './store/allergiesSlice'
+
 
 function Allergies() {
 	const { t } = useTranslation();
-	const[allergies,setAllergies] =  React.useState([]);
 	const user = useSelector(({ auth }) => auth.user);
 	const dispatch = useDispatch();
+
+	const allergies = useSelector(( {ProfilesApp} ) => ProfilesApp.allergies);
+
+	React.useEffect(()=>{
+		if(allergies.length == 0){
+			dispatch(listAllergies())
+		}
+	},[dispatch])
+
 	const RegisterNewAllergies = (allergicTo, ageOfOnset, type, severity)=>{
 		dispatch(openLoading())
-		phbApi().post("/allergies/register", {AllergicTo: allergicTo, AgeOfOnset: parseInt(ageOfOnset), Type: type, Severity:severity, PatientId:user.uuid}).then(res => {
+		phbApi().post("/allergies/register", {AllergicTo: allergicTo, AgeOfOnset: parseInt(ageOfOnset), Type: type, Severity:severity, PatientId:user.currentUser.id}).then(res => {
 			dispatch(closeLoading())
-			ListAllergies();
+			dispatch(listAllergies())
 		}).
 			catch(err => {
-				console.log(err);
-				dispatch(closeLoading())
-			})
-	}
-	const ListAllergies = ()=>{
-		dispatch(openLoading())
-		phbApi().get("/allergies/list/"+user.uuid).then(res => {
-			setAllergies(res.data);
-			console.log(res);
-			dispatch(closeLoading())
-		}).
-			catch(err => {
-				console.log(err);
 				dispatch(closeLoading())
 			})
 	}
 	const DeleteAllergies = (id)=>{
 		dispatch(openLoading())
 		phbApi().delete("/allergies/delete/"+id).then(res => {
-			ListAllergies();
-			console.log(res);
+			dispatch(listAllergies())
 			dispatch(closeLoading())
 		}).
 			catch(err => {
-				console.log(err);
 				dispatch(closeLoading())
 			})
 	}
-	React.useEffect(()=>{ListAllergies()},[])
 
 	return (
 		<>
@@ -67,4 +63,4 @@ function Allergies() {
 	);
 }
 
-export default  React.memo(Allergies);
+export default withReducer('ProfilesApp', reducer)(Allergies);
