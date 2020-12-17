@@ -40,9 +40,14 @@ const ProfilePageConfig = {
 					component: React.lazy(() => import('./ProfileMedicalHistory'))
 				},
 				{
+					path: '/pages/profile/emergency-contact',
+					component: React.lazy(() => import('./EmergencyContact'))
+				},
+				{
 					path: '/pages/profile',
 					component: () => <Redirect to="/pages/profile/profile-overview" />
 				}
+
 			]
 		}
 	]
