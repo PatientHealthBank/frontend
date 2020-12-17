@@ -24,8 +24,6 @@ function NotificationSettings(props) {
 			phbApi().get('/Parameter/Category', { params: { category: 'Email Notification' } }),
 			phbApi().get('/Parameter/Category', { params: { category: 'Whe Should We Notify You?' } })
 		]).then(data => {
-			console.log('obtendo data');
-			console.log(data);
 			setParameters(data);
 		});
 	};
