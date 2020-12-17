@@ -17,10 +17,13 @@ import { withRouter, useParams } from 'react-router-dom';
 import NoteFormList from './checklist/NoteFormList';
 import NoteFormLabelMenu from './NoteFormLabelMenu';
 import NoteFormUploadImage from './NoteFormUploadImage';
+import { useSelector } from 'react-redux';
 
 function NoteForm(props) {
 	const [showList, setShowList] = useState(false);
 	const routeParams = useParams();
+	
+	const user = useSelector(({ auth }) => auth.user);
 	const { form: noteForm, handleChange, setForm } = useForm(
 		_.merge(
 			{},

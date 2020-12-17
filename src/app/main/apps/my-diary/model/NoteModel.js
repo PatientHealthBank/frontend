@@ -3,7 +3,7 @@ import FuseUtils from '@fuse/utils';
 function NoteModel(data) {
 	const item = data || {};
 	return {
-		id: item.id || FuseUtils.generateGUID(),
+		id: item.id || 0,
 		title: item.title || '',
 		description: item.description || '',
 		archive: item.archive || false,
@@ -11,7 +11,8 @@ function NoteModel(data) {
 		time: item.time || null,
 		reminder: item.reminder || null,
 		checklist: item.checklist || [],
-		labels: item.labels || []
+		labels: item.labels || [],
+		patientId: item.patientId || 0
 	};
 }
 

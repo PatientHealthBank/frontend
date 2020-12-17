@@ -141,8 +141,7 @@ mock.onGet('/api/notes-app/labels').reply(config => {
 mock.onPost('/api/notes-app/create-note').reply(request => {
 	const data = JSON.parse(request.data);
 	const newNote = {
-		...data.note,
-		id: FuseUtils.generateGUID()
+		...data.note
 	};
 	notesDB.notes = [newNote, ...notesDB.notes];
 	return [200, newNote];
