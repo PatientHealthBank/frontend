@@ -26,8 +26,7 @@ function Vaccines() {
 
 	const RegisterNewImmunization = (description, date,location)=>{
 		dispatch(openLoading())
-		console.log(description+date+location);
-		phbApi().post("/Provider/immunization/", {Description: description, Date: date, Location: location, PatientId:user.currentUser.id}).then(res => {
+		phbApi().post("/patient/immunization/", {Description: description, Date: date, Location: location, PatientId:user.currentUser.id}).then(res => {
 			dispatch(closeLoading())
 			dispatch(listVaccines())
 		}).
@@ -38,7 +37,7 @@ function Vaccines() {
 	}
 	const DeleteImmunization = (id)=>{
 		dispatch(openLoading())
-		phbApi().delete("/Provider/immunization/"+id).then(res => {
+		phbApi().delete("/patient/immunization/"+id).then(res => {
 			dispatch(listVaccines())
 			console.log(res);
 			dispatch(closeLoading())
@@ -59,7 +58,7 @@ function Vaccines() {
 				{/* <Grid item xs={8}>
 					<VaccinesListWidget widget={vaccines} />
 				</Grid> */}
-				<Grid item xs={6}>
+				<Grid item xs={8}>
 					<ImmunizationListWidget immunizations={vaccines} deleteImmunization={DeleteImmunization} />
 				</Grid>
 				<Grid item xs={4}>

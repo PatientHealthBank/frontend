@@ -26,6 +26,13 @@ const ProfileNavigation = {
 			icon: 'ballot',
 		},
 		{
+			id: 'medicines',
+			title: 'Medicines',
+			type: 'item',
+			url: '/pages/profile/medicines',
+			icon: 'ballot',
+		},
+		{
 			id: 'allergies',
 			title: 'Allergies',
 			type: 'item',
@@ -45,7 +52,14 @@ const ProfileNavigation = {
 			type: 'item',
 			url: '/pages/profile/profile-medical-history',
 			icon: 'ballot',
-		}
+		},
+		{
+			id: 'emergency-contact',
+			title: 'Emergency Contact',
+			type: 'item',
+			url: '/pages/profile/emergency-contact',
+			icon: 'settings_phone',
+		},
 	]
 };
 

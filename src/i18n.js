@@ -63,6 +63,8 @@ const resources = {
 			"My Vaccines": "Minhas Vacinas",
 			"Add Vaccine": "Adicionar Vacinas",
 			"Vaccines": "Vacinas",
+			"Father": "Pai",
+			"Mother": "Mãe"
 		},
 	}
 };

@@ -3,12 +3,11 @@ import FusePageSimple from '@fuse/core/FusePageSimple';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
-import React, { useRef, useState, useEffect } from 'react';
-import { useParams, withRouter } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { withRouter } from 'react-router-dom';
 import reducer from '../doctors/store';
 import { useSelector } from 'react-redux'
 import Widget5 from './widgets/Widget5';
-import LoadingModal from '../../../../fuse-layouts/shared-components/loadingModal/LoadingModal'
 import phbApi from 'app/services/phbApi'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 import { useDispatch } from 'react-redux';

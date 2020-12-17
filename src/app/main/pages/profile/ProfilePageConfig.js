@@ -16,6 +16,10 @@ const ProfilePageConfig = {
 					component: React.lazy(() => import('./Vaccines'))
 				},
 				{
+					path: '/pages/profile/medicines',
+					component: React.lazy(() => import('./Medicines'))
+				},
+				{
 					path: '/pages/profile/allergies',
 					component: React.lazy(() => import('./Allergies'))
 				},
@@ -36,9 +40,14 @@ const ProfilePageConfig = {
 					component: React.lazy(() => import('./ProfileMedicalHistory'))
 				},
 				{
+					path: '/pages/profile/emergency-contact',
+					component: React.lazy(() => import('./EmergencyContact'))
+				},
+				{
 					path: '/pages/profile',
 					component: () => <Redirect to="/pages/profile/profile-overview" />
 				}
+
 			]
 		}
 	]

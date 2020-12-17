@@ -8,14 +8,32 @@ import './Calendar.css';
 import ConfirmAlert from './ConfirmAlert'
 import AlertDialog from './AlertDialog'
 import React, { useState } from 'react';
+import phbApi from 'app/services/phbApi'
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
+import { useDispatch } from 'react-redux';
+
 
 function Widget5(props) {
 	const { clinic, doctor, hour, day, user, specialties} = props
 	const [open,setOpen] = useState(false);
 	const [appointmentSpecialty,setAppointmentSpecialty] = useState('');
+	const [appointmentType,setAppointmentType] = useState('First appointment');
+
 
 	var date = new Date(`${day} ${hour}`)
-
+	const SaveAppointment = ()=>{
+		var params = {
+			ClinicId: clinic.id,
+			ProviderId: doctor.id,
+			SpecialtyId: Number.parseInt(appointmentSpecialty) || Number.parseInt(specialties[0].id),
+			PatientId: user.currentUser.id,
+			ScheduleDate: date,
+			AppointmentType: appointmentType
+		}
+		phbApi().post("appointment/", params).then(res=>{
+			console.log(res)
+		})
+	}
 
 	return (
 		<div className="w-full">
@@ -67,6 +85,8 @@ function Widget5(props) {
 						<div>
 						<Select
 							native
+							value={appointmentType}
+							onChange={event=> setAppointmentType(event.target.value)}
 							inputProps={{
 							}}>
 							<option value={'First appointment'}>First appointment</option>
@@ -92,7 +112,7 @@ function Widget5(props) {
 				</div>
 				<div className="flex flex-row-reverse" style={{marginRight:'7em'}}> 
 					<div className="float-right">
-						<Button onClick={()=>setOpen(true)}  variant="contained" color="secondary">
+						<Button onClick={()=>SaveAppointment()}  variant="contained" color="secondary">
 							Confirm
 						</Button>
 					</div>

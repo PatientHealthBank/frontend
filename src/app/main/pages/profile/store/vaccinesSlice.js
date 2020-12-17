@@ -5,7 +5,7 @@ import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/lo
 export const listVaccines = () => async (dispatch, getState) => {
     dispatch(openLoading())
     var user = getState().auth.user
-	return phbApi().get('/Provider/immunizations/'+user.currentUser.id)
+	return phbApi().get('/patient/immunizations/'+user.currentUser.id)
 		.then(({data}) => {
 			dispatch(closeLoading())
 			return dispatch(getVaccinesList(data));
