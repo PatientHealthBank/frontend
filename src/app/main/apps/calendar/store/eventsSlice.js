@@ -1,28 +1,60 @@
 import { createEntityAdapter, createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import moment from 'moment';
+import phbApi from 'app/services/phbApi';
+
+function setDate(year, month, date, hours, minutes, seconds) {
+	return moment(new Date(year, month, date, hours, minutes, seconds)).format('YYYY-MM-DDTHH:mm:ss.sssZ');
+}
 
 export const dateFormat = 'YYYY-MM-DDTHH:mm:ss.sssZ';
 
-export const getEvents = createAsyncThunk('calendarApp/events/getEvents', async () => {
-	const response = await axios.get('/api/calendar-app/events');
+export const getEvents = createAsyncThunk('calendarApp/events/getEvents', async (params, { getState, dispatch })=> {
+	var user = getState().auth.user; 
+	const response = await phbApi().get('/event/list/'+user.currentUser.id);
 	const data = await response.data;
-
-	return data;
+	console.log(data)
+	var events = data.map(event=>({
+		id:event.id,
+		title:event.title,
+		clinic:event.clinic.companyName,
+		allDay:false,
+		eventType: event.eventType,
+		start: moment(new Date(event.eventDate)).format('YYYY-MM-DDTHH:mm:ss.sssZ'),
+		end: moment(new Date(event.eventDate)).add(event.duration,'minutes').format('YYYY-MM-DDTHH:mm:ss.sssZ'),
+		patient:event.patient.name,
+		email: event.patient.email,
+		ssn: event.patient.ssn,
+		telephone: event.patient.telephone,
+		professional:event.provider.name,
+		firstAppointment: event.eventType,
+		desc: event.description,
+		duration: event.duration
+	}))
+	return events;
 });
 
-export const addEvent = createAsyncThunk('calendarApp/events/addEvent', async (newEvent, { dispatch }) => {
-	const response = await axios.post('/api/calendar-app/add-event', {
-		newEvent
-	});
+export const addEvent = createAsyncThunk('calendarApp/events/addEvent', async (newEvent, { getState, dispatch }) => {
+	var user = getState().auth.user; 
+
+	newEvent.patientId = user.currentUser.id
+	newEvent.start = new Date(newEvent.start)
+	newEvent.end = new Date(newEvent.end)
+	newEvent.description = newEvent.desc
+
+	delete newEvent.id
+
+	const response = await phbApi().post('/event', 	newEvent);
 	const data = await response.data;
 
 	return data;
 });
 
 export const updateEvent = createAsyncThunk('calendarApp/events/updateEvent', async (event, { dispatch }) => {
-	const response = await axios.post('/api/calendar-app/update-event', { event });
+
+	const response = await phbApi().put('/event', { event });
 	const data = await response.data;
+	data.desc = data.description
 
 	return data;
 });

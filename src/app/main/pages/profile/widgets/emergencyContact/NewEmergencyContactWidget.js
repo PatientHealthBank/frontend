@@ -24,7 +24,7 @@ function NewEmergencyContactWidget(props) {
 	return (
 		<Card className="w-full rounded-8 shadow-1">
 			<div className="p-4 px-4 flex flex-row items-center justify-between">
-				<Typography className="h3 px-12 font-bold">{t('New Immunization')}</Typography>
+				<Typography className="h3 px-12 font-bold">{t('New Contact')}</Typography>
 			</div>
 			<div className="p-16">
 				<div>
