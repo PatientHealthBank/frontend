@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import axios from 'axios';
+import phbApi from 'app/services/phbApi'
 
 export const getLabels = createAsyncThunk('notesApp/labels/getLabels', async () => {
-	const response = await axios.get('/api/notes-app/labels');
+	const response = await phbApi().get('/note/labels');
 	const data = await response.data;
 
 	return data;

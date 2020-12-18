@@ -4,6 +4,7 @@ import vaccines from './vaccinesSlice';
 import medicines from './medicinesSlice';
 import allergies from './allergiesSlice';
 import parameters from './parameterSlice';
+import emergencyContact from './emergencyContactSlice';
 
 
 
@@ -13,7 +14,9 @@ const reducer = combineReducers({
 	profile,
 	vaccines,
 	medicines,
-	parameters
+	parameters,
+	emergencyContact
+
 });
 
 export default reducer;

@@ -22,7 +22,7 @@ function NoteList(props) {
 			let data = notes;
 
 			if (labelId) {
-				data = data.filter(note => note.labels.includes(labelId) && !note.archive);
+				data = data.filter(note => note.labels.includes(Number.parseInt(labelId)) && !note.archive);
 			}
 
 			if (!id) {

@@ -10,7 +10,10 @@ import AlertDialog from './AlertDialog'
 import React, { useState } from 'react';
 import phbApi from 'app/services/phbApi'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
+import {removeConfirmAppointment} from "../../doctors/store/confirmAppointmentSlice"
 import { useDispatch } from 'react-redux';
+import { toast } from "react-toastify";
+
 
 
 function Widget5(props) {
@@ -18,10 +21,11 @@ function Widget5(props) {
 	const [open,setOpen] = useState(false);
 	const [appointmentSpecialty,setAppointmentSpecialty] = useState('');
 	const [appointmentType,setAppointmentType] = useState('First appointment');
-
+	const dispatch = useDispatch()
 
 	var date = new Date(`${day} ${hour}`)
 	const SaveAppointment = ()=>{
+		dispatch(openLoading())
 		var params = {
 			ClinicId: clinic.id,
 			ProviderId: doctor.id,
@@ -31,7 +35,15 @@ function Widget5(props) {
 			AppointmentType: appointmentType
 		}
 		phbApi().post("appointment/", params).then(res=>{
+			dispatch(closeLoading())
+			dispatch(removeConfirmAppointment())
+			setOpen(true)
 			console.log(res)
+		})
+		.catch(err=>{
+			toast.warn("Internal Server Error");
+			dispatch(closeLoading())
+			console.log(err)
 		})
 	}
 

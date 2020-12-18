@@ -21,15 +21,17 @@ import MemberDialog from './MemberDialog'
 import PrimaryIconButton from '../../Components/PrimaryIconButton'
 import Icon from '@material-ui/core/Icon';
 
-function createData(name, address, phone, relationship, dateofBirth) {
-	return { name, address, phone, relationship, dateofBirth };
+function createData(name, address, phone, relationship, dateofBirth, id) {
+	return { name, address, phone, relationship, dateofBirth, id };
 }
 
-const rowsBody = [
-	createData('Lillian M Collins', "2371  Arron Smith Drive - California", "843-785-0439", "Child", "02/10/1996"),
-	createData('Paulette T Welch', "2371  Arron Smith Drive - California", "883-235-2439","Other", "01/21/1990"),
-	createData('Morgana Clever', "2371  Arron Smith Drive - California", "419-275-8773", "Spouse" ,"12/07/1978"),
-];
+Array.prototype.remove = function(from, to) {
+	var rest = this.slice((to || from) + 1 || this.length);
+	this.length = from < 0 ? this.length + from : from;
+	return this.push.apply(this, rest);
+  };
+
+const rowsBody = [];
 
 function descendingComparator(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
@@ -210,7 +212,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function FamilyMembersTable() {
+function FamilyMembersTable(props) {
+
+
+	props.rowsBody.map(function(value, i) {
+		rowsBody[i] = createData(value.name, value.address, value.phone, value.relationship, value.birthdate, value.id);
+	});
+
 	const classes = useStyles();
 	const [order, setOrder] = React.useState('asc');
 	const [open, setOpen] = React.useState(false);
@@ -223,14 +231,20 @@ function FamilyMembersTable() {
 	const [rows, setRows] = React.useState(rowsBody);
 	const [selectedRow, setSelectedRow] = React.useState({});
 
-
 	const handleDelete = () => {
-		setRows(rows.filter((x,i) => !selected.includes(i)))
+
+		selected.forEach(element => {
+			props.DeleteFamilyMembers(rows[element].id);
+		});
 		setSelected([]);
+		setSelectedRow({});
+		setRows(rows.filter((x,i) => !selected.includes(i)));
+		
 	}
 	const handleAdd = (row) => {
 		setRows([...rows, row])
 		setSelectedRow({})
+		
 	}
 	const handleEdit = (row) => {
 		var newRows = rows.map((x,i) => {
@@ -307,10 +321,12 @@ function FamilyMembersTable() {
 		return (
 			<div className={classes.root}>
 				<MemberDialog title={title} open={open} setOpen={setOpen}
-					handleEdit={handleEdit}
-					handleAdd={handleAdd}
+					handleEdit={props.UpdateFamilyMembers}
+					handleAdd={props.RegisterNewFamilyMembers}
 					member={selectedRow}
-					setMember={setSelectedRow} />
+					setMember={setSelectedRow} 
+					
+				/>
 				<Paper className={classes.paper}>
 					<EnhancedTableToolbar
 						handleEdit={handleEdit}

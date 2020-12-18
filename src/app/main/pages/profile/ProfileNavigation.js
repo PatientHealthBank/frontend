@@ -52,7 +52,14 @@ const ProfileNavigation = {
 			type: 'item',
 			url: '/pages/profile/profile-medical-history',
 			icon: 'ballot',
-		}
+		},
+		{
+			id: 'emergency-contact',
+			title: 'Emergency Contact',
+			type: 'item',
+			url: '/pages/profile/emergency-contact',
+			icon: 'settings_phone',
+		},
 	]
 };
 

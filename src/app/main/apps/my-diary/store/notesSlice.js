@@ -1,30 +1,40 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import axios from 'axios';
+import phbApi from 'app/services/phbApi';
 
-export const getNotes = createAsyncThunk('notesApp/notes/getNotes', async () => {
-	const response = await axios.get('/api/notes-app/notes');
-	const data = await response.data;
-
+export const getNotes = createAsyncThunk('notesApp/notes/getNotes', async (params, { getState, dispatch })  => {
+	var user = getState().auth.user; 
+	const response = await phbApi().get('/note/patient/'+user.currentUser.id);
+	const data = await response.data.notes; 
 	return data;
 });
 
-export const createNote = createAsyncThunk('notesApp/notes/createNote', async note => {
+export const createNote = createAsyncThunk('notesApp/notes/createNote', async (note, { getState, dispatch })  => {
+	var user = getState().auth.user; 
 	note.reminder = new Date();
-	const response = await axios.post('/api/notes-app/create-note', { note });
+	note.time = new Date();
+	note.patientId = user.currentUser.id;
+
+	const response = await phbApi().post('/note/patient', note);
 	const data = await response.data;
 
 	return data;
 });
 
-export const updateNote = createAsyncThunk('notesApp/notes/updateNote', async note => {
-	const response = await axios.post('/api/notes-app/update-note', { note });
+export const updateNote = createAsyncThunk('notesApp/notes/updateNote', async (note, { getState, dispatch })  => {
+	var user = getState().auth.user; 
+	note.time = new Date();
+	note.patientId = user.currentUser.id;
+
+	const response = await phbApi().put('/note/patient', note);
 	const data = await response.data;
 
 	return data;
 });
 
 export const removeNote = createAsyncThunk('notesApp/notes/removeNote', async noteId => {
-	const response = await axios.post('/api/notes-app/remove-note', { noteId });
+	console.log('noteId:' + noteId)
+	const response = await phbApi().delete('/note/'+ noteId);
 	const data = await response.data;
 
 	return data;

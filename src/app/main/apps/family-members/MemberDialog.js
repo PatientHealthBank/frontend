@@ -45,19 +45,26 @@ function MemberDialog({open, setOpen, title, member,setMember, handleAdd, handle
     setMember({ ...member, [event.target.name]: event.target.value });
   };
 
+
+
   const setDisabled = ()=>{
     return !member.name || !member.address || !member.phone || !member.relationship || !member.dateofBirth
   }
   const handleSave = () => {
     if(title === "Edit"){
-      handleEdit(member)
+      handleEdit(member.id, member.name, member.address, member.phone, member.relationship, new Date(member.dateofBirth))
     }
     else{
-      handleAdd(member)
+      handleAdd(member.name, member.address, member.phone, member.relationship, new Date(member.dateofBirth))
     }
+    setMember({});
     handleClose()
   }
   const handleClose = () => {
+
+    if(title === "Edit"){
+      setMember({});
+    }
     setOpen(false);  
   };
   const handleDateChange = (date) => {
