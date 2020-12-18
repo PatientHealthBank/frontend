@@ -9,7 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
 	backdrop: {
-	  zIndex: theme.zIndex.drawer + 1,
+	  zIndex: 999999,
 	  color: '#fff',
 	},
   }));

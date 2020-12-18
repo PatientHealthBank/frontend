@@ -19,7 +19,8 @@ function NoteDialog(props) {
 	}, 600);
 
 	function handleOnRemove() {
-		dispatch(removeNote(notes.noteDialogId));
+		dispatch(removeNote(notes.noteDialogId));		
+		setTimeout(() => closeNoteDialog());
 	}
 
 	if (!notes.entities) {
