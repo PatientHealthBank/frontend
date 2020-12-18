@@ -11,22 +11,14 @@ import { Divider } from '@material-ui/core';
 import phbApi from 'app/services/phbApi';
 import reducer from './store';
 import { newProfile, getProfile } from './store/profileSlice';
+import { listUserParameters, updateUserParameter } from './store/parameterSlice';
 
 function NotificationSettings(props) {
 	const dispatch = useDispatch();
-	const clinic = useSelector(({ ProfilesApp }) => ProfilesApp.profile);
+	const categories = useSelector(({ ProfilesApp }) => ProfilesApp.parameters);
+
 	const { form, handleChange, setForm } = useForm(null);
 	const routeParams = useParams();
-	const [categories, setParameters] = React.useState([]);
-
-	const notificationsParameters = () => {
-		Promise.all([
-			phbApi().get('/Parameter/Category', { params: { category: 'Email Notification' } }),
-			phbApi().get('/Parameter/Category', { params: { category: 'Whe Should We Notify You?' } })
-		]).then(data => {
-			setParameters(data);
-		});
-	};
 
 	useDeepCompareEffect(() => {
 		function updateProfileState() {
@@ -41,12 +33,13 @@ function NotificationSettings(props) {
 		updateProfileState();
 	}, [dispatch, routeParams]);
 
+
 	useEffect(() => {
-		if ((clinic && !form) || (clinic && form && clinic.id !== form.id)) {
-			notificationsParameters();
-			setForm(clinic);
+		if ((categories && !form) || (categories && form && categories.id !== form.id)) {
+			dispatch(listUserParameters());
+			setForm(categories);
 		}
-	}, [form, clinic, setForm]);
+	}, [form, categories, setForm]);
 
 	return (
 		form && (
@@ -69,7 +62,7 @@ function NotificationSettings(props) {
 												<Switch
 													checked={form.firstAppointment}
 													onChange={handleChange}
-													id="firstAppointment"
+													id={parameter.name}
 													name="firstAppointment"
 												/>
 											}
