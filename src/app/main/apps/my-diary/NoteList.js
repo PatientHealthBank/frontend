@@ -18,10 +18,11 @@ function NoteList(props) {
 		function filterData() {
 			const { params } = props.match;
 			const { id, labelId } = params;
+
 			let data = notes;
 
 			if (labelId) {
-				data = data.filter(note => note.labels.includes(labelId) && !note.archive);
+				data = data.filter(note => note.labels.includes(Number.parseInt(labelId)) && !note.archive);
 			}
 
 			if (!id) {
@@ -45,7 +46,7 @@ function NoteList(props) {
 			return data;
 		}
 
-		if (notes && notes.length > 0) {
+		if (notes.length > 0) {
 			setFilteredData(filterData());
 		}
 	}, [notes, searchText, props.match]);

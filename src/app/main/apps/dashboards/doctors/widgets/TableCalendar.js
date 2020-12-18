@@ -1,8 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import {setConfirmAppointment} from '../store/confirmAppointmentSlice'
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -30,6 +31,7 @@ function TableCalendar(props) {
     const dispatch = useDispatch()
     const { startJob, endJob, appointmentInterval } = provider
     const today = new Date();
+    const user = useSelector(({ auth }) => auth.user);
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     Date.prototype.addDays = function (days) {
         var date = new Date(this.valueOf());
@@ -53,7 +55,13 @@ function TableCalendar(props) {
             provider
         }
         dispatch(setConfirmAppointment(modelConfirmAppointment))
-        props.history.push('/login')
+
+        if(!user.role.lenght){
+            props.history.push('/login')
+        }
+        else{
+            props.history.push('/confirm-appointment')  
+        }
 
     }
     const classes = useStyles(props);
