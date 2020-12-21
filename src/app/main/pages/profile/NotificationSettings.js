@@ -10,7 +10,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Divider } from '@material-ui/core';
 import phbApi from 'app/services/phbApi';
 import reducer from './store';
-import { getParametersList } from './store/parameterSlice';
+import { getParametersList, updateStatusParameter, updateParameter } from './store/parameterSlice';
 
 function NotificationSettings(props) {
 	const dispatch = useDispatch();
@@ -19,12 +19,20 @@ function NotificationSettings(props) {
 	const { form, setForm, setInForm } = useForm(null);
 	const routeParams = useParams();
 
-	function handleChange(categoryIndex, parameterIndex, c, name, e) {
-		e.persist()
-		categoryIndex = form.findIndex(obj => obj.category == c.category);
-		parameterIndex = form[categoryIndex].parameters.findIndex(x => x.name == name);
-		form[categoryIndex].parameters[parameterIndex].isActive = !e.target.value
+	function handleChange(e, formIndex, parameterIndex, isActive, name) {
+		e.persist();
+
+		isActive = !isActive;
+		console.log(isActive);
+		console.log('categoria', categories);
+		categories[formIndex].parameters[parameterIndex].isActive = !isActive;
+		setForm(categories)
+
+
+
+		dispatch(updateStatusParameter({ isActive, formIndex, parameterIndex, name }));
 	}
+
 	useDeepCompareEffect(() => {
 		function updateProfileState() {
 			const { clinicId } = routeParams;
@@ -46,27 +54,32 @@ function NotificationSettings(props) {
 				<div className="mt-8 mb-32" style={{ textAlign: 'center' }}>
 					<Typography variant="h4">Types Of Notification</Typography>
 				</div>
-				{form.map((category, index) => (
+				{form.map((category, formIndex) => (
 					<div>
 						<Grid container spacing={3} alignContent="center" direction="column">
 							<div style={{ textAlign: 'center' }}>
-								<Typography variant="h6" key={index}>
-									{category.category}
-								</Typography>
+								<Typography variant="h6">{category.category}</Typography>
 							</div>
 							<Grid item xs={4}>
-								{category.parameters.map((parameter, index) => (
+								{category.parameters.map((parameter, parameterIndex) => (
 									<div>
 										<FormControlLabel
-											key={index}
 											className="mt-8 mb-16"
 											control={
 												<Switch
-													checked={parameter.isActive}
+													checked={form[formIndex].parameters[parameterIndex].isActive}
 													value={parameter.isActive}
 													id={parameter.id}
 													name={parameter.name}
-													onChange={e => handleChange(null, null, category, parameter.name,e)}
+													onChange={e =>
+														handleChange(
+															e,
+															formIndex,
+															parameterIndex,
+															form[formIndex].parameters[parameterIndex].isActive,
+															parameter.name
+														)
+													}
 												/>
 											}
 											label={parameter.name}

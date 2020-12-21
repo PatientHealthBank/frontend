@@ -14,18 +14,34 @@ export const getParametersList = createAsyncThunk(
 	}
 );
 
-const parametersAdapter = createEntityAdapter({});
+export const updateStatusParameter = createAsyncThunk(
+	'parameters/users/updateStatusParameter',
+	async (params, { getState, dispatch }) => {
+		const { user } = getState().auth;
 
+		const response = await phbApi().get('/Parameter/users/UpdateStatusParameter/', {
+			params: {
+				userId: user.uuid,
+				category: params.name,
+				isActive:params.isActive
+				
+			}
+		});
+		const data = await response.data;
+		return data;
+	}
+);
+const parametersAdapter = createEntityAdapter({});
 
 const parametersSlice = createSlice({
 	name: 'parameters/users',
-	initialState:null,
-
+	initialState: null,
 
 	reducers: {
-		returnList: {
+		updateParameter: {
 			reducer: (state, action) => {
-				return action.payload;
+				console.log('atualizando parameter', state, action);
+				// return !action.payload;
 			}
 		}
 	},
@@ -34,6 +50,6 @@ const parametersSlice = createSlice({
 	}
 });
 
-export const { returnList } = parametersSlice.actions;
+export const { updateParameter } = parametersSlice.actions;
 
 export default parametersSlice.reducer;
