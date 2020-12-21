@@ -46,12 +46,6 @@ function NotificationSettings(props) {
 				<div className="mt-8 mb-32" style={{ textAlign: 'center' }}>
 					<Typography variant="h4">Types Of Notification</Typography>
 				</div>
-				<div>
-					{form.map(x => (
-						<b>teste</b>
-					))}
-					<h1></h1>
-				</div>
 				{form.map((category, index) => (
 					<div>
 						<Grid container spacing={3} alignContent="center" direction="column">
