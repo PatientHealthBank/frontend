@@ -68,7 +68,7 @@ function TableCalendar(props) {
     var itens = [];
     for (let i = 0; i < (endJob.hours - startJob.hours) / appointmentInterval; i++) {
         itens.push(
-            <tr>
+            <tr key={i}>
                 {
                     (eventHour(0, startJob.hours, i) ? (<td ><a  onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today)} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
                         {`${(startJob.hours + i).toString().padStart(2, 0)}:00`}</a></td>) :

@@ -10,6 +10,8 @@ import { showMessage } from 'app/store/fuse/messageSlice';
 import auth0Service from 'app/services/auth0Service';
 import firebaseService from 'app/services/firebaseService';
 import jwtService from 'app/services/jwtService';
+import { getStrength } from 'app/main/pages/profile/store/strengthSlice';
+
 import {
 	getEvents
 } from 'app/main/apps/calendar/store/eventsSlice';
@@ -183,6 +185,7 @@ export const setCurrentUser = currentUser => (dispatch, getState) =>{
 	dispatch(listAllergies())
 	dispatch(listMedicines())
 	dispatch(getEvents())
+	dispatch(getStrength())
 }
 
 export const updateUserData = user => async (dispatch, getState) => {

@@ -52,7 +52,8 @@ export const addEvent = createAsyncThunk('calendarApp/events/addEvent', async (n
 
 export const updateEvent = createAsyncThunk('calendarApp/events/updateEvent', async (event, { dispatch }) => {
 
-	const response = await phbApi().put('/event', { event });
+	event.description = event.desc
+	const response = await phbApi().put('/event', event  );
 	const data = await response.data;
 	data.desc = data.description
 
@@ -60,10 +61,10 @@ export const updateEvent = createAsyncThunk('calendarApp/events/updateEvent', as
 });
 
 export const removeEvent = createAsyncThunk('calendarApp/events/remove-event', async (eventId, { dispatch }) => {
-	const response = await axios.post('/api/calendar-app/remove-event', { eventId });
+	const response = await phbApi().delete('/event/'+eventId);
 	const data = await response.data;
 
-	return data.id;
+	return data;
 });
 
 const eventsAdapter = createEntityAdapter({});
