@@ -10,33 +10,32 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Divider } from '@material-ui/core';
 import phbApi from 'app/services/phbApi';
 import reducer from './store';
-import { newProfile, getProfile } from './store/profileSlice';
-import { listUserParameters, updateUserParameter } from './store/parameterSlice';
+import { getParametersList } from './store/parameterSlice';
 
 function NotificationSettings(props) {
 	const dispatch = useDispatch();
 	const categories = useSelector(({ ProfilesApp }) => ProfilesApp.parameters);
 
-	const { form, handleChange, setForm } = useForm(null);
+	const { form, setForm, setInForm } = useForm(null);
 	const routeParams = useParams();
 
+	function handleChange(categoryIndex, parameterIndex, c, name, e) {
+		e.persist()
+		categoryIndex = form.findIndex(obj => obj.category == c.category);
+		parameterIndex = form[categoryIndex].parameters.findIndex(x => x.name == name);
+		form[categoryIndex].parameters[parameterIndex].isActive = !e.target.value
+	}
 	useDeepCompareEffect(() => {
 		function updateProfileState() {
 			const { clinicId } = routeParams;
-			if (clinicId === 'new') {
-				dispatch(newProfile());
-			} else {
-				dispatch(getProfile(routeParams));
-			}
+			dispatch(getParametersList(routeParams));
 		}
 
 		updateProfileState();
 	}, [dispatch, routeParams]);
 
-
 	useEffect(() => {
-		if ((categories && !form) || (categories && form && categories.id !== form.id)) {
-			dispatch(listUserParameters());
+		if (categories) {
 			setForm(categories);
 		}
 	}, [form, categories, setForm]);
@@ -47,23 +46,33 @@ function NotificationSettings(props) {
 				<div className="mt-8 mb-32" style={{ textAlign: 'center' }}>
 					<Typography variant="h4">Types Of Notification</Typography>
 				</div>
-				{categories.map(category => (
+				<div>
+					{form.map(x => (
+						<b>teste</b>
+					))}
+					<h1></h1>
+				</div>
+				{form.map((category, index) => (
 					<div>
 						<Grid container spacing={3} alignContent="center" direction="column">
 							<div style={{ textAlign: 'center' }}>
-								<Typography variant="h6">{category.data[0].category}</Typography>
+								<Typography variant="h6" key={index}>
+									{category.category}
+								</Typography>
 							</div>
 							<Grid item xs={4}>
-								{category.data.map(parameter => (
+								{category.parameters.map((parameter, index) => (
 									<div>
 										<FormControlLabel
+											key={index}
 											className="mt-8 mb-16"
 											control={
 												<Switch
-													checked={form.firstAppointment}
-													onChange={handleChange}
-													id={parameter.name}
-													name="firstAppointment"
+													checked={parameter.isActive}
+													value={parameter.isActive}
+													id={parameter.id}
+													name={parameter.name}
+													onChange={e => handleChange(null, null, category, parameter.name,e)}
 												/>
 											}
 											label={parameter.name}
@@ -77,6 +86,7 @@ function NotificationSettings(props) {
 			</div>
 		)
 	);
+	// }
 }
 
 export default withReducer('ProfilesApp', reducer)(NotificationSettings);

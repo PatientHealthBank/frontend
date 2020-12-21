@@ -7,8 +7,6 @@ import parameters from './parameterSlice';
 import emergencyContact from './emergencyContactSlice';
 
 
-
-
 const reducer = combineReducers({
 	allergies,
 	profile,

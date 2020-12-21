@@ -43,12 +43,6 @@ function PatientInformation(props) {
 		}
 	}, [form, clinic, setForm]);
 
-
-	// function canBeSubmitted() {
-	// 	return form.clinicName && form.clinicName.length > 0 && !_.isEqual(clinic, form);
-	// }
-
-
 	return (
 		form && (
 			<div className="p-16 sm:p-24">

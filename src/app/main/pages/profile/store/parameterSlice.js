@@ -1,60 +1,39 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
+import axios from 'axios';
 import phbApi from 'app/services/phbApi';
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
-import axios from 'axios';
-
-export const listUserParameters = () => async (dispatch, getState) => {
-	dispatch(openLoading());
-
-	Promise.all([
-		phbApi().get('/Parameter/Category', { params: { category: 'Email Notification' } }),
-		phbApi().get('/Parameter/Category', { params: { category: 'Whe Should We Notify You?' } })
-	]).then(data => {
-		dispatch(closeLoading());
-		return dispatch(getParametersList(data));
-	});
-};
-
-export const updateUserParameter = () => async (dispatch, getState) => {
-	dispatch(openLoading());
-	console.log(getState());
-	console.log('atualizando usuario');
-	// phbApi().patch(`Parameter`,{}).then(data => {
-	// 	dispatch(closeLoading())
-	// 	return dispatch(getParametersList(data));
-	// });
-};
-
-const parameterAdapter = createEntityAdapter({});
-
-export const { selectAll: selectParameters, selectById: selectParameterById } = parameterAdapter.getSelectors(
-	state => state.profile.parameters
+export const getParametersList = createAsyncThunk(
+	'parameters/users/getParametersList',
+	async (params, { getState, dispatch }) => {
+		console.log('disparando pra api');
+		const { user } = getState().auth;
+		const response = await phbApi().get('/Parameter/User', { params: { UserId: user.uuid } });
+		const data = await response.data;
+		return data;
+	}
 );
 
+const parametersAdapter = createEntityAdapter({});
+
+
 const parametersSlice = createSlice({
-	name: 'profile/Parameters',
-	initialState: [],
+	name: 'parameters/users',
+	initialState:null,
+
+
 	reducers: {
-		getParametersList: {
-			reducer: (state, action) => {
-				return action.payload;
-			}
-		},
-		updateUserParameter: {
+		returnList: {
 			reducer: (state, action) => {
 				return action.payload;
 			}
 		}
+	},
+	extraReducers: {
+		[getParametersList.fulfilled]: (state, action) => action.payload
 	}
 });
 
-export const { getParametersList } = parametersSlice.actions;
+export const { returnList } = parametersSlice.actions;
 
 export default parametersSlice.reducer;
-
-// export const updateParameter = createAsyncThunk('notesApp/notes/createNote', async parameter => {
-// 	const response = await axios.post('/Parameter/User', { parameter });
-// 	const data = await response.data;
-// 	return data;
-// });
