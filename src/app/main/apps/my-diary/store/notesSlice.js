@@ -1,15 +1,18 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
-import axios from 'axios';
 import phbApi from 'app/services/phbApi';
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
 export const getNotes = createAsyncThunk('notesApp/notes/getNotes', async (params, { getState, dispatch })  => {
+    dispatch(openLoading());
 	var user = getState().auth.user; 
 	const response = await phbApi().get('/note/patient/'+user.currentUser.id);
 	const data = await response.data.notes; 
+	dispatch(closeLoading());
 	return data;
 });
 
 export const createNote = createAsyncThunk('notesApp/notes/createNote', async (note, { getState, dispatch })  => {
+	dispatch(openLoading());
 	var user = getState().auth.user; 
 	note.reminder = new Date();
 	note.time = new Date();
@@ -17,26 +20,27 @@ export const createNote = createAsyncThunk('notesApp/notes/createNote', async (n
 
 	const response = await phbApi().post('/note/patient', note);
 	const data = await response.data;
-
+	dispatch(closeLoading());
 	return data;
 });
 
 export const updateNote = createAsyncThunk('notesApp/notes/updateNote', async (note, { getState, dispatch })  => {
+	dispatch(openLoading());
 	var user = getState().auth.user; 
 	note.time = new Date();
 	note.patientId = user.currentUser.id;
 
 	const response = await phbApi().put('/note/patient', note);
 	const data = await response.data;
-
+	dispatch(closeLoading());
 	return data;
 });
 
-export const removeNote = createAsyncThunk('notesApp/notes/removeNote', async noteId => {
-	console.log('noteId:' + noteId)
+export const removeNote = createAsyncThunk('notesApp/notes/removeNote',  async (noteId, { getState, dispatch })  => {
+	dispatch(openLoading());
 	const response = await phbApi().delete('/note/'+ noteId);
 	const data = await response.data;
-
+	dispatch(closeLoading());
 	return data;
 });
 
