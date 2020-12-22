@@ -1,6 +1,10 @@
 import _ from '@lodash';
 import Card from '@material-ui/core/Card';
 import Divider from '@material-ui/core/Divider';
+import withReducer from 'app/store/withReducer';
+import { getStrength } from '../store/strengthSlice'
+import reducer from '../store';
+
 import Link from '@material-ui/core/Link';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
@@ -8,12 +12,46 @@ import { useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+
 
 function StrengthWidget(props) {
 	const theme = useTheme();
 	 // eslint-disable-next-line 
 	const [dataset, setDataset] = useState('Today');
-	const data = _.merge({}, props.data);
+	const dispatch = useDispatch();
+
+	const strengthParams = useSelector(({ ProfilesApp }) => ProfilesApp.strength);
+
+	React.useEffect(() => {
+		if(!strengthParams.total)
+			dispatch(getStrength())
+	}, [])
+
+	const handleStrengthNavigate = ()=>{
+		props.history.push(	"/pages/profile/profile-strength");
+	}
+	var strength = {
+		id: 'widget7',
+		labels: ['Complate', 'Incomplete'],
+		datasets: {
+			Today: [
+				{
+					data: [strengthParams.total, 100 - strengthParams.total],
+				}
+			]
+		},
+		options: {
+			cutoutPercentage: strengthParams.total,
+			spanGaps: false,
+			legend: {
+				display: false
+			},
+			maintainAspectRatio: false
+		}
+	};
+
 	return (
 		<Card className="w-full rounded-8 shadow-1" style={{height:'359px'}}>
 			<div className="p-16 px-4 flex flex-row items-center justify-between">
@@ -29,8 +67,8 @@ function StrengthWidget(props) {
 			<div className="h-180 relative">
 				<Doughnut
 					data={{
-						labels: data.labels,
-						datasets: data.datasets[dataset].map(obj => ({
+						labels: strength.labels,
+						datasets: strength.datasets[dataset].map(obj => ({
 							...obj,
 							borderColor: theme.palette.divider,
 							backgroundColor: [
@@ -45,7 +83,7 @@ function StrengthWidget(props) {
 							]
 						}))
 					}}
-					options={data.options}
+					options={strength.options}
 				/>
 			</div>
 
@@ -76,13 +114,13 @@ function StrengthWidget(props) {
 
 			<div className="p-16 flex flex-row items-center justify-between">
 				<Typography>
-					<Link href="/pages/profile/profile-strength">
+					<a onClick={handleStrengthNavigate} style={{cursor: "pointer"}}>
 						Complete your profile to increase your percentage
-  					</Link>
+  					</a>
 				</Typography>
 			</div>
 		</Card>
 	);
 }
+export default  withReducer('ProfilesApp', reducer)(withRouter(StrengthWidget));
 
-export default React.memo(StrengthWidget);

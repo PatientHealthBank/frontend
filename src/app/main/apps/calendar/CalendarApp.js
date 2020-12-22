@@ -224,7 +224,7 @@ function CalendarApp(props) {
 	}
 	const eventStyleGetter =  function(event, start, end, isSelected)
 	{
-			var backgroundColor = event.outlook ? 'rgb(36 170 224)' : '#21a6a9' ;
+			var backgroundColor = event.eventType == 1 ? 'rgb(36 170 224)' : (event.eventType == 2? '#21a6a9' :'#6ca0a9' ) ;
 			var style = {
 				backgroundColor: backgroundColor,
 				color: 'white'
@@ -235,12 +235,16 @@ function CalendarApp(props) {
 	}
 	const [checkedA, setCheckedA] = React.useState(true)
 	const [checkedB, setCheckedB] = React.useState(true)
+	const [checkedC, setCheckedC] = React.useState(true)
 
 
-	  const handleChange = (checkedAprop, checkedBprop) => {
+
+	  const handleChange = (checkedAprop, checkedBprop, checkedCprop) => {
 
 		setCheckedA(checkedAprop);
 		setCheckedB(checkedBprop);
+		setCheckedC(checkedCprop);
+
 	  };
 
 	return (
@@ -251,27 +255,28 @@ function CalendarApp(props) {
 				selectable
 				localizer={localizer}
 				events={events.filter(x=>{
-					console.log(checkedA, checkedB)
-					if(checkedA && checkedB){
-						return true
+					var retorno = false
+					console.log(x)
+					if(checkedA){
+						if(x.eventType == 2)
+							retorno = true
 					}
-					if(!checkedA && !checkedB){					
-						return false
+					if(checkedB){
+						if(x.eventType == 1)
+							retorno = true
 					}
-					if(!checkedA){					
-						return !x.outlook
+					if(checkedC){
+						if(x.eventType == 3)
+							retorno = true
 					}
-					if(!checkedB){					
-						return x.outlook
-					}
-					return false
+					return retorno
 				
 				})}
 				onEventDrop={moveEvent}
 				resizable
 				onEventResize={resizeEvent}
 				defaultView={Views.MONTH}
-				defaultDate={new Date(2020, 9, 1)}
+				defaultDate={new Date()}
 				startAccessor="start"
 				endAccessor="end"
 				views={allViews}

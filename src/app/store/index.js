@@ -22,6 +22,7 @@ const store = configureStore({
 		getDefaultMiddleware({
 			serializableCheck: {
 				ignoredActions: [
+					'profile/Parameters',
 					'dialog/openDialog',
 					'dialog/closeDialog',
 					'message/showMessage',
