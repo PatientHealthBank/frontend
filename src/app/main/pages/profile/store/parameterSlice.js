@@ -6,7 +6,6 @@ import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/lo
 export const getParametersList = createAsyncThunk(
 	'parameters/users/getParametersList',
 	async (params, { getState, dispatch }) => {
-		console.log('disparando pra api');
 		const { user } = getState().auth;
 		const response = await phbApi().get('/Parameter/User', { params: { UserId: user.uuid } });
 		const data = await response.data;
@@ -18,15 +17,7 @@ export const updateStatusParameter = createAsyncThunk(
 	'parameters/users/updateStatusParameter',
 	async (params, { getState, dispatch }) => {
 		const { user } = getState().auth;
-
-		const response = await phbApi().get('/Parameter/users/UpdateStatusParameter/', {
-			params: {
-				userId: user.uuid,
-				category: params.name,
-				isActive:params.isActive
-				
-			}
-		});
+		const response = await phbApi().put('/Parameter/users/UpdateStatusParameter/', params);
 		const data = await response.data;
 		return data;
 	}
@@ -35,18 +26,27 @@ const parametersAdapter = createEntityAdapter({});
 
 const parametersSlice = createSlice({
 	name: 'parameters/users',
-	initialState: null,
+	initialState: {
+		loading: "",
+		error: "",
+		data: []
+	  },
 
 	reducers: {
 		updateParameter: {
 			reducer: (state, action) => {
-				console.log('atualizando parameter', state, action);
-				// return !action.payload;
+
+				const index = state.data.findIndex(x =>x.name == action.payload.name)
+				state.data[index].isActive =  !action.payload.isActive 
+				
 			}
 		}
 	},
 	extraReducers: {
-		[getParametersList.fulfilled]: (state, action) => action.payload
+		[getParametersList.fulfilled]: (state, action) => {
+			state.data = action.payload
+		},
+		[updateStatusParameter.pending]: (state, action) => action.payload
 	}
 });
 
