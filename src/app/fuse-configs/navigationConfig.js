@@ -95,7 +95,7 @@ const navigationConfig = [
 			},
 			{
 				id: 'clinicbranchs',
-				title: 'Clinic Branches',
+				title: 'Clinic',
 				translate: 'CLINICBRANCHES',
 				type: 'item',
 				icon: 'business',
