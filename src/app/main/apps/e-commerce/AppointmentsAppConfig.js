@@ -1,18 +1,18 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-const ECommerceAppConfig = {
+const AppointmentsAppConfig = {
 	settings: {
 		layout: {}
 	},
 	routes: [
 		{
-			path: '/apps/e-commerce/products/:productId/:productHandle?',
+			path: '/apps/e-commerce/appointments/:productId/:productHandle?',
 			component: React.lazy(() => import('./product/Product'))
 		},
 		{
 			path: '/appointments',
-			component: React.lazy(() => import('./products/Products'))
+			component: React.lazy(() => import('./appointments/Appointments'))
 		},
 		{
 			path: '/intake-form',
@@ -28,9 +28,9 @@ const ECommerceAppConfig = {
 		},
 		{
 			path: '/apps/e-commerce',
-			component: () => <Redirect to="/apps/e-commerce/products" />
+			component: () => <Redirect to="/apps/e-commerce/appointments" />
 		}
 	]
 };
 
-export default ECommerceAppConfig;
+export default AppointmentsAppConfig;

@@ -51,7 +51,7 @@ const rows = [
 	}
 ];
 
-function ProductsTableHead(props) {
+function AppointmentsTableHead(props) {
 
 	const createSortHandler = property => event => {
 		props.onRequestSort(event, property);
@@ -94,4 +94,4 @@ function ProductsTableHead(props) {
 	);
 }
 
-export default ProductsTableHead;
+export default AppointmentsTableHead;

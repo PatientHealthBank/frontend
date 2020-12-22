@@ -5,7 +5,7 @@ import ConfirmAppointmentsConfig from './dashboards/confirm-appointments/Confirm
 import DashboardAppConfig from './dashboards/dashboard/DashboardAppConfig';
 import FindAClinicAppConfig from './dashboards/find-a-clinic/FindAClinicAppConfig';
 import DoctorsAppConfig from './dashboards/doctors/DoctorsAppConfig';
-import ECommerceAppConfig from './e-commerce/ECommerceAppConfig';
+import AppointmentsAppConfig from './e-commerce/AppointmentsAppConfig';
 import FileManagerAppConfig from './file-manager/FileManagerAppConfig';
 import NotesAppConfig from './my-diary/NotesAppConfig';
 import ClinicAppConfig from './clinic/ClinicAppConfig';
@@ -24,7 +24,7 @@ const appsConfigs = [
 	FileManagerAppConfig,
 	CalendarAppConfig,
 	CalendarProviderConfig,
-	ECommerceAppConfig,
+	AppointmentsAppConfig,
 	ClinicAppConfig,
 	TreatmentsAppConfig,
 	ProviderAppConfig,
