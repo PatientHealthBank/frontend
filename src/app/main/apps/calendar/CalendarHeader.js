@@ -16,23 +16,33 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 const GreenCheckbox = withStyles({
 	root: {
-	  color: 'rgb(36 170 224)',
-	  '&$checked': {
 		color: 'rgb(36 170 224)',
-	  },
+		'&$checked': {
+			color: 'rgb(36 170 224)',
+		},
 	},
 	checked: {},
-  })((props) => <Checkbox color="default" {...props} />);
+})((props) => <Checkbox color="default" {...props} />);
 
-  const BlueCheckbox = withStyles({
+const BlueCheckbox = withStyles({
 	root: {
-	  color: '#21a6a9',
-	  '&$checked': {
 		color: '#21a6a9',
-	  },
+		'&$checked': {
+			color: '#21a6a9',
+		},
 	},
 	checked: {},
-  })((props) => <Checkbox color="default" {...props} />);
+
+})((props) => <Checkbox color="default" {...props} />);
+const CustomCheckbox = withStyles({
+	root: {
+		color: '#6ca0a9',
+		'&$checked': {
+			color: '#6ca0a9',
+		},
+	},
+	checked: {},
+})((props) => <Checkbox color="default" {...props} />);
 
 /* eslint-disable react/jsx-no-bind */
 const styles = theme => ({
@@ -151,8 +161,9 @@ class CalendarHeader extends Toolbar {
 		this.state = {
 			checkedA: true,
 			checkedB: true,
-		  }
-	  }
+			checkedC: true
+		}
+	}
 
 	render() {
 		const { classes, mainThemeDark, label, date } = this.props;
@@ -169,42 +180,65 @@ class CalendarHeader extends Toolbar {
 							</FuseAnimate>
 						</div>
 
-					
-							<div className="flex items-center">
-								{this.viewButtons()}
-							</div>
-							<div className="items-center">
+
+						<div className="flex items-center">
+							{this.viewButtons()}
+						</div>
+						<div className="items-center">
 							<div className="flex flex-row">
-									<h2>Calendars</h2>
-								</div>
-								<div className="flex flex-row">
-									<FormControlLabel
-										control={<GreenCheckbox checked={this.state.checkedA} onChange={(event)=>{
+								<h2>Calendars</h2>
+							</div>
+							<div className="flex flex-row">
+								<FormControlLabel
+									control={
+										<GreenCheckbox checked={this.state.checkedA} onChange={(event) => {
 											this.setState({
 												checkedA: event.target.checked,
 												checkedB: this.state.checkedB,
-											  });
-											this.props.handleChange(event.target.checked,this.state.checkedB)
-										
+												checkedC: this.state.checkedC
+											});
+											this.props.handleChange(event.target.checked, this.state.checkedB, this.state.checkedC)
+
 										}} name="checkedA" />}
 									label="Outlook"
 								/>
-								</div>
-								<div className="flex flex-row">
-							<FormControlLabel
-									control={<BlueCheckbox checked={this.state.checkedB} onChange={
-										(event)=>{
-										this.setState({
-											checkedA: this.state.checkedA,
-											checkedB: event.target.checked,
-										})
-										this.props.handleChange(this.state.checkedA,event.target.checked)
-									
-									}}  name="checkedB" />}
-								label="My Appointments"
-							/>
-								</div>
 							</div>
+							<div className="flex flex-row">
+								<FormControlLabel
+									control={
+										<BlueCheckbox checked={this.state.checkedB} onChange={
+											(event) => {
+												this.setState({
+													checkedA: this.state.checkedA,
+													checkedB: event.target.checked,
+													checkedC: this.state.checkedC
+
+												})
+												this.props.handleChange(this.state.checkedA, event.target.checked, this.state.checkedC)
+
+											}} name="checkedB" />}
+									label="My Appointments"
+								/>
+							</div>
+
+							<div className="flex flex-row">
+
+								<FormControlLabel
+									control={
+										<CustomCheckbox checked={this.state.checkedC} onChange={
+											(event) => {
+												this.setState({
+													checkedA: this.state.checkedA,
+													checkedB: this.state.checkedB,
+													checkedC: event.target.checked
+												})
+												this.props.handleChange(this.state.checkedA, this.state.checkedB, event.target.checked)
+
+											}} name="checkedC" />}
+									label="My Events"
+								/>
+							</div>
+						</div>
 					</div>
 					<FuseAnimate delay={500}>
 						<div className="flex items-center justify-center">

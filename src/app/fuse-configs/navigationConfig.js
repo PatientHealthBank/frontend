@@ -18,6 +18,7 @@ const navigationConfig = [
 		title: 'User',
 		translate: 'USER',
 		type: 'group',
+		auth:['patient'],
 		icon: 'pages',
 		children: [
 			{
@@ -25,6 +26,7 @@ const navigationConfig = [
 				title: 'Dashboard',
 				translate: 'Dashboard',
 				type: 'item',
+				
 				icon: 'menu',
 				url: '/dashboard'
 			},
@@ -74,6 +76,7 @@ const navigationConfig = [
 		id: 'clinic',
 		title: 'Clinic',
 		type: 'group',
+		auth:['clinic'],
 		icon: 'pages',
 		children: [
 			{
@@ -104,6 +107,7 @@ const navigationConfig = [
 		id: 'provider',
 		title: 'Provider',
 		type: 'group',
+		auth:['provider'],
 		icon: 'pages',
 		children: [
 			{
@@ -126,6 +130,7 @@ const navigationConfig = [
 		id: 'settings',
 		title: 'Settings',
 		type: 'group',
+		auth:['patient'],
 		icon: 'pages',
 		children: [
 			{
