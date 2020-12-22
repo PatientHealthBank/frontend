@@ -4,11 +4,10 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\fuse-layouts",
-    "\\src\\app\\fuse-layouts\\shared-components",
     "\\src\\app\\main",
     "\\src\\app\\main\\pages",
     "\\src\\app\\main\\pages\\profile",
-    "\\src\\app\\main\\pages\\profile\\store"
+    "\\src\\app\\main\\pages\\profile\\widgets\\patient"
   ],
   "SelectedNode": "\\src\\app\\main\\pages\\profile\\store",
   "PreviewInSolutionExplorer": false
