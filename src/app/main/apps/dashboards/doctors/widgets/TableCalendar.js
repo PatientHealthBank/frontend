@@ -27,7 +27,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function TableCalendar(props) {
-    const { provider, clinic } = props;
+
+    const { provider, clinic, events } = props;
     const dispatch = useDispatch()
     const { startJob, endJob, appointmentInterval } = provider
     const today = new Date();
@@ -38,13 +39,48 @@ function TableCalendar(props) {
         date.setDate(date.getDate() + days);
         return date;
     }
-    function eventHour(day, startJob, i) {
-        if (!day) {
-            return startJob + i > new Date().getHours()
-        }
-        else {
-            return true
-        }
+    var eventsProvider = events.filter(event => event.providerId === provider.id);
+
+     function availableTime(day, i) {
+            
+            var date = today.addDays(day);
+            var hour = `${(startJob.hours + i).toString().padStart(2, 0)}`;
+            date = date.getFullYear()+''+date.getMonth()+''+date.getDate()+''+ hour;
+
+            if (
+                setArrayAvailableTime().indexOf(date) != -1 
+                || (startJob.hours + i < new Date().getHours() && !day)
+                ){
+                return false;
+            }else{  
+                return true;
+            }
+        
+    }
+
+    function setArrayAvailableTime(){
+
+        var arraDateAvailableTime = [];
+
+        eventsProvider.map(function(value, i) {
+            var date = new Date(value.eventDate);
+            var endTimeEvent = new Date(date.getTime() + (value.duration - 1)*60000); 
+            
+            var hourStartEvent = date.getHours().toString().padStart(2, 0);
+            var hourEndEvent = endTimeEvent.getHours().toString().padStart(2, 0);
+
+            var timeStartEvent = date.getFullYear()+''+date.getMonth()+''+date.getDate()+''+hourStartEvent;
+            var timeEndEvent = date.getFullYear()+''+date.getMonth()+''+date.getDate()+''+hourEndEvent;
+
+            if(timeStartEvent < timeEndEvent){
+                arraDateAvailableTime.push(date.getFullYear()+''+date.getMonth()+''+endTimeEvent.getDate()+''+hourEndEvent);
+            }
+
+            arraDateAvailableTime.push(date.getFullYear()+''+date.getMonth()+''+date.getDate()+''+hourStartEvent);
+
+        });
+
+        return arraDateAvailableTime;
     }
 
     function handleConfirmAppointment(jobHour, jobDay){
@@ -52,8 +88,10 @@ function TableCalendar(props) {
             jobHour,
             jobDay: jobDay.toDateString(),
             clinic,
-            provider
+            provider,
+            events
         }
+
         dispatch(setConfirmAppointment(modelConfirmAppointment))
 
         if(!user.role.lenght){
@@ -64,38 +102,39 @@ function TableCalendar(props) {
         }
 
     }
+
     const classes = useStyles(props);
     var itens = [];
-    for (let i = 0; i < (endJob.hours - startJob.hours) / appointmentInterval; i++) {
+    for (let i = 0; i < (endJob.hours - startJob.hours) / appointmentInterval; i+=appointmentInterval) {
         itens.push(
-            <tr>
+            <tr key={i}>
                 {
-                    (eventHour(0, startJob.hours, i) ? (<td ><a  onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today)} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
+                    (availableTime(0, i) ? (<td ><a onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today)} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
+                        {`${(startJob.hours + i).toString().padStart(2, 0)}:00`}</a></td>) :
+                        (<td style={{ padding: "5px" }}>----</td>)) 
+                }
+                {
+                    (availableTime(1, i) ? (<td><a  onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today.addDays(1))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
                         {`${(startJob.hours + i).toString().padStart(2, 0)}:00`}</a></td>) :
                         (<td style={{ padding: "5px" }}>----</td>))
                 }
                 {
-                    (eventHour(1, startJob.hours, i) ? (<td><a  onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today.addDays(1))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
+                    (availableTime(2,i) ? (<td><a onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today.addDays(2))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
                         {`${(startJob.hours + i).toString().padStart(2, 0)}:00`}</a></td>) :
                         (<td style={{ padding: "5px" }}>----</td>))
                 }
                 {
-                    (eventHour(2, startJob.hours, i) ? (<td><a onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today.addDays(2))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
-                        {`${(startJob.hours + i).toString().padStart(2, 0)}:00`}</a></td>) :
-                        (<td style={{ padding: "5px" }}>----</td>))
-                }
-                {
-                    (eventHour(3, startJob.hours, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today.addDays(3))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
+                    (availableTime(3, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today.addDays(3))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
                         {`${(startJob.hours + i).toString().padStart(2, 0)}:00`}</a></td>) :
                         (<td style={{ padding: "5px" }}> ----</td>))
                 }
                 {
-                    (eventHour(4, startJob.hours, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today.addDays(4))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
+                    (availableTime(4, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00`,today.addDays(4))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
                         {`${(startJob.hours + i).toString().padStart(2, 0)}:00`}</a></td>) :
                         (<td style={{ padding: "5px" }}>----</td>))
                 }
                 {
-                    (eventHour(5, startJob.hours, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00` ,today.addDays(5))} style={{ backgroundColor: "aliceblue", padding: "5px",cursor: 'pointer' }}>
+                    (availableTime(5, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${(startJob.hours + i).toString().padStart(2, 0)}:00` ,today.addDays(5))} style={{ backgroundColor: "aliceblue", padding: "5px",cursor: 'pointer' }}>
                         {`${(startJob.hours + i).toString().padStart(2, 0)}:00`}</a></td>) :
                         (<td style={{ padding: "5px" }}>----</td>))
                 }
@@ -110,36 +149,36 @@ function TableCalendar(props) {
                     <tr>
                         <th>
                             <div>{daysOfWeek[today.getDay()]}</div>
-                            <div>{`${today.getDate()}/${today.getMonth()}`}</div>
+                            <div>{`${today.getDate()}/${(today.getMonth()+1)}`}</div>
                         </th>
                         <th>
                             <div>{daysOfWeek[today.addDays(1).getDay()]}</div>
                             <div> 
-                                {`${today.addDays(1).getDate()}/${today.addDays(1).getMonth()}`}
+                                {`${today.addDays(1).getDate()}/${(today.addDays(1).getMonth()+1)}`}
                             </div>
                             
                          </th>
                         <th>
                             <div>{daysOfWeek[today.addDays(2).getDay()]}</div>
 
-                            <div>{`${today.addDays(2).getDate()}/${today.addDays(2).getMonth()}`}</div>
+                            <div>{`${today.addDays(2).getDate()}/${(today.addDays(2).getMonth()+1)}`}</div>
                             
                             </th>
                         <th>
                          <div>{daysOfWeek[today.addDays(3).getDay()]}</div>
 
-                            <div>{`${today.addDays(3).getDate()}/${today.addDays(3).getMonth()}`}</div>   
+                            <div>{`${today.addDays(3).getDate()}/${(today.addDays(3).getMonth()+1)}`}</div>   
                             </th>
                         <th>
                             <div>{daysOfWeek[today.addDays(4).getDay()]}</div>
 
-                            <div>{`${today.addDays(4).getDate()}/${today.addDays(4).getMonth()}`}</div>
+                            <div>{`${today.addDays(4).getDate()}/${(today.addDays(4).getMonth()+1)}`}</div>
                             
                             </th>
                         <th>
                             <div>{daysOfWeek[today.addDays(5).getDay()]}</div>
 
-                            <div>{`${today.addDays(5).getDate()}/${today.addDays(5).getMonth()}`}</div>
+                            <div>{`${today.addDays(5).getDate()}/${(today.addDays(5).getMonth()+1)}`}</div>
                             
                             </th>
 

@@ -5,7 +5,7 @@ import TableCalendar from './TableCalendar'
 import React from 'react';
 
 function Widget5(props) {
-	const { clinic, providers, specialty, clinicalInterest } = props;
+	const { clinic, providers, specialty, clinicalInterest, events } = props;
 
 	return (
 		<div className="w-full">
@@ -57,7 +57,7 @@ function Widget5(props) {
 					<Paper className="w-full lg:w-1/2 md:w-full rounded-8 shadow-1 overflow-auto" >
 						<div className="flex flex-row">
 							<div className="w-full p-8" style={{ textAlign: '-webkit-center', overflow:"auto" }} >
-								{ <TableCalendar  provider={provider} clinic={clinic}></TableCalendar> }
+								{ <TableCalendar  provider={provider} clinic={clinic} events={events}></TableCalendar> }
 							</div>
 						</div>
 					</Paper>

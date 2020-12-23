@@ -41,15 +41,37 @@ function DoctorsApp(props) {
 	const clinicalInterest = queryParams.get("clinicalInterest");
 	const classes = useStyles(props);
 	const pageLayout = useRef(null);
-	const [providers, setProviders] = React.useState([])
-	const [clinic, setClinic] = React.useState({})
+	const [providers, setProviders] = React.useState([]);
+	const [clinic, setClinic] = React.useState({});
+	const [events, setEvents] = React.useState([]);
 
 	React.useEffect(() => {
 		dispatch(openLoading())
 		phbApi().get("/provider/clinic/"+routeParams.clinicId , { params: { specialty, clinicalInterest } }).then(res => {
 			dispatch(closeLoading())
+			
+			var providersIds = '';
+
 			if(res.data.providers){
-				console.log(res.data.providers)
+
+				res.data.providers.map(function(value, i) {
+					if(i == 0){
+						providersIds = 'providersIds=' + value.id;
+					} 
+					else {
+						providersIds = providersIds + '&providersIds=' + value.id;
+					}
+				});
+
+				phbApi().get("/Event/list-provider?"+  providersIds).then(resEvents => {
+					dispatch(closeLoading())
+					if(resEvents.data){
+						setEvents(resEvents.data)
+					}
+				}).catch(err => {
+					dispatch(closeLoading());
+				})
+
 				setProviders(res.data.providers)
 				setClinic(res.data.clinic)
 			}
@@ -57,8 +79,7 @@ function DoctorsApp(props) {
 		.catch(err => {
 				dispatch(closeLoading())
 			})
-	},[clinicalInterest, dispatch, routeParams.clinicId, specialty ])
-
+	},[clinicalInterest, dispatch, routeParams.clinicId, specialty ]);
 
 	return (
 		<FusePageSimple
@@ -88,7 +109,13 @@ function DoctorsApp(props) {
 						}}
 					>
 						<div className="widget flex w-full p-12" style={{ padding: "10px" }}>
-							<Widget5 providers={providers} clinic={clinic} specialty={specialty} clinicalInterest={clinicalInterest} />
+							<Widget5 
+								providers={providers} 
+								clinic={clinic} 
+								specialty={specialty} 
+								clinicalInterest={clinicalInterest} 
+								events={events}
+							/>
 						</div>
 						<LoadingModal />
 					</FuseAnimateGroup>
