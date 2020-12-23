@@ -1,7 +1,7 @@
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 
-function ProductsHeader(props) {
+function AppointmentsHeader(props) {
 	return (
 		<div className="flex flex-1 w-full items-center justify-between">
 			<div className="flex items-center">
@@ -13,4 +13,4 @@ function ProductsHeader(props) {
 	);
 }
 
-export default ProductsHeader;
+export default AppointmentsHeader;

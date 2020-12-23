@@ -1,15 +1,28 @@
 import Grid from '@material-ui/core/Grid';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import withReducer from 'app/store/withReducer';
 import reducer from './store';
 import Typography from '@material-ui/core/Typography';
 import { Doughnut } from 'react-chartjs-2';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
+import { getStrength } from './store/strengthSlice'
+
+import { useDispatch, useSelector } from 'react-redux';
+
 
 function ProfileStrength() {
+	const dispatch = useDispatch()
+	const strengthParams = useSelector(({ ProfilesApp }) => ProfilesApp.strength);
+	console.log(strengthParams)
+
+	React.useEffect(() => {
+		if(!strengthParams.total)
+			dispatch(getStrength())
+	}, [])
 	const theme = useTheme();
-	
+
 	// eslint-disable-next-line
 	const [dataset, setDataset] = useState('Today');
 
@@ -19,37 +32,12 @@ function ProfileStrength() {
 		datasets: {
 			Today: [
 				{
-					data: [74.0, 26.0],
-					change: [-0.6, 0.7]
-				}
-			],
-			Yesterday: [
-				{
-					data: [77.2, 8.4],
-					change: [-2.3, 0.3]
-				}
-			],
-			'Last 7 days': [
-				{
-					data: [88.2, 9.2],
-					change: [1.9, -0.4]
-				}
-			],
-			'Last 28 days': [
-				{
-					data: [65.2, 2.6],
-					change: [-12.6, -0.7]
-				}
-			],
-			'Last 90 days': [
-				{
-					data: [93.5, 4.2],
-					change: [2.6, -0.7]
+					data: [strengthParams.total, 100 - strengthParams.total],
 				}
 			]
 		},
 		options: {
-			cutoutPercentage: 75,
+			cutoutPercentage: strengthParams.total,
 			spanGaps: false,
 			legend: {
 				display: false
@@ -79,7 +67,6 @@ function ProfileStrength() {
 						</Typography>
 					</div>
 				</Grid>
-
 				<Grid item>
 					<div className="h-224 relative">
 						<Doughnut
@@ -104,10 +91,16 @@ function ProfileStrength() {
 						/>
 					</div>
 					<div className="p-16 flex flex-row items-center justify-center">
-						<Typography className="h1 px-12">Intermediate Level</Typography>
+						{strengthParams.total  && (!strengthParams.total ||  strengthParams.total < 40 ? 
+						(<Typography className="h1 px-12">Basic Level</Typography>)
+							:
+							strengthParams.total < 60 ? (<Typography className="h1 px-12">Intermediate Level</Typography>):
+							(<Typography className="h1 px-12">Advanced Level</Typography>)
+
+					)}
 					</div>
 				</Grid>
-
+				{strengthParams.total && 
 				<Grid item xs={12}>
 					<div className="mt-8 mb-32">
 						<Typography variant="h6">
@@ -117,24 +110,62 @@ function ProfileStrength() {
 
 					<div className={classes.root}>
 
-						<Alert severity="warning">
-							<AlertTitle>Incompleted</AlertTitle>
-        					Complete your family history to improve your profile — <strong>70%</strong>
-						</Alert>
-						<Alert severity="warning">
-							<AlertTitle>Incompleted</AlertTitle>
-        					Complete your allergies to improve your profile — <strong>65%</strong>
-						</Alert>
-						<Alert severity="success">
-							<AlertTitle>Completed</AlertTitle>
-        					My Immunization History —<strong>100%</strong>
-						</Alert>
-						<Alert severity="success">
-							<AlertTitle>Completed</AlertTitle>
+						{strengthParams.strength.medicalHistory == 100 ?
+							<Alert severity="success">
+								<AlertTitle>Completed</AlertTitle>
+								My Medications —<strong>100%</strong>
+
+							</Alert> :
+							<Alert severity="warning">
+								<AlertTitle>Incompleted</AlertTitle>
+								Complete your family history to improve your profile — <strong>{strengthParams.strength.medicalHistory}</strong>
+							</Alert>
+						}
+						{strengthParams.strength.allergies == 100 ?
+							<Alert severity="success">
+								<AlertTitle>Completed</AlertTitle>
+								My Allergies —<strong>100%</strong>
+
+							</Alert> :
+							<Alert severity="warning">
+								<AlertTitle>Incompleted</AlertTitle>
+								Complete your Allergies to improve your profile — <strong>{strengthParams.strength.allergies}</strong>
+							</Alert>
+						}
+						{strengthParams.strength.medication == 100 ?
+							<Alert severity="success">
+								<AlertTitle>Completed</AlertTitle>
+								My Medications —<strong>100%</strong>
+
+							</Alert> :
+							<Alert severity="warning">
+								<AlertTitle>Incompleted</AlertTitle>
+								Complete your Medications to improve your profile — <strong>{strengthParams.strength.medication}</strong>
+							</Alert>
+						}
+						{strengthParams.strength.vaccines == 100 ?
+							<Alert severity="success">
+								<AlertTitle>Completed</AlertTitle>
+								My Immunization History —<strong>100%</strong>
+
+							</Alert> :
+							<Alert severity="warning">
+								<AlertTitle>Incompleted</AlertTitle>
+								Complete your Patient Information to improve your profile — <strong>{strengthParams.strength.vaccines}</strong>
+							</Alert>
+						}
+						{strengthParams.strength.patientInformation == 100 ?
+							<Alert severity="success">
+								<AlertTitle>Completed</AlertTitle>
         					Patient Information —<strong>100%</strong>
-						</Alert>
+							</Alert> :
+							<Alert severity="warning">
+								<AlertTitle>Incompleted</AlertTitle>
+								Complete your Patient Information to improve your profile — <strong>{strengthParams.strength.patientInformation}</strong>
+							</Alert>
+						}
 					</div>
-				</Grid>
+				</Grid>}
 			</Grid>
 		</div>
 	);
