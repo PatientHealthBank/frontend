@@ -8,16 +8,16 @@ import TableRow from '@material-ui/core/TableRow';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { getClinicBranchs, selectClinicBranchs } from '../store/clinicBranchsSlice';
-import ClinicBranchsTableHead from './ClinicBranchsTableHead';
+import { getClinic, selectClinic } from '../store/clinicSlice';
+import ClinicBranchsTableHead from './ClinicTableHead';
 
-function ClinicBranchsTable(props) {
+function ClinicTable(props) {
 	const dispatch = useDispatch();
-	const clinicBranchs = useSelector(selectClinicBranchs);
-	const searchText = useSelector(({ ClinicBranchsApp }) => ClinicBranchsApp.clinicBranchs.searchText);
+	const clinic = useSelector(selectClinic);
+	const searchText = useSelector(({ ClinicApp }) => ClinicApp.clinic.searchText);
 
 	const [selected, setSelected] = useState([]);
-	const [data, setData] = useState(clinicBranchs);
+	const [data, setData] = useState(clinic);
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [order, setOrder] = useState({
@@ -26,17 +26,17 @@ function ClinicBranchsTable(props) {
 	});
 
 	useEffect(() => {
-		dispatch(getClinicBranchs());
+		dispatch(getClinic());
 	}, [dispatch]);
 
 	useEffect(() => {
 		if (searchText.length !== 0) {
-			setData(_.filter(clinicBranchs, item => item.name.toLowerCase().includes(searchText.toLowerCase())));
+			setData(_.filter(clinic, item => item.name.toLowerCase().includes(searchText.toLowerCase())));
 			setPage(0);
 		} else {
-			setData(clinicBranchs);
+			setData(clinic);
 		}
-	}, [clinicBranchs, searchText]);
+	}, [clinic, searchText]);
 
 	function handleRequestSort(event, property) {
 		const id = property;
@@ -117,7 +117,7 @@ function ClinicBranchsTable(props) {
 									>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											{n.clinicName}
+											{n.companyName }
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row">
@@ -161,4 +161,4 @@ function ClinicBranchsTable(props) {
 	);
 }
 
-export default withRouter(ClinicBranchsTable);
+export default withRouter(ClinicTable);

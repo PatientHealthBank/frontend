@@ -242,4 +242,4 @@ function ClinicBranch(props) {
 	);
 }
 
-export default withReducer('ClinicBranchsApp', reducer)(ClinicBranch);
+export default withReducer('ClinicApp', reducer)(ClinicBranch);
