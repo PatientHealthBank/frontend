@@ -6,9 +6,12 @@ import allergies from './allergiesSlice';
 import strength from './strengthSlice';
 import parameters from './parameterSlice';
 import emergencyContact from './emergencyContactSlice';
+import intakeForm from './intakeFormSlice';
+
 
 
 const reducer = combineReducers({
+	intakeForm,
 	allergies,
 	strength,
 	profile,
