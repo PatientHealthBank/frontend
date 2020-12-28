@@ -14,6 +14,8 @@ function useForm(initialState, onSubmit) {
 			)
 		);
 	}, []);
+	
+
 
 	const resetForm = useCallback(() => {
 		if (!_.isEqual(initialState, form)) {
@@ -25,6 +27,7 @@ function useForm(initialState, onSubmit) {
 		setForm(_form => _.setIn(_form, name, value));
 	}, []);
 
+	
 	const handleSubmit = useCallback(
 		event => {
 			if (event) {

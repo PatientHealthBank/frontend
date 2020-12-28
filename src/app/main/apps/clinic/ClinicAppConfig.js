@@ -10,12 +10,12 @@ const ClinicAppConfig = {
 			component: React.lazy(() => import('./appointment/AppointmentBook'))
 		},
 		{
-			path: '/apps/clinic/clinicbranchs/:clinicId',
+			path: '/apps/clinic/:clinicId',
 			component: React.lazy(() => import('./clinic-branch/ClinicBranch'))
 		},
 		{
-			path: '/apps/clinic/clinicbranchs',
-			component: React.lazy(() => import('./clinic-branchs/ClinicBranchs'))
+			path: '/apps/clinic',
+			component: React.lazy(() => import('./clinic-main/Clinic'))
 		},
 		{
 			path: '/apps/clinic/members/:membersId',

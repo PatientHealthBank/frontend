@@ -7,39 +7,31 @@ import React from 'react';
 
 const rows = [
 	{
-		id: 'appointment',
+		id: 'name',
 		align: 'left',
 		disablePadding: false,
-		label: 'Appointment',
-		sort: true,
-		colspan:2
-	},
-	{
-		id: 'doctorname',
-		align: 'left',
-		disablePadding: false,
-		label: 'Doctor name',
+		label: 'Name',
 		sort: true
 	},
 	{
-		id: 'patient',
+		id: 'address',
 		align: 'left',
 		disablePadding: false,
-		label: 'Patient',
+		label: 'Address',
 		sort: true
 	},
 	{
-		id: 'date',
+		id: 'city',
 		align: 'left',
 		disablePadding: false,
-		label: 'Date',
+		label: 'City',
 		sort: true
 	},
 	{
-		id: 'priority',
+		id: 'state',
 		align: 'left',
 		disablePadding: false,
-		label: 'Tasks',
+		label: 'State',
 		sort: true
 	},
 	{
@@ -51,7 +43,7 @@ const rows = [
 	}
 ];
 
-function ProductsTableHead(props) {
+function ClinicTableHead(props) {
 
 	const createSortHandler = property => event => {
 		props.onRequestSort(event, property);
@@ -69,7 +61,6 @@ function ProductsTableHead(props) {
 							align={row.align}
 							padding={row.disablePadding ? 'none' : 'default'}
 							sortDirection={props.order.id === row.id ? props.order.direction : false}
-							colSpan={row.colspan ? row.colspan : 1}
 						>
 							{row.sort && (
 								<Tooltip
@@ -94,4 +85,4 @@ function ProductsTableHead(props) {
 	);
 }
 
-export default ProductsTableHead;
+export default ClinicTableHead;

@@ -7,31 +7,39 @@ import React from 'react';
 
 const rows = [
 	{
-		id: 'name',
+		id: 'appointment',
 		align: 'left',
 		disablePadding: false,
-		label: 'Name',
+		label: 'Appointment',
+		sort: true,
+		colspan:2
+	},
+	{
+		id: 'doctorname',
+		align: 'left',
+		disablePadding: false,
+		label: 'Doctor name',
 		sort: true
 	},
 	{
-		id: 'address',
+		id: 'patient',
 		align: 'left',
 		disablePadding: false,
-		label: 'Address',
+		label: 'Patient',
 		sort: true
 	},
 	{
-		id: 'city',
+		id: 'date',
 		align: 'left',
 		disablePadding: false,
-		label: 'City',
+		label: 'Date',
 		sort: true
 	},
 	{
-		id: 'state',
+		id: 'priority',
 		align: 'left',
 		disablePadding: false,
-		label: 'State',
+		label: 'Tasks',
 		sort: true
 	},
 	{
@@ -43,7 +51,7 @@ const rows = [
 	}
 ];
 
-function ClinicBranchsTableHead(props) {
+function AppointmentsTableHead(props) {
 
 	const createSortHandler = property => event => {
 		props.onRequestSort(event, property);
@@ -61,6 +69,7 @@ function ClinicBranchsTableHead(props) {
 							align={row.align}
 							padding={row.disablePadding ? 'none' : 'default'}
 							sortDirection={props.order.id === row.id ? props.order.direction : false}
+							colSpan={row.colspan ? row.colspan : 1}
 						>
 							{row.sort && (
 								<Tooltip
@@ -85,4 +94,4 @@ function ClinicBranchsTableHead(props) {
 	);
 }
 
-export default ClinicBranchsTableHead;
+export default AppointmentsTableHead;

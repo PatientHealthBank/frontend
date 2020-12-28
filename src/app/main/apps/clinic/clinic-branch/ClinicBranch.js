@@ -5,7 +5,7 @@ import _ from '@lodash';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
-import { useTheme , withStyles} from '@material-ui/core/styles';
+import { useTheme, withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
@@ -13,27 +13,26 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import reducer from '../store';
-import { getClinicBranch, newClinicBranch, saveClinicBranch } from '../store/clinicBranchSlice';
+import { getClinicBranch, newClinicBranch, saveClinicBranch, setGeoCoordinate } from '../store/clinicBranchSlice';
+import geocodingApi from '../../../../services/geocodingApi';
 
-
-const PrimaryButton = withStyles((theme) => ({
-    root: {
-      color: "#ffffff",
-      backgroundColor: '#24aae0',
-      '&:hover': {
-        backgroundColor: '#1d8ab5',
-      },
-    },
-  }))(Button);
+const PrimaryButton = withStyles(theme => ({
+	root: {
+		color: '#ffffff',
+		backgroundColor: '#24aae0',
+		'&:hover': {
+			backgroundColor: '#1d8ab5'
+		}
+	}
+}))(Button);
 
 function ClinicBranch(props) {
 	const dispatch = useDispatch();
 	const clinic = useSelector(({ ClinicBranchsApp }) => ClinicBranchsApp.clinicBranch);
-
+	console.log('pegando state', clinic);
 	const theme = useTheme();
 	const { form, handleChange, setForm } = useForm(null);
 	const routeParams = useParams();
-
 	useDeepCompareEffect(() => {
 		function updateClinicBranchState() {
 			const { clinicId } = routeParams;
@@ -47,22 +46,21 @@ function ClinicBranch(props) {
 		updateClinicBranchState();
 	}, [dispatch, routeParams]);
 
-
+	const getAddress = e => {
+		e.persist();
+		geocodingApi
+			.get(clinic.addressLine2)
+			.then(res => dispatch(setGeoCoordinate(res.data.results[0].geometry.location)));
+	};
 	useEffect(() => {
 		if ((clinic && !form) || (clinic && form && clinic.id !== form.id)) {
 			setForm(clinic);
 		}
 	}, [form, clinic, setForm]);
 
-
 	function canBeSubmitted() {
 		return form.clinicName && form.clinicName.length > 0 && !_.isEqual(clinic, form);
 	}
-
-	// if ((!clinic || (clinic && routeParams.memberId !== clinic.id)) && routeParams.memberId !== 'new') {
-	// 	return <FuseLoading />;
-	// }
-
 	return (
 		<FusePageCarded
 			classes={{
@@ -175,6 +173,7 @@ function ClinicBranch(props) {
 										name="addressLine2"
 										value={form.addressLine2}
 										onChange={handleChange}
+										onBlur={e => getAddress(e)}
 										variant="outlined"
 										fullWidth
 									/>
@@ -235,8 +234,7 @@ function ClinicBranch(props) {
 								</Grid>
 							</Grid>
 						</div>
-
-					</ div>
+					</div>
 				)
 			}
 			innerScroll
@@ -244,4 +242,4 @@ function ClinicBranch(props) {
 	);
 }
 
-export default withReducer('ClinicBranchsApp', reducer)(ClinicBranch);
+export default withReducer('ClinicApp', reducer)(ClinicBranch);

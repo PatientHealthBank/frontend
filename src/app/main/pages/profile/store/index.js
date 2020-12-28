@@ -8,6 +8,7 @@ import parameters from './parameterSlice';
 import emergencyContact from './emergencyContactSlice';
 import intakeForm from './intakeFormSlice';
 
+import patientInformation from './patientInformationSlice';
 
 
 const reducer = combineReducers({
@@ -18,8 +19,8 @@ const reducer = combineReducers({
 	vaccines,
 	medicines,
 	parameters,
-	emergencyContact
-
+	emergencyContact,
+	patientInformation
 });
 
 export default reducer;
