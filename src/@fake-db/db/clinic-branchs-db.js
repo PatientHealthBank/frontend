@@ -8,37 +8,40 @@ const clinicBranchsDB = {
 			clinicName: 'Orthopedic Surgeon - Clinic 1',
 			zipcode: '',
 			number: '',
+			geoCordinates: [],
 			addressLine1: '1919  Saint Clair Street',
 			addressLine2: '1919  Saint Clair Street',
-			city:'Canton',
+			city: 'Canton',
 			state: 'Colorado',
-			telephone:'',
-			TaxId: ''			
+			telephone: '',
+			TaxId: ''
 		},
 		{
 			id: '2',
 			clinicName: 'Physical Therapist - Clinic 2',
 			zipcode: '',
 			number: '',
+			geoCordinates: [],
 			addressLine1: '1451  Timberbrook Lane',
 			addressLine2: '1451  Timberbrook Lane',
-			city:'San Francisco',
+			city: 'San Francisco',
 			state: 'Oklahoma',
-			telephone:'',
-			TaxId: ''			
+			telephone: '',
+			TaxId: ''
 		},
 		{
 			id: '3',
 			clinicName: 'Sports Medicine - Clinic 3',
 			zipcode: '',
 			number: '',
+			geoCordinates: [],
 			addressLine1: '3099  Park Street',
 			addressLine2: '3099  Park Street',
-			city:'Stamford',
+			city: 'Stamford',
 			state: 'Pennsylvania',
-			telephone:'',
-			TaxId: ''			
-		}			
+			telephone: '',
+			TaxId: ''
+		}
 	]
 };
 

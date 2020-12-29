@@ -258,7 +258,7 @@ function Member(props) {
 									<Grid container spacing={3}>
 										<Grid item xs={6}>
 											<FormControl id="meansTransport" className="mt-8 mb-16" component="fieldset">
-												<FormLabel component="legend">Clinic Branch</FormLabel>
+												<FormLabel component="legend">Clinic</FormLabel>
 												<RadioGroup aria-label="gender" id="meansTransport" name="meansTransport" value={form.meansTransport} onChange={handleChange}>
 													<FormControlLabel value="Own" control={<Radio />} label="Orthopedic Surgeon - Clinic 1" />
 													<FormControlLabel value="Uber" control={<Radio />} label="Physical Therapist - Clinic 2" />

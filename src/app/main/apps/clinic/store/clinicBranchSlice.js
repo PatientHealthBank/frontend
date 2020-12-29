@@ -2,13 +2,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import FuseUtils from '@fuse/utils';
 
-export const getClinicBranch = createAsyncThunk('ClinicBranchsApp/clinicBranch/getClinicBranch', async params => {
+export const getClinicBranch = createAsyncThunk('ClinicApp/clinicBranch/getClinicBranch', async params => {
 	const response = await axios.get('/api/clinic-branchs-app/clinicBranch', { params });
 	const data = await response.data;
 	return data;
 });
 
-export const saveClinicBranch = createAsyncThunk('ClinicBranchsApp/clinicBranch/saveClinicBranch', async clinic => {
+export const saveClinicBranch = createAsyncThunk('ClinicApp/clinicBranch/saveClinicBranch', async clinic => {
+	console.log('savando clinica',clinic)
 	const response = await axios.post('/api/clinic-branchs-app/clinicBranch/save', clinic);
 	const data = await response.data;
 
@@ -16,7 +17,7 @@ export const saveClinicBranch = createAsyncThunk('ClinicBranchsApp/clinicBranch/
 });
 
 const clinicBranchSlice = createSlice({
-	name: 'ClinicBranchsApp/clinic',
+	name: 'ClinicBranchs/clinic',
 	initialState: null,
 	reducers: {
 		newClinicBranch: {
@@ -29,12 +30,19 @@ const clinicBranchSlice = createSlice({
 					number: '',
 					addressLine1: '',
 					addressLine2: '',
-					city:'',
+					city: '',
+					geoCordinates: [0, 0],
 					state: '',
-					telephone:'',
+					telephone: '',
 					TaxId: ''
 				}
 			})
+		},
+		setGeoCoordinate: {
+			reducer: (state, action) => {
+				console.log('recebendo do reducer',action.payload)
+				state.geoCordinates = action.payload;
+			}
 		}
 	},
 	extraReducers: {
@@ -43,6 +51,6 @@ const clinicBranchSlice = createSlice({
 	}
 });
 
-export const { newClinicBranch } = clinicBranchSlice.actions;
+export const { newClinicBranch, setGeoCoordinate } = clinicBranchSlice.actions;
 
 export default clinicBranchSlice.reducer;
