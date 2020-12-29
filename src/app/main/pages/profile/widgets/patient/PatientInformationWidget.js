@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 function PatientInformationWidget(props) {
     const { t } = useTranslation();
     const { form, handleChange, setForm } = useForm();
-
+    
     const handleSubmit = () => {
         props.editPatientInformation(form.name, form.birthdate, form.ssn, form.phone, form.email, form.photoURL);
     }
@@ -62,7 +62,7 @@ function PatientInformationWidget(props) {
                     <TextField
                         className="mb-16"
                         type="text"
-                        disabled="true"
+                        disabled={ true }
                         name="email"
                         label="Email"
                         value={form.email}
@@ -152,7 +152,7 @@ function PatientInformationWidget(props) {
                         className="mb-16"
                         type="text"
                         name="email"
-                        disabled="true"
+                        disabled={true}
                         label="Email"
                         value={form.email}
                         InputProps={{

@@ -3,12 +3,9 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\fuse-layouts",
     "\\src\\app\\main",
-    "\\src\\app\\main\\pages",
-    "\\src\\app\\main\\pages\\profile",
-    "\\src\\app\\main\\pages\\profile\\widgets\\patient"
+    "\\src\\app\\main\\pages"
   ],
-  "SelectedNode": "\\src\\app\\main\\pages\\profile\\store",
+  "SelectedNode": "\\src\\app\\main\\pages\\profile",
   "PreviewInSolutionExplorer": false
 }
