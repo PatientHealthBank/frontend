@@ -7,7 +7,7 @@ const AppointmentsAppConfig = {
 	},
 	routes: [
 		{
-			path: '/appointment/:productId',
+			path: '/appointment/:appointmentId',
 			component: React.lazy(() => import('./appointment/Appointment'))
 		},
 		{

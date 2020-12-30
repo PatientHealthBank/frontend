@@ -1,16 +1,61 @@
 import _ from '@lodash';
 import FormControl from '@material-ui/core/FormControl';
-import Icon from '@material-ui/core/Icon';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import Rating from '@material-ui/lab/Rating';
 import InputLabel from '@material-ui/core/InputLabel';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import LabelsDialog from '../../../my-diary/dialogs/labels/LabelsDialog';
+import NoteDialog from '../../../my-diary/dialogs/note/NoteDialog';
+import NewNoteSpecialty from '../../../my-diary/NewNoteSpecialty';
 import clsx from 'clsx';
+import NoteList from '../../../my-diary/NoteList';
+import Switch from '@material-ui/core/Switch';
 import React, { useEffect, useRef, useState } from 'react';
 import Comments from '../Comments';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { orange } from '@material-ui/core/colors';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
+import { useSelector } from 'react-redux';
+import { openLabelsDialog, selectLabels } from '../../../my-diary/store/labelsSlice';
 
+
+
+const useStyle = makeStyles({
+	rating: {
+		"& .MuiRating-iconFilled ": {
+			color: ({ color }) => `${color}`
+		}
+	}
+});
+
+const StyledRating = ({
+	component: ComponentProp = Rating,
+	children,
+	name,
+	color,
+	defaultValue,
+	getLabelText,
+	disabled,
+	readOnly,
+	IconContainerComponent,
+	onChange
+}) => {
+	const classes = useStyle({ color });
+	return <Rating className={classes.ratingDepressed}
+		name={name}
+		defaultValue={defaultValue}
+		disabled={disabled}
+		readOnly={readOnly}
+		getLabelText={getLabelText}
+		IconContainerComponent={IconContainerComponent}
+		onChange={onChange}
+	>{children}</Rating>;
+};
 
 const useStyles = makeStyles(theme => ({
     typeIcon: {
@@ -71,144 +116,281 @@ const useStyles = makeStyles(theme => ({
         marginLeft: '5px'
     },
 }));
-const dummyData = [
-    {
-        message: "I want to check, the pain that i have been feeling, and ai justs don’t know what’s happening ....",
-        date: "2020-01-19 08:22 pm",
-        user: 1
-    },
-    {
-        message: "I checked the new exams and they're all OK",
-        date: "2020-01-20 04:30 pm",
+const customIcons = {
+	1: {
+		icon: <SentimentVeryDissatisfiedIcon />,
+		label: 'Very Dissatisfied'
+	},
+	2: {
+		icon: <SentimentDissatisfiedIcon />,
+		label: 'Dissatisfied'
+	},
+	3: {
+		icon: <SentimentSatisfiedIcon />,
+		label: 'Neutral'
+	},
+	4: {
+		icon: <SentimentSatisfiedAltIcon />,
+		label: 'Satisfied'
+	},
+	5: {
+		icon: <SentimentVerySatisfiedIcon />,
+		label: 'Very Satisfied'
+	},
+};
+function IconContainer(props) {
+	const { value, ...other } = props;
+	return <span {...other}>{customIcons[value].icon}</span>;
+}
 
-        user: 2
-    },
-    {
-        message: "This should be in left again",
-        date: "2020-01-20 01:20 pm",
-
-        user: 2
-    },
-    {
-        message: "I realized that the pain are strong when i climb the stairs....",
-        date: "2020-01-21 02:20 pm",
-        user: 1
-    },
-    {
-        message: "I want to check, the pain that i have been feeling, and ai justs don’t know what’s happening ....",
-        date: "2020-01-23 09:20 am",
-
-        user: 1
-    },
-    {
-        message: "I checked the new exams and they're all OK",
-        date: "2020-01-23 09:20 am",
-
-        user: 2
-    },
-    {
-        message: "This should be in left again",
-        date: "2020-01-23 09:20 am",
-
-        user: 2
-    },
-    {
-        message: "I realized that the pain are strong when i climb the stairs....",
-        date: "2020-01-23 09:20 am",
-
-        user: 1
-    },
-    {
-        message: "I want to check, the pain that i have been feeling, and ai justs don’t know what’s happening ....",
-        date: "2020-01-23 09:20 am",
-
-        user: 1
-    },
-    {
-        message: "I checked the new exams and they're all OK",
-        date: "2020-01-23 09:20 am",
-
-        user: 2
-    },
-    {
-        message: "This should be in left again",
-        date: "2020-01-23 09:20 am",
-
-        user: 2
-    },
-    {
-        message: "I realized that the pain are strong when i climb the stairs....",
-        date: "2020-01-23 09:20 am",
-
-        user: 1
-    }
-];
 function AppointmentTopics(props) {
-    const AlwaysScrollToBottom = () => {
-        const elementRef = useRef();
-        useEffect(() => elementRef.current.scrollIntoView());
-        return <div ref={elementRef} />;
-    };
+    const routeParams = {readOnly : false}
+    routeParams.readOnly = false
     const classes = useStyles(props);
-    const theme = useTheme();
-    const [comment, setComment] = useState("");
-    const [comments, setComments] = useState(dummyData);
+    const [rating, setRating] = useState(4);
+    const [state, setState] = React.useState({
+        MyDiagnosis: true,
+        HowcanIavoidsurgery: false,
+        Possibilityofsurgery: true,
+        Whathappensaftermyprocedure: true,
+        Myexerciseroutine: true,
+        Returntosport: false,
+        Alteredsleepcycle: false,
+        Fearofreinjury: true,
+        Ihurtaftermylastvisit: true,
+        GoodvsBadpain: false,
+        Congestion: false,
+    });
+	const handleChangeCheckBox = (event) => {
+		setState({ ...state, [event.target.name]: event.target.checked });
+	};    
+	const onRatingChange = (value) => {
+		if (value === 1) {
+			setColor("#ff2111")
+		}
+		if (value === 2) {
+			setColor("#ff8511")
+		}
+		if (value === 3) {
+			setColor("#ffda00")
+		}
+		if (value === 4) {
+			setColor("#90d83a")
+		}
+		if (value === 5) {
+			setColor("#1fd418")
+		}
+		setRating(value)
 
-    function formatAMPM(date) {
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var ampm = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        var strTime = hours + ':' + minutes + ' ' + ampm;
-        return strTime;
     }
+    const labels = useSelector(selectLabels);
+	const [color, setColor] = useState("#123123");;
+    const label = labels.find(item=> item.name == props.topics.specialty.description) 
+    console.log(label)
 
     return (
         <div>
-            <div className="rounded-lg shadow-xl flex flex-col pt-16 px-16 ltr:pl-56 rtl:pr-56 pb-40 overflow-scroll" style={{ height: '50vh', background: '#24aae007', border: '1px solid #00000044' }}>
-                <Comments dummyData={comments}></Comments>
-                <AlwaysScrollToBottom />
-            </div>
-            <div style={{ marginTop: "1vh" }}>
-                <FormControl className={clsx(classes.margin, classes.textField)} style={{ width: '99%' }} variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">Type your message ...</InputLabel>
-                    <OutlinedInput
-                        className="mt-8 mb-16"
-                        label="Extra Shipping Fee"
-                        id="extraShippingFee"
-                        name="extraShippingFee"
-                        onChange={(event) => setComment(event.target.value)}
-                        value={comment}
-                        variant="outlined"
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    edge="end"
-                                    onClick={() => {
-                                        var data = new Date();
-                                        var newComment =
-                                        {
-                                            message: comment,
-                                            date: `${data.getFullYear()}-${data.getMonth()}-${data.getDate()} ${formatAMPM(data)}`,
-                                            user: 1
-                                        }
-                                        setComments([...comments, newComment])
-                                    }}
-                                >
-                                    <Icon>
-                                        send
-                            </Icon>
-                                </IconButton>
-                            </InputAdornment>
-                        }
-                        fullWidth
-                    />
-                </FormControl>
-            </div>
-        </div>
+								<Grid container spacing={3}>
+									<Grid item xs={12} sm={12}>
+										<Grid container spacing={3}>
+											<Grid item xs={12} sm={6}>
+													<h2>My Notes</h2>
+													{!routeParams.readOnly &&
+														<NewNoteSpecialty description="Take a note"
+															specialties={[label?.handle]} />}
+                                                    <NoteList readOnly={routeParams.readOnly}
+                                                    paramsLabel={{
+														params: {
+															id: "labels",
+                                                            labelHandle: label?.handle,
+															labelId: label?.id,                             
+														}
+													}}
+                                                    />
+													<NoteDialog />
+													<LabelsDialog />
+											</Grid>
+											<Grid item xs={12} sm={6}>
+
+													<h2> Provider Notes </h2>
+													{routeParams.readOnly &&
+														<NewNoteSpecialty description="Take a note"
+															specialties={['sportsmedicine', 'providernote']} />}
+													<NoteList readOnly={!routeParams.readOnly} paramsLabel={{
+														params: {
+															id: "labels",
+                                                            labelHandle: label?.handle,
+															labelId: label?.id,                             
+														}
+													}} />
+													<NoteDialog />
+													<LabelsDialog />
+
+											</Grid>
+
+										</Grid>
+									</Grid>
+
+									<Grid item xs={12} sm={5}>
+										<h2> Main Topics</h2> <br />
+										<Grid container spacing={3} direction="column">
+											<Grid container spacing={3} >
+												<Grid item xs={12} sm={6}>
+													<FormControlLabel
+														control={
+															<Switch
+																checked={state.Mydiagnosis}
+																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
+																name="Mydiagnosis"
+																inputProps={{ 'aria-label': 'secondary checkbox' }}
+
+															/>
+														}
+														label="Diagnosis"
+													/>
+													<FormControlLabel
+														control={
+															<Switch
+																checked={state.Possibilityofsurgery}
+																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
+																name="Possibilityofsurgery"
+																inputProps={{ 'aria-label': 'secondary checkbox' }}
+
+															/>
+														}
+														label="Possibility of surgery"
+													/>
+													<FormControlLabel
+														control={
+															<Switch
+																checked={state.HowcanIavoidsurgery}
+																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
+																name="HowcanIavoidsurgery"
+																inputProps={{ 'aria-label': 'secondary checkbox' }}
+
+															/>
+														}
+														label="How can I avoid surgery"
+													/>
+													<FormControlLabel
+														control={
+															<Switch
+																checked={state.Whathappensaftermyprocedure}
+																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
+																name="Whathappensaftermyprocedure"
+																inputProps={{ 'aria-label': 'secondary checkbox' }}
+
+															/>
+														}
+														label="What happens after my procedure"
+													/>
+													<FormControlLabel
+														control={
+															<Switch
+																checked={state.Myexerciseroutine}
+																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
+																name="Myexerciseroutine"
+																inputProps={{ 'aria-label': 'secondary checkbox' }}
+
+															/>
+														}
+														label="Exercise routine"
+													/>
+												</Grid>
+												<Grid item xs={12} sm={6} direction="column">
+													<FormControlLabel
+														control={
+															<Switch
+																checked={state.Returntosport}
+																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
+																name="Returntosport"
+																inputProps={{ 'aria-label': 'secondary checkbox' }}
+
+															/>
+														}
+														label="Return to sport"
+													/>
+													<FormControlLabel
+														control={
+															<Switch
+																checked={state.Alteredsleepcycle}
+																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
+																name="Alteredsleepcycle"
+																inputProps={{ 'aria-label': 'secondary checkbox' }}
+
+															/>
+														}
+														label="Altered sleep cycle"
+													/>
+													<FormControlLabel
+														control={
+															<Switch
+																checked={state.Fearofreinjury}
+																onChange={(event) => routeParams || handleChangeCheckBox(event)}
+																name="Fearofreinjury"
+																inputProps={{ 'aria-label': 'secondary checkbox' }}
+
+															/>
+														}
+														label="Fear of reinjury"
+													/>
+													<FormControlLabel
+														control={
+															<Switch
+																checked={state.Ihurtaftermylastvisit}
+																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
+																name="Ihurtaftermylastvisit"
+																inputProps={{ 'aria-label': 'secondary checkbox' }}
+
+															/>
+														}
+														label=" I hurt after my last visit"
+													/>
+													<FormControlLabel
+														control={
+															<Switch
+																checked={state.GoodvsBadpain}
+																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
+																name="GoodvsBadpain"
+																inputProps={{ 'aria-label': 'secondary checkbox' }}
+
+															/>
+														}
+														label="Good vs Bad pain"
+													/>
+												</Grid>
+											</Grid>
+											<Grid item xs={10} sm={10} container justify="center" alignItems="center">
+												<FormControlLabel
+													className={classes.ratingSize}
+													control={
+														<StyledRating
+															color={color}
+															name="painFlareUp"
+															defaultValue={rating}
+															readOnly={routeParams.readOnly}
+															onChange={(event, newValue) => {
+																onRatingChange(newValue);
+															}}
+															getLabelText={(value) => customIcons[value].label}
+															IconContainerComponent={IconContainer}
+														/>
+													}
+													labelPlacement={'top'}
+													label="Pain flare up (select your pain level) "
+												/>
+												{!routeParams.readOnly &&
+													<NewNoteSpecialty description="Please describe what you were doing when you experienced pain (i.e. Shoveling snow, playing with my kids, sports (which one), doing laundry, gardening, or  describe)"
+														specialties={[label?.handle, 'pain']} />}
+											</Grid>
+										</Grid>
+
+
+
+									</Grid>
+								</Grid>
+
+							</div>
     );
 }
 

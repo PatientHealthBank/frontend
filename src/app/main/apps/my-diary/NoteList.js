@@ -6,6 +6,11 @@ import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import NoteListItem from './NoteListItem';
 import { selectNotes } from './store/notesSlice';
+import reducer from './store';
+import withReducer from 'app/store/withReducer';
+
+
+
 
 function NoteList(props) {
 	const notes = useSelector(selectNotes);
@@ -14,10 +19,12 @@ function NoteList(props) {
 
 	const [filteredData, setFilteredData] = useState(null);
 
+
 	useEffect(() => {
 		function filterData() {
-			const { params } = props.match;
+			const { params } = props.paramsLabel || props.match;
 			const { id, labelId } = params;
+			console.log(params)
 
 			let data = notes;
 
@@ -86,4 +93,5 @@ function NoteList(props) {
 	);
 }
 
-export default withRouter(NoteList);
+export default withReducer('notesApp', reducer)(withRouter(NoteList));
+
