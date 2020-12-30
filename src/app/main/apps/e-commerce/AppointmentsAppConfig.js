@@ -7,8 +7,8 @@ const AppointmentsAppConfig = {
 	},
 	routes: [
 		{
-			path: '/apps/e-commerce/appointments/:productId/:productHandle?',
-			component: React.lazy(() => import('./product/Product'))
+			path: '/appointment/:productId',
+			component: React.lazy(() => import('./appointment/Appointment'))
 		},
 		{
 			path: '/appointments',

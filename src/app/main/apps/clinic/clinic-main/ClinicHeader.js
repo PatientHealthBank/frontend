@@ -5,9 +5,9 @@ import { withRouter } from "react-router";
 import React from 'react';
 
 
-function ClinicBranchsHeader(props) {
+function ClinicHeader(props) {
 	const handleAddClinic = () =>{
-		props.history.push(`/apps/clinic/clinicBranchs/new`);
+		props.history.push(`/apps/clinic-main/new`);
 	}
 
 	return (
@@ -28,4 +28,4 @@ function ClinicBranchsHeader(props) {
 	);
 }
 
-export default withRouter(ClinicBranchsHeader);
+export default withRouter(ClinicHeader);

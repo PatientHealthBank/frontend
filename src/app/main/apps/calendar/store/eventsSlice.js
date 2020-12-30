@@ -13,7 +13,6 @@ export const getEvents = createAsyncThunk('calendarApp/events/getEvents', async 
 	var user = getState().auth.user; 
 	const response = await phbApi().get('/event/list/'+user.currentUser.id);
 	const data = await response.data;
-	console.log(data)
 	var events = data.map(event=>({
 		id:event.id,
 		title:event.title,

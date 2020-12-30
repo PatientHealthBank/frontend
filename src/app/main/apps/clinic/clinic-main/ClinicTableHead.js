@@ -43,7 +43,7 @@ const rows = [
 	}
 ];
 
-function ClinicBranchsTableHead(props) {
+function ClinicTableHead(props) {
 
 	const createSortHandler = property => event => {
 		props.onRequestSort(event, property);
@@ -85,4 +85,4 @@ function ClinicBranchsTableHead(props) {
 	);
 }
 
-export default ClinicBranchsTableHead;
+export default ClinicTableHead;

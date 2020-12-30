@@ -91,12 +91,12 @@ const navigationConfig = [
 				url: '/apps/clinic/members'
 			},
 			{
-				id: 'clinicbranchs',
-				title: 'Clinic Branches',
+				id: 'clinic',
+				title: 'Clinic',
 				translate: 'CLINICBRANCHES',
 				type: 'item',
 				icon: 'business',
-				url: '/apps/clinic/clinicbranchs'
+				url: '/apps/clinic-main'
 			}
 		]
 	},

@@ -3,6 +3,7 @@ import { useForm, useDeepCompareEffect } from '@fuse/hooks';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
+import FuseLoading from '@fuse/core/FuseLoading';
 import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -15,8 +16,17 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
+
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
+import reducer from '../../../pages/profile/store';
+import {setIntakeForm} from '../../../pages/profile/store/intakeFormSlice';
+
+import withReducer from 'app/store/withReducer';
+import { withRouter } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import phbApi from 'app/services/phbApi'
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
 const useStyles = makeStyles({
     layoutRoot: {}
@@ -42,10 +52,11 @@ const intakeForm = {
 
 function IntakeForm(props) {
     const dispatch = useDispatch();
+    const [state, setState] = React.useState({});
+    const intakeForm = useSelector(({ ProfilesApp }) => ProfilesApp.intakeForm);
 
     const theme = useTheme();
     const classes = useStyles(props);
-    const { form, handleChange, setForm } = useForm(null);
     const routeParams = useParams();
 
     useDeepCompareEffect(() => {
@@ -63,13 +74,41 @@ function IntakeForm(props) {
 
 
     useEffect(() => {
-        if ((intakeForm && !form) || (intakeForm && form && intakeForm.id !== form.id)) {
-            setForm(intakeForm);
+        if (intakeForm.answers) {
+            var responses = intakeForm.answers.reduce((acc, item) => {
+                acc[item.question.description] = { value: item.answer, id: item.id }
+                return acc
+            }, {})
+            console.log(responses)
+            setState(responses)
         }
-    }, [form, setForm]);
+    },[intakeForm.answers]);
 
     function goToAppointmens() {
         props.history.push(`/appointments`);
+    }
+    const handleChangeInput = (event, description, id) => {
+        console.log({ ...state, [description]: { value: event.target.value, id } })
+        setState({ ...state, [description]: { value: event.target.value, id } })
+    }
+    const handleChangeCheckBox = (event, description, id) => {
+        console.log({ ...state, [description]: { value: event.target.checked ? "1" : "0", id } })
+
+        setState({ ...state, [description]: { value: event.target.checked ? "1" : "0", id } })
+    }
+    const saveIntakeForm = () => {
+        var data = []
+        for (var item in state) {
+            data.push(state[item])
+        }
+        dispatch(openLoading())
+        phbApi().post("patient/PatientIntakeform/" + intakeForm.id, data).then(res=>{
+            dispatch(closeLoading())
+            setState({})
+            dispatch(setIntakeForm({}))
+            props.history.push(`/pages/profile/profile-medical-history`);
+        })
+
     }
 
     return (
@@ -78,7 +117,6 @@ function IntakeForm(props) {
                 root: classes.layoutRoot
             }}
             header={
-                form && (
                     <div className="flex flex-1 w-full items-center justify-between">
                         <div className="flex flex-col items-start max-w-full">
                             <Typography
@@ -106,25 +144,24 @@ function IntakeForm(props) {
                             className="whitespace-no-wrap normal-case"
                             variant="contained"
                             color="secondary"
-                            onClick={goToAppointmens}
+                            onClick={saveIntakeForm}
                         >
                             Save
 							</Button>
                     </div>
-                )
             }
             content={
-                form && (<div className="p-16 sm:p-24">
-                    <div>
+                (<div className="p-16 sm:p-24">
+                    {intakeForm && intakeForm.intakeform ?( <div>
 
                         <div className="mt-8 mb-32" style={{ textAlign: 'center' }}>
                             <Typography variant="h4" className="text-blue-600">
-                                Medical History
-						    </Typography>
+                                {intakeForm.intakeform.intakeForm.description}
+                            </Typography>
                         </div>
 
                         {/* <Grid container spacing={3} alignContent="center" direction="column">
-                            <Grid item xs={4}>
+                            
                                 <div style={{ textAlign: 'center' }}>
                                     <Typography variant="h6">
                                         Email Notification
@@ -133,182 +170,69 @@ function IntakeForm(props) {
 
                             </Grid>
                         </Grid> */}
+                        <Grid container spacing={3}>
+                            {intakeForm.questions.map(item =>
+                            (
+                                <Grid key={item.id} item xs={4}>
+                                    {item.questionType != 1 && <Typography variant="h6" className="text-blue-600">
+                                        {item.description}
+                                    </Typography>}
+                                    {item.questionType == 3 ?
+                                        (
+                                            <FormControl fullWidth variant="outlined" className="mt-8 mb-16">
+                                             <InputLabel htmlFor="outlined-age-native-simple">{item.description}</InputLabel>
 
-                        <Typography variant="h6" className="text-blue-600">
-                            1 - Name of the Patient
-						</Typography>
-                        <Grid container spacing={2}>
-                            <Grid item xs={2}>
-                                <TextField
-                                    className="mt-8 mb-16"
-                                    error={form.firstName === ''}
-                                    required
-                                    label="First Name"
-                                    id="firstName"
-                                    name="firstName"
-                                    value={form.firstName}
-                                    onChange={handleChange}
-                                    variant="outlined"
-                                    fullWidth
-                                    autoFocus
-                                />
-                            </Grid>
-                            <Grid item xs={2}>
-                                <TextField
-                                    className="mt-8 mb-16"
-                                    error={form.lastName === ''}
-                                    required
-                                    label="Last Name"
-                                    id="lastName"
-                                    name="lastName"
-                                    value={form.lastName}
-                                    onChange={handleChange}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                            </Grid>
+                                                <Select
+                                                    native
+                                                    id={item.description}
+                                                    name={item.description}
+                                                    value={state[item.description]?.value}
+                                                    onChange={event => handleChangeInput(event, item.description, item.id)}
+                                                    label={item.description}
+                                                    inputProps={{
+                                                        id: 'outlined-age-native-simple',
+                                                    }}>
+                                                    <option value=""></option>
+                                                    {item.options.map(option =>
+                                                        <option value={option.value}>{option.description}</option>
+                                                    )}
+                                                </Select>
+                                            </FormControl>
+                                        )
+                                        :
+                                        item.questionType == 2 ? (
+                                            <TextField
+                                                className="mt-8 mb-16"
+                                                required
+                                                label={item.description}
+                                                id={item.description}
+                                                name={item.description}
+                                                value={state[item.description]?.value}
+                                                onChange={event => handleChangeInput(event, item.description, item.id)}
+                                                variant="outlined"
+                                                fullWidth
+                                                autoFocus
+                                            />
+                                        ) :
+                                            (
+                                                <FormControlLabel
+                                                    disabled={routeParams.readOnly}
+                                                    control={<Checkbox name={item.description}
+                                                        value={state[item.description]?.value == "1"}
+                                                        checked={state[item.description]?.value == "1"}
+                                                        onChange={event => handleChangeCheckBox(event, item.description, item.id)} />}
+                                                    label={item.description}
+                                                />)
+                                    }
+                                </Grid>
+                            )
+                            )}
                         </Grid>
-
-                        <Typography variant="h6" className="text-blue-600">
-                            2 - Phone Number
-						</Typography>
-                        <Grid container spacing={2}>
-                            <Grid item xs={1}>
-                                <TextField
-                                    className="mt-8 mb-16"
-                                    error={form.areaCode === ''}
-                                    required
-                                    label="Area Code"
-                                    id="areaCode"
-                                    name="areaCode"
-                                    value={form.areaCode}
-                                    onChange={handleChange}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid item xs={2}>
-                                <TextField
-                                    className="mt-8 mb-16"
-                                    error={form.phoneNumber === ''}
-                                    required
-                                    label="Phone Number"
-                                    id="phoneNumber"
-                                    name="phoneNumber"
-                                    value={form.phoneNumber}
-                                    onChange={handleChange}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                            </Grid>
-                        </Grid>
-
-                        <Typography variant="h6" className="text-blue-600">
-                            3 - Check the conditions that apply to you or to any members of your immediate relatives:
-						</Typography>
-                        <Grid container spacing={1}>
-                            <FormControl component="fieldset" className="mr-32">
-                                <FormGroup>
-                                    <FormControlLabel
-                                        control={<Checkbox name="asthma" checked={form.asthma} onChange={handleChange} />}
-                                        label="Asthma"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox name="cardiacDisease" checked={form.cardiacDisease} onChange={handleChange} />}
-                                        label="Cardiac Disease"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox name="hypertension" checked={form.hypertension} onChange={handleChange} />}
-                                        label="Hypertension"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox checked={form.psychiatricDisorder} onChange={handleChange} name="psychiatricDisorder" />}
-                                        label="Psychiatric Disorder"
-                                    />
-                                </FormGroup>
-                            </FormControl>
-
-                            <FormControl component="fieldset">
-                                <FormGroup>
-                                    <FormControlLabel
-                                        control={<Checkbox checked={form.epilepsy} onChange={handleChange} name="epilepsy" />}
-                                        label="Epilepsy"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox checked={form.cancer} onChange={handleChange} name="cancer" />}
-                                        label="Cancer"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox checked={form.diabetes} onChange={handleChange} name="diabetes" />}
-                                        label="Diabetes"
-                                    />
-                                </FormGroup>
-                            </FormControl>
-                        </Grid>
-
-                        <Typography variant="h6" className="text-blue-600 mt-16 mb-8">
-                            4 - Do you use or do you have history of using tobacco?
-						</Typography>
-                        <Grid container spacing={2}>
-                            <Grid item xs={2}>
-                                <FormControl fullWidth variant="outlined" className="mt-8 mb-16">
-                                    <InputLabel htmlFor="outlined-age-native-simple">Option</InputLabel>
-                                    <Select
-                                        native
-                                        id="historyTobacco"
-                                        name="historyTobacco"
-                                        value={form.historyTobacco}
-                                        onChange={handleChange}
-                                        label="History Tobacco"
-                                        inputProps={{
-                                            name: 'historyTobacco',
-                                            id: 'outlined-age-native-simple',
-                                        }}
-                                    >
-                                        <option aria-label="None" value="" />
-                                        <option value={1}>Yes</option>
-                                        <option value={2}>No</option>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-
-                        <Typography variant="h6" className="text-blue-600 mt-16 mb-8">
-                            5 - Do you have any medication allergies?
-						</Typography>
-                        <Grid container spacing={2}>
-                            <Grid item xs={3}>
-                                <FormControl id="medicationAlergies" className="mt-8 mb-16" component="fieldset">
-                                    <RadioGroup aria-label="gender" id="medicationAlergies" name="medicationAlergies" value={form.medicationAlergies} onChange={handleChange}>
-                                        <FormControlLabel value="no" control={<Radio />} label="No" />
-                                        <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                                        <FormControlLabel value="sure" control={<Radio />} label="Sure" />
-                                    </RadioGroup>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-
-                        <Typography variant="h6" className="text-blue-600 mt-16 mb-8">
-                            6 - How often do you consume alcohol?
-						</Typography>
-                        <Grid container spacing={2}>
-                            <Grid item xs={2}>
-                                <FormControl id="oftenAlcohol" className="mt-8 mb-16" component="fieldset">
-                                    <RadioGroup aria-label="gender" id="oftenAlcohol" name="oftenAlcohol" value={form.oftenAlcohol} onChange={handleChange}>
-                                        <FormControlLabel value="never" control={<Radio />} label="Never" />
-                                        <FormControlLabel value="daily" control={<Radio />} label="Daily" />
-                                        <FormControlLabel value="occasionally" control={<Radio />} label="Occasionally" />
-                                        <FormControlLabel value="weekly" control={<Radio />} label="Weekly" />
-                                        <FormControlLabel value="monthly" control={<Radio />} label="Monthly" />
-                                    </RadioGroup>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                    </div>
+                    </div>): (<></>)}
                 </ div >
                 )}
         />
     );
 }
 
-export default IntakeForm;
+export default withReducer('ProfilesApp', reducer)(withRouter(IntakeForm));

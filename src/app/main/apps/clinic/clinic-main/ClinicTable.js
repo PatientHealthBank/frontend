@@ -8,16 +8,15 @@ import TableRow from '@material-ui/core/TableRow';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { getClinicBranchs, selectClinicBranchs } from '../store/clinicBranchsSlice';
-import ClinicBranchsTableHead from './ClinicBranchsTableHead';
+import { getClinics, selectClinics,deleteClinic } from '../store/clinicsSlice';
+import ClinicBranchsTableHead from './ClinicTableHead';
 
-function ClinicBranchsTable(props) {
+function ClinicTable(props) {
 	const dispatch = useDispatch();
-	const clinicBranchs = useSelector(selectClinicBranchs);
-	const searchText = useSelector(({ ClinicBranchsApp }) => ClinicBranchsApp.clinicBranchs.searchText);
+	const clinic = useSelector(selectClinics);
 
 	const [selected, setSelected] = useState([]);
-	const [data, setData] = useState(clinicBranchs);
+	const [data, setData] = useState(clinic);
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const [order, setOrder] = useState({
@@ -26,17 +25,15 @@ function ClinicBranchsTable(props) {
 	});
 
 	useEffect(() => {
-		dispatch(getClinicBranchs());
+		console.log('realizando dispastch');
+		if (clinic.length == 0 && clinic) {
+			dispatch(getClinics());
+		}
 	}, [dispatch]);
 
 	useEffect(() => {
-		if (searchText.length !== 0) {
-			setData(_.filter(clinicBranchs, item => item.name.toLowerCase().includes(searchText.toLowerCase())));
-			setPage(0);
-		} else {
-			setData(clinicBranchs);
-		}
-	}, [clinicBranchs, searchText]);
+		setData(clinic);
+	}, [clinic]);
 
 	function handleRequestSort(event, property) {
 		const id = property;
@@ -60,8 +57,13 @@ function ClinicBranchsTable(props) {
 		setSelected([]);
 	}
 
+	function handleDelete(id, e){
+		console.log('handle delete',id)
+		dispatch(deleteClinic(id))
+	}
 	function handleClick(item) {
-		props.history.push(`/apps/clinic/clinicBranchs/${item.id}`);
+		console.log('handle click');
+		props.history.push(`/apps/clinic-main/${item.id}`);
 	}
 
 	function handleChangePage(event, value) {
@@ -113,27 +115,27 @@ function ClinicBranchsTable(props) {
 										tabIndex={-1}
 										key={n.id}
 										selected={isSelected}
-										onClick={event => handleClick(n)}
 									>
+										<TableCell className="p-4 md:p-16"  onClick={event => handleClick(n)} component="th" scope="row">
+											{n.companyName}
+										</TableCell>
 
-										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											{n.clinicName}
+										<TableCell className="p-4 md:p-16"  onClick={event => handleClick(n)} component="th" scope="row">
+											{n.address.addressLine1}
+										</TableCell>
+
+										<TableCell className="p-4 md:p-16" onClick={event => handleClick(n)} component="th" scope="row">
+											{n.address.city}
+										</TableCell>
+
+										<TableCell className="p-4 md:p-16" onClick={event => handleClick(n)} component="th" scope="row">
+											{n.address.state}
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											{n.addressLine1}
-										</TableCell>
-
-										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											{n.city}
-										</TableCell>
-
-										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											{n.state}
-										</TableCell>
-										
-										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											{n.actions}
+											<button onClick={e => handleDelete(n.id,e)} >
+												Remove
+											</button>
 										</TableCell>
 									</TableRow>
 								);
@@ -161,4 +163,4 @@ function ClinicBranchsTable(props) {
 	);
 }
 
-export default withRouter(ClinicBranchsTable);
+export default withRouter(ClinicTable);
