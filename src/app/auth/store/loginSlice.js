@@ -29,12 +29,14 @@ export const updateUser = user => async dispatch => {
 		.updateUser(user)
 		.then(result => {
 			console.log('resultado do update',result)
+			dispatch(closeLoading());
 			if (result) {
-				return dispatch(submitLogin({ email: user.email, password: user.currentUser.password }));
+				return dispatch(submitLogin({ email: user.currentUser.email, password: user.password }));
 			}
 		})
 		.catch(error => {
 			console.log('deu erro',error)
+			dispatch(closeLoading());
 
 		});
 };
