@@ -15,7 +15,7 @@ function AppointmentTab({appointment,handleChange}) {
         const [open, setOpen] = useState(false);
         const [dialogContent, setDialogContent] = useState([]);
         const [dialogTitle, setDialogTitle] = useState("Title");
-
+        console.log(appointment.caregiverAppointment)
         function handleMeansTranportChange(event) {
     
             switch (event.target.value) {

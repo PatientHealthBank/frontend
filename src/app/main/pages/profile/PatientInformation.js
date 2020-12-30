@@ -64,7 +64,7 @@ function PatientInformation() {
 
     const DeleteAddresstInformation = (id) => {
         dispatch(openLoading())
-        phbApi().post("/patient/address/delete/" + id).then(res => {
+        phbApi().delete("/patient/address/delete/" + id).then(res => {
             dispatch(closeLoading())
             dispatch(addressInfo())
         }).
@@ -100,7 +100,7 @@ function PatientInformation() {
 
     const DeleteInsurancePlan = (id) => {
         dispatch(openLoading())
-        phbApi().post("/InsurancePlan/delete/" + id).then(res => {
+        phbApi().delete("/InsurancePlan/delete/" + id).then(res => {
             dispatch(closeLoading())
             dispatch(insurancePlanInfo())
         }).

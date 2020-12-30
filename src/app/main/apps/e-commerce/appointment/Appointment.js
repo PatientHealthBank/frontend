@@ -1,4 +1,5 @@
 import FuseAnimate from '@fuse/core/FuseAnimate';
+import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import { useDeepCompareEffect, useForm } from '@fuse/hooks';
 import _ from '@lodash';
@@ -14,13 +15,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import reducer from '../store';
-import {getAppointment,updateAppointment} from '../store/appointmentSlice';
+import {getAppointment,updateAppointment, newAppointment} from '../store/appointmentSlice';
 import Avatar from '@material-ui/core/Avatar';
 import AppointmentTab from './tabs/AppointmentTab';
 import AppointmentTestResults from './tabs/AppointmentTestResults';
 import AppointmentTopics from './tabs/AppointmentTopics';
 import AppointmentPreparation from './tabs/AppointmentPreparation';
 import AppointmentCheckList from './tabs/AppointmentCheckList';
+import { getLabels } from 'app/main/apps/my-diary/store/labelsSlice';
+import { getNotes } from 'app/main/apps/my-diary/store/notesSlice';
+
 
 const useStyles = makeStyles(theme => ({
 	typeIcon: {
@@ -105,12 +109,17 @@ function Appointment(props) {
 	const [specialtyDescription, setSpecialty] = React.useState("Specialty")
 	const routeParams = useParams();
 
+	useEffect(() => {
+		dispatch(getNotes());
+		dispatch(getLabels());
+	}, [dispatch]);
+
 	useDeepCompareEffect(() => {
 		function updateAppointmentState() {
 			const { appointmentId } = routeParams;
 			
 			if (appointmentId === 'new') {
-				dispatch();
+				dispatch(newAppointment());
 			} else {
 				dispatch(getAppointment(routeParams));
 			}
@@ -132,7 +141,6 @@ function Appointment(props) {
 			console.log(form.meansTransport);
 			switch (form.meansTransport) {
 				case 'Uber':
-					console.log('Cheguei Uber');
 					setDialogTitle('Uber');
 					setDialogContent("This will generate a reminder/notification for you 2 hours before your appointment."
 						+ "This option doesn't book an Uber for you."
@@ -140,13 +148,11 @@ function Appointment(props) {
 					setOpen(true);
 					break;
 				case 'Taxi':
-					console.log('Cheguei Taxi');
 					setDialogTitle('Taxi');
 					setDialogContent('');
 					setOpen(true);
 					break;
 				case 'Caregiver':
-					console.log('Cheguei v');
 					setDialogTitle('Caregiver');
 					setDialogContent('');
 					setOpen(true);
@@ -230,14 +236,16 @@ function Appointment(props) {
 					classes={{ root: 'w-full h-64' }}
 				>
 					<Tab className="h-64 normal-case" label="Appointment" />
-					<Tab className="h-64 normal-case" label="Your Check List" />
+					{routeParams.appointmentId != 'new' && (
+					<><Tab className="h-64 normal-case" label="Your Check List" />
 					<Tab className="h-64 normal-case" label="Test Results" />
 					<Tab className="h-64 normal-case" label="Preparation for Your Appointment" />
-					<Tab className="h-64 normal-case" label="Topics for Discussion" />
+					<Tab className="h-64 normal-case" label="Topics for Discussion" /></>)
+					}
 				</Tabs>
 			}
 			content={
-				form && (
+				(form && (routeParams.appointmentId == "new" || form.specialty)) ? (
 					<div className="p-16 sm:p-24">
 						{tabValue === 0 && <AppointmentTab appointment={form} handleChange={handleChange}/>}
 						{tabValue === 1 && (
@@ -249,7 +257,7 @@ function Appointment(props) {
 						{tabValue === 3 && <AppointmentPreparation preparation ={form}/>}
 						{tabValue === 4 && <AppointmentTopics topics={form}/>}
 					</div>
-				)
+				) : (<FuseLoading></FuseLoading>)
 			}
 			innerScroll
 		/>

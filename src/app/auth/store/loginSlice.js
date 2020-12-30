@@ -3,23 +3,41 @@ import { showMessage } from 'app/store/fuse/messageSlice';
 import firebaseService from 'app/services/firebaseService';
 import jwtService from 'app/services/jwtService';
 import { setUserData } from './userSlice';
-import { openLoading, closeLoading }  from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
-
-
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
 export const submitLogin = ({ email, password }) => async dispatch => {
-	dispatch(openLoading())
+	dispatch(openLoading());
 	return jwtService
 		.signInWithEmailAndPassword(email, password)
 		.then(user => {
 			dispatch(setUserData(user));
-			dispatch(closeLoading())
+			dispatch(closeLoading());
 			return dispatch(loginSuccess());
 		})
 		.catch(error => {
-			console.log(error)
-			dispatch(closeLoading())
+			console.log(error);
+			dispatch(closeLoading());
 			return dispatch(loginError(error));
+		});
+};
+
+export const updateUser = user => async dispatch => {
+	console.log('atualizando user', user);
+	dispatch(openLoading());
+
+	return jwtService
+		.updateUser(user)
+		.then(result => {
+			console.log('resultado do update',result)
+			dispatch(closeLoading());
+			if (result) {
+				return dispatch(submitLogin({ email: user.currentUser.email, password: user.password }));
+			}
+		})
+		.catch(error => {
+			console.log('deu erro',error)
+			dispatch(closeLoading());
+
 		});
 };
 
@@ -52,7 +70,7 @@ export const submitLoginWithFireBase = ({ username, password }) => async dispatc
 			if (error.code === 'auth/invalid-api-key') {
 				dispatch(showMessage({ message: error.message }));
 			}
-			console.log(response)
+			console.log(response);
 
 			return dispatch(loginError(response));
 		});
@@ -60,6 +78,7 @@ export const submitLoginWithFireBase = ({ username, password }) => async dispatc
 
 const initialState = {
 	success: false,
+	firstAccess: false,
 	error: {
 		username: null,
 		password: null
@@ -74,7 +93,7 @@ const loginSlice = createSlice({
 			state.success = true;
 		},
 		loginError: (state, action) => {
-			console.log(action.payload)
+			console.log(action.payload);
 			state.success = false;
 			state.error = action.payload;
 		}

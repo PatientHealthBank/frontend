@@ -7,7 +7,7 @@ import React from 'react';
 
 function ClinicHeader(props) {
 	const handleAddClinic = () =>{
-		props.history.push(`/apps/clinic/clinicBranchs/new`);
+		props.history.push(`/apps/clinic-main/new`);
 	}
 
 	return (

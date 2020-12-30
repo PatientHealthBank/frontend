@@ -1,48 +1,109 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { showMessage } from 'app/store/fuse/messageSlice';
+import { getClinics } from './../store/clinicsSlice';
 import phbApi from 'app/services/phbApi';
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
-export const getClinic = createAsyncThunk(
-	'ClinicApp/clinic/getClinic',
-	async (params, { getState, dispatch }) => {
-		const { user } = getState().auth;
+const clinicAdapter = createEntityAdapter({});
+export const clinicModel = {
+	id: null,
+	companyName: '',
+	score: 0,
+	email: '',
+	phone: '',
+	taxId: '0',
+	isClinicBranch: false,
+	clinicTypeId: 1,
+	userId: 51,
+	isActive: true,
+	address: {
+		addressTypeId: 1,
+		addressLine1: '',
+		country: '',
+		city: '',
+		state: '',
+		zipCode: '',
+		geoCordinates: {
+			longitude: '0',
+			latitude: '0'
+		}
+	}
+};
 
-		const response = await phbApi().get(`/clinic/${user.uuid}`);
-		const data = await response.data;
-		return data;
-	// 		const response = await axios.get('/api/clinic-branchs-app/clinicBranchs');
-	// const data = await response.data;
-	// 		console.log('obtendo data',data)
+export const getClinic = createAsyncThunk('ClinicApp/clinic/getClinic', async ({ clinicId }, { dispatch }) => {
+	dispatch(openLoading());
+	return phbApi()
+		.get(`/clinic/${clinicId}`)
+		.then(response => {
+			dispatch(closeLoading());
+			dispatch(getClinics())
+			return response.data;
+		})
+		.catch(error => {
+			dispatch(showMessage({ message: error.message }));
+			dispatch(closeLoading());
+		});
+});
 
-	// return data;
-
+export const saveClinic = createAsyncThunk(
+	'ClinicApp/clinicBranch/saveClinicBranch',
+	async (clinic, { getState, dispatch }) => {
+		dispatch(openLoading());
+		return phbApi()
+			.post(`/clinic`, clinic)
+			.then(response => {
+				dispatch(closeLoading());
+				dispatch(getClinics())
+				return response.data;
+			})
+			.catch(error => {
+				dispatch(showMessage({ message: error.message }));
+				dispatch(closeLoading());
+			});
 	}
 );
 
-const clinicAdapter = createEntityAdapter({});
+export const updateClinic = createAsyncThunk(
+	'ClinicApp/clinicBranch/updateClinicBranch',
+	async (clinic, { getState, dispatch }) => {
+		dispatch(openLoading());
 
-export const { selectAll: selectClinic, selectById: selectClinicById } = clinicAdapter.getSelectors(
-	state => state.ClinicApp.clinic
+		return phbApi()
+			.put(`/clinic`, clinic)
+			.then(response => {
+				dispatch(closeLoading());
+				dispatch(getClinics())
+				return response.data;
+			})
+			.catch(error => {
+				dispatch(showMessage({ message: error.message }));
+				dispatch(closeLoading());
+			});
+
+	}
 );
 
 const clinicSlice = createSlice({
 	name: 'ClinicApp/clinic',
-	initialState: clinicAdapter.getInitialState({
-		searchText: ''
-	}),
+	initialState: null,
 	reducers: {
-		setclinicBranchsSearchText: {
+		setGeoCoordinate: {
 			reducer: (state, action) => {
-				state.searchText = action.payload;
-			},
-			prepare: event => ({ payload: event.target.value || '' })
+				state.geoCordinates = action.payload;
+			}
+		},
+		newClinic: {
+			reducer: (state, action) => action.payload,
+			prepare: event => ({ payload: clinicModel })
 		}
 	},
 	extraReducers: {
-		[getClinic.fulfilled]: clinicAdapter.addOne
+		[getClinic.fulfilled]: (state, action) => action.payload,
+		[saveClinic.fulfilled]: (state, action) => action.payload,
+		[updateClinic.pending]: (state, action) => action.payload
 	}
 });
 
-export const { setclinicSearchText } = clinicSlice.actions;
+export const { setGeoCoordinate, newClinic } = clinicSlice.actions;
 
 export default clinicSlice.reducer;

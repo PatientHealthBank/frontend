@@ -1,10 +1,13 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
-import axios from 'axios';
+import phbApi from 'app/services/phbApi';
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
-export const getMembers = createAsyncThunk('MembersApp/members/getMembers', async () => {
-	const response = await axios.get('/api/members-app/members');
-	const data = await response.data;
-
+export const getMembers = createAsyncThunk('MembersApp/members/getMembers', async (params, { getState, dispatch })  => {
+	dispatch(openLoading());
+	var user = getState().auth.user; 
+	const response = await phbApi().get('/provider/list/' + user.currentUser.id);
+	const data = await response.data.data;  
+	dispatch(closeLoading());
 	return data;
 });
 
