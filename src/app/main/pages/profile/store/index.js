@@ -6,10 +6,14 @@ import allergies from './allergiesSlice';
 import strength from './strengthSlice';
 import parameters from './parameterSlice';
 import emergencyContact from './emergencyContactSlice';
-import patientInformation from './patientInformationSlice';
+import intakeForm from './intakeFormSlice';
 
+import patientInformation from './patientInformationSlice';
+import insurancePlan from './insurancePlanSlice';
+import addressInformation from './addressInformationSlice';
 
 const reducer = combineReducers({
+	intakeForm,
 	allergies,
 	strength,
 	profile,
@@ -17,7 +21,9 @@ const reducer = combineReducers({
 	medicines,
 	parameters,
 	emergencyContact,
-	patientInformation
+	patientInformation,
+	insurancePlan,
+	addressInformation
 });
 
 export default reducer;
