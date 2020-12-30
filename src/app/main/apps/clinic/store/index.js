@@ -1,9 +1,11 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import clinic from './clinicSlice';
+import clinics from './clinicsSlice';
+import clinic from './clinicSlice'
 import members from './membersSlice';
 import member from './memberSlice';
 
 const reducer = combineReducers({
+	clinics,
 	clinic,
 	member,
 	members

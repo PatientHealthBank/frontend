@@ -96,7 +96,7 @@ const navigationConfig = [
 				translate: 'CLINICBRANCHES',
 				type: 'item',
 				icon: 'business',
-				url: '/apps/clinic'
+				url: '/apps/clinic-main'
 			}
 		]
 	},
