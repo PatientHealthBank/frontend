@@ -62,6 +62,20 @@ class JwtService extends FuseUtils.EventEmitter {
 		});
 	};
 
+	updateUser = data => {
+		return new Promise((resolve, reject) => {
+			phbApi().put('/user', data).then(response => {
+				console.log('response jwt',response)
+				if (response.data) {
+					console.log('resolvendo')
+					resolve(response.data);
+				} else {
+					reject(response.data);
+				}
+			}).catch(err=> reject({serverError:true}));
+		});
+	};
+
 	signInWithEmailAndPassword = (username, password) => {
 		return new Promise((resolve, reject) => {
 			phbApi()

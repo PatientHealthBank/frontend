@@ -78,7 +78,6 @@ function ClinicBranch(props) {
 			}
 		);
 
-		// .then(res => dispatch(setGeoCoordinate(res.data.results[0].geometry.location)));
 	};
 	useEffect(() => {
 		if ((clinic && !form) || (clinic && form && clinic.id !== form.id)) {

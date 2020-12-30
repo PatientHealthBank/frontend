@@ -9,20 +9,22 @@ import Register2PageConfig from './auth/register-2/Register2PageConfig';
 import Register3PageConfig from './auth/register-3/Register3PageConfig';
 import RegisterPageConfig from './auth/register/RegisterPageConfig';
 import ResetPassword2PageConfig from './auth/reset-password-2/ResetPassword2PageConfig';
-import ResetPasswordPageConfig from './auth/reset-password/ResetPasswordPageConfig';
+// import ResetPasswordPageConfig from './auth/reset-password/ResetPasswordPageConfig';
 import Error404PageConfig from './errors/404/Error404PageConfig';
 import Error500PageConfig from './errors/500/Error500PageConfig';
 import MaintenancePageConfig from './maintenance/MaintenancePageConfig';
 import ProfilePageConfig from './profile/ProfilePageConfig';
 import ClassicSearchPageConfig from './search/classic/ClassicSearchPageConfig';
 import ModernSearchPageConfig from './search/modern/ModernSearchPageConfig';
+import ResetPasswordPageConfig from '../login/first-access/ResetPasswordPageConfig';
 
 const pagesConfigs = [
 	LoginPageConfig,
 	RegisterPageConfig,
-	ResetPasswordPageConfig,
+	// ResetPasswordPageConfig,
 	ForgotPasswordPageConfig,
 	MailConfirmPageConfig,
+	ResetPasswordPageConfig,
 	LockPageConfig,
 	Login2PageConfig,
 	Login3PageConfig,
