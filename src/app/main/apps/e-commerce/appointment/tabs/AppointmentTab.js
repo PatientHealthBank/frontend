@@ -52,7 +52,8 @@ function AppointmentTab({appointment,handleChange}) {
                         label="Clinic"
                         id="clinic.companyName"
                         name="clinic.companyName"
-                        value={appointment.clinic?.companyName}
+                        disabled = {appointment.clinic === null? false:true}
+                        value={appointment.clinic === null? appointment.clinicName : appointment.clinic?.companyName}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth

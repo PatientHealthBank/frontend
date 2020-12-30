@@ -13,7 +13,6 @@ import withReducer from 'app/store/withReducer';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import InstructionsList from '../instructions/InstructionsList';
 import reducer from '../store';
 import {getAppointment,updateAppointment} from '../store/appointmentSlice';
 import Avatar from '@material-ui/core/Avatar';
@@ -21,6 +20,7 @@ import AppointmentTab from './tabs/AppointmentTab';
 import AppointmentTestResults from './tabs/AppointmentTestResults';
 import AppointmentTopics from './tabs/AppointmentTopics';
 import AppointmentPreparation from './tabs/AppointmentPreparation';
+import AppointmentCheckList from './tabs/AppointmentCheckList';
 
 const useStyles = makeStyles(theme => ({
 	typeIcon: {
@@ -80,6 +80,14 @@ const useStyles = makeStyles(theme => ({
 		height: theme.spacing(5),
 		marginLeft: '5px'
 	},
+	checkListItem: {
+		'&.completed': {
+			background: 'rgba(0,0,0,0.03)',
+			'& .todo-title, & .todo-notes': {
+				textDecoration: 'line-through'
+			}
+		}
+	}
 }));
 
 
@@ -115,7 +123,6 @@ function Appointment(props) {
 			setForm(appointment);
 		}
 	}, [form, appointment, setForm]);
-	console.log(form)
 
 	useEffect(() => {
 		if (form && form.specialty && specialtyDescription === "Specialty") {
@@ -235,7 +242,7 @@ function Appointment(props) {
 						{tabValue === 0 && <AppointmentTab appointment={form} handleChange={handleChange}/>}
 						{tabValue === 1 && (
 							<div>
-								<InstructionsList instructions={form.instructions} />
+								<AppointmentCheckList appointmentCheckList={form.appointmentCheckList} setForm={setForm} handleChange={handleChange} classes={classes} />
 							</div>
 						)}
 						{tabValue === 2 && <AppointmentTestResults testResults={form}/>}
