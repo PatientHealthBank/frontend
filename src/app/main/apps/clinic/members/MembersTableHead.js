@@ -23,31 +23,17 @@ const rows = [
 		colspan: 2
 	},
 	{
+		id: 'clinicalinterest',
+		align: 'left',
+		disablePadding: false,
+		label: 'Clinical Interest',
+		sort: true
+	},
+	{
 		id: 'email',
 		align: 'left',
 		disablePadding: false,
 		label: 'E-mail',
-		sort: true
-	},
-	{
-		id: 'occupation',
-		align: 'left',
-		disablePadding: false,
-		label: 'Occupation',
-		sort: true
-	},
-	{
-		id: 'profileType',
-		align: 'left',
-		disablePadding: false,
-		label: 'Profile Type',
-		sort: true
-	},
-	{
-		id: 'clinic',
-		align: 'left',
-		disablePadding: false,
-		label: 'Clinic',
 		sort: true
 	},
 	{

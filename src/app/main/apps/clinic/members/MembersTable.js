@@ -9,7 +9,12 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { getMembers, selectMembers } from '../store/membersSlice';
+import { deleteMember } from '../store/memberSlice';
 import MembersTableHead from './MembersTableHead';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 function MembersTable(props) {
 	const dispatch = useDispatch();
@@ -64,6 +69,10 @@ function MembersTable(props) {
 		props.history.push(`/apps/clinic/members/${item.id}`);
 	}
 
+	function handleDelete(item) {
+		dispatch(deleteMember(item.id));
+	}
+
 	function handleChangePage(event, value) {
 		setPage(value);
 	}
@@ -113,7 +122,6 @@ function MembersTable(props) {
 										tabIndex={-1}
 										key={n.id}
 										selected={isSelected}
-										onClick={event => handleClick(n)}
 									>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row">
@@ -122,24 +130,27 @@ function MembersTable(props) {
 										<TableCell className="p-4 md:p-16" component="th" scope="row">
 											{n.specialty}
 										</TableCell>
+
+										<TableCell className="p-4 md:p-16" component="th" scope="row">
+											{n.clinicalInterest}
+										</TableCell>
+
 										<TableCell className="p-4 md:p-16" component="th" scope="row">
 											{n.email}
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											{n.occupation}
-										</TableCell>
-
-										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											{n.profileType}
-										</TableCell>
-
-										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											{n.clinic}
-										</TableCell>
-
-										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											{n.actions}
+											<Tooltip title="Edit">
+												<IconButton onClick={ev => handleClick(n)} aria-label="delete">
+													<EditIcon />
+												</IconButton>
+											</Tooltip>
+											<Tooltip title="Delete">
+												<IconButton onClick={ev => handleDelete(n)} aria-label="delete">
+													<DeleteIcon />
+												</IconButton>
+												
+											</Tooltip>
 										</TableCell>
 									</TableRow>
 								);
