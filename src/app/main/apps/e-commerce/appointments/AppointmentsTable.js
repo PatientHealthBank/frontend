@@ -1,20 +1,86 @@
 import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import _ from '@lodash';
-import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Typography from '@material-ui/core/Typography';
-import { useTranslation } from "react-i18next";
-import React from 'react';
+import { getAppointments, selectAppointments } from '../store/appointmentsSlice';
+import AppointmentsTableHead from './AppointmentsTableHead';
 import AppointmentPriority from './AppointmentPriority';
+import CheckIn from '../../dashboards/dashboard/widgets/CheckIn';
+import { useTranslation } from "react-i18next";
+import { makeStyles } from '@material-ui/core/styles';
 
-function AppointmentsTable(props) {
+
+function AppointmentTable(props) {
 	const { t } = useTranslation();
+	const useStyles = makeStyles((theme) => ({
+		avatarMain: {
+			width: theme.spacing(5),
+			height: theme.spacing(5),
+			marginLeft: '5px'
+		},
+	}));
+	const classes = useStyles();
+
+	// const dispatch = useDispatch();
+	// const appointments = useSelector(selectAppointments);
+	// const searchText = useSelector(({ eCommerceApp }) => eCommerceApp.appointments.searchText);
+
+	// const [selected, setSelected] = useState([]);
+	// const [data, setData] = useState(appointments);
+	// const [page, setPage] = useState(0);
+	// const [rowsPerPage, setRowsPerPage] = useState(10);
+	// const [order, setOrder] = useState({
+	// 	direction: 'asc',
+	// 	id: null
+	// });
+
+	// useEffect(() => {
+	// 	dispatch(getAppointments());
+	// }, [dispatch]);
+
+	// useEffect(() => {
+	// 	if (searchText.length !== 0) {
+	// 		setData(_.filter(appointments, item => item.name.toLowerCase().includes(searchText.toLowerCase())));
+	// 		setPage(0);
+	// 	} else {
+	// 		setData(appointments);
+	// 	}
+	// }, [appointments, searchText]);
+
+	// function handleRequestSort(event, property) {
+	// 	const id = property;
+	// 	let direction = 'desc';
+
+	// 	if (order.id === property && order.direction === 'desc') {
+	// 		direction = 'asc';
+	// 	}
+
+	// 	setOrder({
+	// 		direction,
+	// 		id
+	// 	});
+	// }
+
+	// function handleSelectAllClick(event) {
+	// 	if (event.target.checked) {
+	// 		setSelected(data.map(n => n.id));
+	// 		return;
+	// 	}
+	// 	setSelected([]);
+	// }
+
+	function handleClick(item) {
+		props.history.push(`/appointment/${item.id}/`);
+	}
+
 	// function handleChangePage(event, value) {
 	// 	setPage(value);
 	// }
@@ -26,6 +92,7 @@ function AppointmentsTable(props) {
 		{
 			id: 'appointment',
 			title: 'Appointment',
+			colspan: 2,
 		},
 		{
 			id: 'doctorname',
@@ -49,64 +116,104 @@ function AppointmentsTable(props) {
 		}
 	];
 	return (
-		<Paper className="w-full rounded-8 shadow-1">
-			<div className="w-full flex flex-col">
-				<FuseScrollbars className="flex-grow overflow-x-auto">
-					<Table className="min-w-xl" aria-labelledby="tableTitle">
-						<TableHead>
-							<TableRow >
-								{columns.map((column,i) => (
-									<TableCell key={i} className="h3 px-12 font-bold">
-										{t(column.title)}
-									</TableCell>
-								))}
-							</TableRow>
+		<div className="w-full flex flex-col">
+			<FuseScrollbars className="flex-grow overflow-x-auto">
+				<Table className="min-w-xl" aria-labelledby="tableTitle">
+					<TableHead>
+						<TableRow >
+							{columns.map((column, i) => (
+								<TableCell key={i} className="h3 px-12 font-bold" colSpan={column.colspan ? column.colspan : 1}>
+									{t(column.title)}
+								</TableCell>
+							))}
+						</TableRow>
 
-						</TableHead>
+					</TableHead>
+					{/* <AppointmentsTableHead
+						numSelected={selected.length}
+						order={order}
+						onSelectAllClick={handleSelectAllClick}
+						onRequestSort={handleRequestSort}
+						rowCount={data.length}
+					/> */}
 
-						<TableBody>
-							{props.appointments.map((row,i) =>
-								<TableRow key={i}>
-									<TableCell className="p-4 md:p-16" component="th" scope="row" >
-										{/* { row.images.length > 0 && row.featuredImageId ? (
-									<Avatar className="mx-4" alt={row.name} src={row.featuredImageId} />		
+					<TableBody>
+						{props.appointments
+							// .orderBy(
+							// 	data,
+							// 	[
+							// 		o => {
+							// 			switch (order.id) {
+							// 				case 'categories': {
+							// 					return o.categories[0];
+							// 				}
+							// 				default: {
+							// 					return o[order.id];
+							// 				}
+							// 			}
+							// 		}
+							// 	],
+							// 	[order.direction]
+							// )
+							// .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+							.map((row, i) => {
+								// const isSelected = selected.indexOf(i) !== -1;
+								return (
+									<TableRow
+										className="h-64 cursor-pointer"
+										hover
+										role="checkbox"
+									// aria-checked={isSelected}
+									// tabIndex={-1}
+									// key={i}
+									// selected={isSelected}
+
+									>
+										<TableCell
+											className="w-52 px-16 md:px-0"
+											component="th"
+											scope="row"
+											padding="none"
+											onClick={event => handleClick(row)}
+										>
+											{row.provider.imageUrl == null && row.provider.imageUrl == ""?(
+												<Avatar className="md:mx-4" alt="user photo" src={row.provider.imageUrl} />
 											) : (
-												<img
-													className="w-full block rounded"
-													src="assets/images/ecommerce/product-image-placeholder.png"
-													alt={row.name}
-												/>
-											)} */}
-										{t(row.specialty.description)}
-									</TableCell>
+													<Avatar className={classes.avatarMain} >{row.provider.name[0]}</Avatar>
+												)}
+										</TableCell>
 
-									<TableCell className="p-4 md:p-16" component="th" scope="row" >
-										{t(row.provider.name)}
-									</TableCell>
+										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
+											{t(row.specialty.description)}
+										</TableCell>
 
-									<TableCell className="p-4 md:p-16" component="th" scope="row" >
-										{t(row.patient.name)}
-									</TableCell>
+										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
+											{t(row.provider.name)}
+										</TableCell>
 
-									<TableCell className="p-4 md:p-16" component="th" scope="row" >
-										{new Date(row.createDate).toLocaleString()}
-									</TableCell>
+										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
+											{t(row.patient.name)}
+										</TableCell>
 
-									<TableCell className="p-4 md:p-16" component="th" scope="row" >
-										<AppointmentPriority name={"Ready"} />
-									</TableCell>
+										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
+											{new Date(row.createDate).toLocaleString()}
+										</TableCell>
 
-									<TableCell className="p-4 md:p-16" component="th" scope="row" >
-										{
-											// <CheckIn specialty={n.specialtyDescription} date={n.date} disabled={n.priority === "Pending"}/>
-										}
-									</TableCell>
-								</TableRow>
-							)}
-						</TableBody>
-					</Table>
-				</FuseScrollbars>
-				{/* <TablePagination
+										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
+											{/* <AppointmentPriority name={n.priority} /> */}
+											<AppointmentPriority name={"Ready"} />
+										</TableCell>
+										<TableCell className="p-4 md:p-16" component="th" scope="row">
+											{/* <CheckIn specialty={n.specialtyDescription} date={n.date} disabled={n.priority === "Pending"}/> */}
+										</TableCell>
+									</TableRow>
+								);
+							})}
+					</TableBody>
+				</Table>
+			</FuseScrollbars>
+
+			{/* <TablePagination
 				className="flex-shrink-0 border-t-1"
 				component="div"
 				count={data.length}
@@ -121,9 +228,8 @@ function AppointmentsTable(props) {
 				onChangePage={handleChangePage}
 				onChangeRowsPerPage={handleChangeRowsPerPage}
 			/> */}
-			</div>
-		</Paper>
+		</div>
 	);
 }
 
-export default withRouter(AppointmentsTable);
+export default withRouter(AppointmentTable);
