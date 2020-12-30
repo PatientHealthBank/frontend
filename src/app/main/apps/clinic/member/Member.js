@@ -9,7 +9,7 @@ import { orange } from '@material-ui/core/colors';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
-import Input from '@material-ui/core/Input';
+import FuseLoading from '@fuse/core/FuseLoading';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -23,8 +23,13 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import reducer from '../store';
-import { getMember, newMember, saveMember,updateMember } from '../store/memberSlice';
+import { getMember, newMember, saveMember, updateMember } from '../store/memberSlice';
 import phbApi from '../../../../services/phbApi';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import {
+	KeyboardTimePicker
+} from '@material-ui/pickers';
 
 const useStyles = makeStyles(theme => ({
 	formControl: {
@@ -123,13 +128,7 @@ function Member(props) {
 
 	useEffect(() => {
 		if ((member && !form) || (member && form && member.id !== form.id)) {
-			phbApi().get('/specialty/List').then(res => {
-				setSpecialties(res.data)
-				phbApi().get('/clinicalinterest/BySpecialties', { params: { specialty: member.specialty.join() } }).then(res => {
-					setClinicalInterest(res.data);
-					setForm(member);
-				});
-			});
+			setForm(member);
 		}
 
 		if (form && form.specialty) {
@@ -209,7 +208,7 @@ function Member(props) {
 				)
 			}
 			content={
-				form && (
+				(form && (routeParams.membersId == "new" || form.name)) ? (
 					<div className="p-16 sm:p-24">
 						<div>
 							<Grid container spacing={3}>
@@ -294,18 +293,6 @@ function Member(props) {
 										</Grid>
 									</Grid>
 
-									<TextField
-										className="mb-16"
-										id="appointmentInterval"
-										fullWidth
-										name="appointmentInterval"
-										type="number"
-										label="Appointment Interval"
-										value={form.appointmentInterval}
-										onChange={handleChange}
-										variant="outlined"
-										required
-									/>
 									<Grid container spacing={3}>
 										<Grid item xs={6}>
 											<FormControl fullWidth variant="outlined" className="mb-16">
@@ -345,6 +332,63 @@ function Member(props) {
 										</Grid>
 									</Grid>
 									<Typography className="text-16 sm:text-20 truncate mb-16">
+										{'Appointments'}
+									</Typography>
+
+									<Grid container spacing={3}>
+										<Grid item xs={6}>
+											<TextField
+												className="mb-16"
+												id="startJob"
+												fullWidth
+												name="startJob"
+												type="time"
+												label="Start Job"
+												value={form.startJob}
+												onChange={handleChange}
+												variant="outlined"
+												required
+											/>
+										</Grid>
+										<Grid item xs={6}>
+											<TextField
+												className="mb-16"
+												id="endJob"
+												fullWidth
+												name="endJob"
+												type="time"
+												label="End Job"
+												value={form.endJob}
+												onChange={handleChange}
+												variant="outlined"
+												required
+											/>
+										</Grid>
+									</Grid>
+									<Grid container spacing={3}>
+										<Grid item xs={6}>
+											<TextField
+												className="mb-16"
+												id="appointmentInterval"
+												fullWidth
+												name="appointmentInterval"
+												type="number"
+												label="Appointment Interval"
+												value={form.appointmentInterval}
+												onChange={handleChange}
+												variant="outlined"
+												required
+											/>
+										</Grid>
+										<Grid item xs={6}>
+											<FormControlLabel
+												control={<Switch checked={form.telemedicine} onChange={handleChange} id="telemedicine"
+													name="telemedicine" />}
+												label="Telemedicine"
+											/>
+										</Grid>
+									</Grid>
+									<Typography className="text-16 sm:text-20 truncate mb-16">
 										{'Specialties'}
 									</Typography>
 
@@ -366,7 +410,7 @@ function Member(props) {
 													renderValue={(selected) => (
 														<div className={classes.chips}>
 															{selected.map((value) => (
-																<Chip key={value} label={specialties.find(x => x.id === value).description} className={classes.chip} />
+																<Chip key={value} label={specialties.find(x => x.id === value)?.description} className={classes.chip} />
 															))}
 														</div>
 													)}
@@ -374,7 +418,7 @@ function Member(props) {
 												>
 													{specialties.map((specialty) => (
 														<MenuItem key={specialty.id} value={specialty.id}>
-															<Checkbox checked={form.specialty.indexOf(specialty.id) > -1} />
+															<Checkbox checked={form.specialty?.indexOf(specialty.id) > -1} />
 															<ListItemText primary={specialty.description} />
 														</MenuItem>
 													))}
@@ -399,7 +443,7 @@ function Member(props) {
 													renderValue={(selected) => (
 														<div className={classes.chips}>
 															{selected.map((value) => (
-																<Chip key={value} label={clinicalInterest.find(x => x.id === value).description} className={classes.chip} />
+																<Chip key={value} label={clinicalInterest.find(x => x.id === value)?.description} className={classes.chip} />
 															))
 															}
 														</div>
@@ -508,7 +552,7 @@ function Member(props) {
 						</div>
 
 					</ div>
-				)
+				) : (<FuseLoading></FuseLoading>)
 			}
 			innerScroll
 		/>

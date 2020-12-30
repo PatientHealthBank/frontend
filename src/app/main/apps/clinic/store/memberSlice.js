@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import phbApi from 'app/services/phbApi';
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 import FuseUtils from '@fuse/utils';
+import DateFnsUtils from '@date-io/date-fns';
 
 export const getMember = createAsyncThunk('MembersApp/member/getMember', async (params, { getState, dispatch }) => {
 	dispatch(openLoading());
@@ -23,7 +24,7 @@ export const saveMember = createAsyncThunk('MembersApp/member/saveMember', async
 export const updateMember = createAsyncThunk('MembersApp/member/updateMember', async (member, { getState, dispatch }) => {
 	dispatch(openLoading());
 	var user = getState().auth.user;
-	const response = await phbApi().put('/provider', member);
+	const response = await phbApi().put('/provider/' + user.currentUser.id, member);
 	const data = await response.data;
 	dispatch(closeLoading());
 	return data;
@@ -54,8 +55,8 @@ const memberSlice = createSlice({
 					rating: 0,
 					imageUrl: '',
 					telemedicine: false,
-					startJob: null,
-					endJob: null,
+					startJob: '08:00',
+					endJob: '18:00',
 					appointmentInterval: 0,
 					genderId: 0,
 					userId: 0,
