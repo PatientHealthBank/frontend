@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import { showMessage } from 'app/store/fuse/messageSlice';
-
+import { getClinics } from './../store/clinicsSlice';
 import phbApi from 'app/services/phbApi';
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
 const clinicAdapter = createEntityAdapter({});
 export const clinicModel = {
@@ -29,33 +30,56 @@ export const clinicModel = {
 	}
 };
 
-export const getClinic = createAsyncThunk('ClinicApp/clinic/getClinic', async ({ clinicId }) => {
-	const response = await phbApi().get(`/clinic/${clinicId}`);
-	const data = await response.data;
-	return data;
+export const getClinic = createAsyncThunk('ClinicApp/clinic/getClinic', async ({ clinicId }, { dispatch }) => {
+	dispatch(openLoading());
+	return phbApi()
+		.get(`/clinic/${clinicId}`)
+		.then(response => {
+			dispatch(closeLoading());
+			dispatch(getClinics())
+			return response.data;
+		})
+		.catch(error => {
+			dispatch(showMessage({ message: error.message }));
+			dispatch(closeLoading());
+		});
 });
 
 export const saveClinic = createAsyncThunk(
 	'ClinicApp/clinicBranch/saveClinicBranch',
 	async (clinic, { getState, dispatch }) => {
-		const response = await phbApi().post(`/clinic`, clinic);
-		const data = await response.data;
-		if (data) {
-			dispatch(showMessage({ message: 'Clinic saved' }));
-			return data;
-		}
+		dispatch(openLoading());
+		return phbApi()
+			.post(`/clinic`, clinic)
+			.then(response => {
+				dispatch(closeLoading());
+				dispatch(getClinics())
+				return response.data;
+			})
+			.catch(error => {
+				dispatch(showMessage({ message: error.message }));
+				dispatch(closeLoading());
+			});
 	}
 );
 
 export const updateClinic = createAsyncThunk(
 	'ClinicApp/clinicBranch/updateClinicBranch',
 	async (clinic, { getState, dispatch }) => {
-		const response = await phbApi().put(`/clinic`, clinic);
-		const data = await response.data;
-		if (data) {
-			dispatch(showMessage({ message: 'Clinic updated' }));
-			return data;
-		}
+		dispatch(openLoading());
+
+		return phbApi()
+			.put(`/clinic`, clinic)
+			.then(response => {
+				dispatch(closeLoading());
+				dispatch(getClinics())
+				return response.data;
+			})
+			.catch(error => {
+				dispatch(showMessage({ message: error.message }));
+				dispatch(closeLoading());
+			});
+
 	}
 );
 

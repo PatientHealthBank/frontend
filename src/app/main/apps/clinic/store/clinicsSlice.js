@@ -1,21 +1,42 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
+import { showMessage } from 'app/store/fuse/messageSlice';
+
 import phbApi from 'app/services/phbApi';
 
 export const getClinics = createAsyncThunk('ClinicApp/clinics/getClinics', async (params, { getState, dispatch }) => {
-	const response = await phbApi().get(`/clinic`);
-	const data = await response.data;
-	return data;
+	dispatch(openLoading());
+	return phbApi()
+		.get(`/clinic`)
+		.then(response => {
+			dispatch(closeLoading());
+			return response.data;
+		})
+		.catch(error => {
+			dispatch(showMessage({ message: error.message }));
+			dispatch(closeLoading());
+		});
 });
 
 export const deleteClinic = createAsyncThunk(
 	'ClinicApp/clinics/deleteClinic',
 	async (idDeleted, { getState, dispatch }) => {
+		dispatch(openLoading());
+
 		console.log('deletando clinica', idDeleted);
-		const response = await phbApi().delete(`/clinic`, { params: { id: idDeleted } });
-		const data = await response.data;
-		if (data) {
-			return idDeleted;
-		}
+		return phbApi()
+			.delete(`/clinic`, { params: { id: idDeleted } })
+			.then(response => {
+				dispatch(closeLoading());
+
+				if (response.data) {
+					return idDeleted;
+				}
+			})
+			.catch(error => {
+				dispatch(showMessage({ message: error.message }));
+				dispatch(closeLoading());
+			});
 	}
 );
 
