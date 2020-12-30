@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 function NewEmergencyContactWidget(props) {
 	const [name, setName] = React.useState('');
@@ -19,7 +19,6 @@ function NewEmergencyContactWidget(props) {
 	}
 	const canBeNotSubmitted = () => !name || !phone || !email || !kinship;
 	const { t } = useTranslation();
-	const currentLanguageId = useSelector(({ i18n }) => i18n.language);
 
 	return (
 		<Card className="w-full rounded-8 shadow-1">

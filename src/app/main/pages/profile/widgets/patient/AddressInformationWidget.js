@@ -1,29 +1,48 @@
-import { useDeepCompareEffect, useForm } from '@fuse/hooks';
 import AppBar from '@material-ui/core/AppBar';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import withReducer from 'app/store/withReducer';
-import React, { useEffect } from 'react';
-
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import AddressFormDialog from './AddressFormDialog'
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 function AddressInformationWidget(props) {
 
-    const [title, setTitle] = React.useState();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [title, setTitle] = useState();
 
+    const [id, setId] = useState(null);
+    const [addressLine1, setAddress] = useState("");
+    const [addressTypeId, setAddressTypeId] = useState("");
+    const [country, setCountry] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
+    const [zipCode, setZipCode] = useState("");
 
     const handleOpenModal = (titleModal) => {
         setTitle(titleModal)
         setOpen(true);
-        //AddAddress();
+    }
+
+    const handleOpenModalEdit = (titleModal, row) => {
+        setTitle(titleModal);
+        setId(row.id);
+        setAddress(row.addressLine1);
+        setAddressTypeId(row.addressTypeId);
+        setCountry(row.country);
+        setCity(row.city);
+        setState(row.state);
+        setZipCode(row.zipCode);
+        setOpen(true);
+    }
+
+    const handleDelete = (id) => {
+        props.deleteAddresstInformation(id);
     }
 
     return (
@@ -36,15 +55,24 @@ function AddressInformationWidget(props) {
                 </div>
 
                 <Grid container spacing={3} direction="row">
-                    {props.addresstInformation.map(row => (
+                    {props.addresstInformation && props.addresstInformation.map(row => (
                         <Grid item xs={4}>
                             <Card className="w-full mb-16 rounded-8" key={row.id}>
                                 <AppBar position="static" elevation={0}>
                                     <Toolbar className="px-8" variant="dense">
                                         <Typography variant="subtitle1" color="inherit" className="flex-1 px-12">
-                                            Address - {row.addressTypeId === 1 ? 'Home' : 'Work'}
-                                        
+                                            Address - {row.addressTypeId === 1 ? 'Home' : (row.addressTypeId === 2 ? 'Business' : 'Other') }
                                         </Typography>
+                                        <Tooltip title="Edit">
+                                            <IconButton size="small" onClick={() => handleOpenModalEdit("Edit Address", row)} aria-label="delete">
+                                                <Icon size="small">edit</Icon>
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Delete">
+                                            <IconButton size="small" onClick={() => handleDelete(row.id)} aria-label="delete">
+                                                <DeleteIcon size="small" />
+                                            </IconButton>
+                                        </Tooltip>
                                     </Toolbar>
                                 </AppBar>
 
@@ -88,7 +116,7 @@ function AddressInformationWidget(props) {
                         <Card variant="outlined" className="w-full mb-16 rounded-8">
                             <CardContent>
                                 <Grid container direction="column" alignItems="center">
-                                    <button>
+                                    <button onClick={() => handleOpenModal("Add a New Address") }>
                                         <Grid item xs={2}>
                                             <Icon className="text-56" color="action">
                                                 add
@@ -103,37 +131,17 @@ function AddressInformationWidget(props) {
                         </Card>
                     </Grid>
                 </Grid>
+
+                <AddressFormDialog 
+                    open={open} 
+                    setOpen={setOpen} 
+                    newAddressForm={props.registerNewAddresstInformation} 
+                    editAddressForm={props.editAddresstInformation} 
+                    title={title} 
+                    addressInformation={{ id, setId, addressTypeId, setAddressTypeId, addressLine1, setAddress, country, setCountry, city, setCity, state, setState, zipCode, setZipCode}}></AddressFormDialog>
             </div>
         )
     );
 }
-
-function AddAddress() {
-    return (
-        (
-            <div class="modal fade" id="EnSureModal" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Do ypu need change </h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are u sure from </p>
-                            <label id="FromDate"></label>
-                            <p>To</p>
-                            <label id="ToDate"></label>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">no</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">yes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            )
-        );
-}
-
 
 export default React.memo(AddressInformationWidget);
