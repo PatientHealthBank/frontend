@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Member from './member/Member';
 const ClinicAppConfig = {
 	settings: {
 		layout: {}
@@ -19,12 +19,12 @@ const ClinicAppConfig = {
 		},
 		{
 			path: '/apps/clinic/members/:membersId',
-			component: React.lazy(() => import('./member/Member'))
+			component: Member
 		},
 		{
 			path: '/apps/clinic/members',
 			component: React.lazy(() => import('./members/Members'))
-		},		
+		},
 	]
 };
 
