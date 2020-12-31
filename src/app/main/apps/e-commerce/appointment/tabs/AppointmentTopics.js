@@ -145,7 +145,8 @@ function IconContainer(props) {
 
 function AppointmentTopics(props) {
     const routeParams = {readOnly : false}
-    routeParams.readOnly = false
+	routeParams.readOnly = false
+	const {setForm, handleChange} = props
     const classes = useStyles(props);
     const [rating, setRating] = useState(4);
     const [state, setState] = React.useState({
@@ -186,8 +187,22 @@ function AppointmentTopics(props) {
     const labels = useSelector(selectLabels);
 	const [color, setColor] = useState("#123123");;
     const label = labels.find(item=> item.name == props.topics.specialty.description) 
-    console.log(label)
-
+    function handleChangeMainTopic(event, id) {
+        let newTopics = props.topics.mainTopics.map(item=>{
+            return {
+                id:item.id,
+                description:item.description,
+                isChecked: item.id==id ? event.target.checked:item.isChecked
+            }
+        });
+            setForm(_form =>
+                _.setIn(
+                    { ..._form },
+                    'mainTopics',
+                    newTopics
+                )
+            );
+    }
     return (
         <div>
 								<Grid container spacing={3}>
@@ -236,129 +251,21 @@ function AppointmentTopics(props) {
 										<h2> Main Topics</h2> <br />
 										<Grid container spacing={3} direction="column">
 											<Grid container spacing={3} >
-												<Grid item xs={12} sm={6}>
+												<Grid item xs={12} sm={12}>
+													{props.topics.mainTopics.map(item=>
 													<FormControlLabel
 														control={
 															<Switch
-																checked={state.Mydiagnosis}
-																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
-																name="Mydiagnosis"
+																checked={item.isChecked}
+																onClick={(event) => routeParams.readOnly || handleChangeMainTopic(event, item.id)}
+																name={item.description}
 																inputProps={{ 'aria-label': 'secondary checkbox' }}
 
 															/>
 														}
-														label="Diagnosis"
-													/>
-													<FormControlLabel
-														control={
-															<Switch
-																checked={state.Possibilityofsurgery}
-																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
-																name="Possibilityofsurgery"
-																inputProps={{ 'aria-label': 'secondary checkbox' }}
-
-															/>
-														}
-														label="Possibility of surgery"
-													/>
-													<FormControlLabel
-														control={
-															<Switch
-																checked={state.HowcanIavoidsurgery}
-																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
-																name="HowcanIavoidsurgery"
-																inputProps={{ 'aria-label': 'secondary checkbox' }}
-
-															/>
-														}
-														label="How can I avoid surgery"
-													/>
-													<FormControlLabel
-														control={
-															<Switch
-																checked={state.Whathappensaftermyprocedure}
-																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
-																name="Whathappensaftermyprocedure"
-																inputProps={{ 'aria-label': 'secondary checkbox' }}
-
-															/>
-														}
-														label="What happens after my procedure"
-													/>
-													<FormControlLabel
-														control={
-															<Switch
-																checked={state.Myexerciseroutine}
-																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
-																name="Myexerciseroutine"
-																inputProps={{ 'aria-label': 'secondary checkbox' }}
-
-															/>
-														}
-														label="Exercise routine"
-													/>
-												</Grid>
-												<Grid item xs={12} sm={6} direction="column">
-													<FormControlLabel
-														control={
-															<Switch
-																checked={state.Returntosport}
-																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
-																name="Returntosport"
-																inputProps={{ 'aria-label': 'secondary checkbox' }}
-
-															/>
-														}
-														label="Return to sport"
-													/>
-													<FormControlLabel
-														control={
-															<Switch
-																checked={state.Alteredsleepcycle}
-																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
-																name="Alteredsleepcycle"
-																inputProps={{ 'aria-label': 'secondary checkbox' }}
-
-															/>
-														}
-														label="Altered sleep cycle"
-													/>
-													<FormControlLabel
-														control={
-															<Switch
-																checked={state.Fearofreinjury}
-																onChange={(event) => routeParams || handleChangeCheckBox(event)}
-																name="Fearofreinjury"
-																inputProps={{ 'aria-label': 'secondary checkbox' }}
-
-															/>
-														}
-														label="Fear of reinjury"
-													/>
-													<FormControlLabel
-														control={
-															<Switch
-																checked={state.Ihurtaftermylastvisit}
-																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
-																name="Ihurtaftermylastvisit"
-																inputProps={{ 'aria-label': 'secondary checkbox' }}
-
-															/>
-														}
-														label=" I hurt after my last visit"
-													/>
-													<FormControlLabel
-														control={
-															<Switch
-																checked={state.GoodvsBadpain}
-																onChange={(event) => routeParams.readOnly || handleChangeCheckBox(event)}
-																name="GoodvsBadpain"
-																inputProps={{ 'aria-label': 'secondary checkbox' }}
-
-															/>
-														}
-														label="Good vs Bad pain"
-													/>
+														label={item.description}
+													/>)}
+													
 												</Grid>
 											</Grid>
 											<Grid item xs={10} sm={10} container justify="center" alignItems="center">
@@ -368,11 +275,9 @@ function AppointmentTopics(props) {
 														<StyledRating
 															color={color}
 															name="painFlareUp"
-															defaultValue={rating}
+															defaultValue={props.topics.painFlareUp}
 															readOnly={routeParams.readOnly}
-															onChange={(event, newValue) => {
-																onRatingChange(newValue);
-															}}
+															onChange={handleChange}
 															getLabelText={(value) => customIcons[value].label}
 															IconContainerComponent={IconContainer}
 														/>
