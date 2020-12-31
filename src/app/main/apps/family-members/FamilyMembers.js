@@ -21,7 +21,10 @@ function FamilyMembers() {
 	const rowsBody = useSelector(( {FamilyMembers} ) => FamilyMembers.familyMembers);
 
 	React.useEffect(()=>{
-			dispatch(listFamilyMembers())
+		if(rowsBody.length == 0){
+			dispatch(listFamilyMembers());
+		}
+			
 	},[dispatch]);
 
 	const RegisterNewFamilyMembers = (name, address, phone, relationship, birthday)=>{
@@ -71,7 +74,7 @@ function FamilyMembers() {
 				dispatch(closeLoading())
 			})
 	}
-
+	
 	return (
 		<FusePageCarded
 			classes={{

@@ -69,7 +69,16 @@ const navigationConfig = [
 					type: 'item',
 					icon: 'people',
 					url: '/family-members'
+				},
+				{
+					id: 'invoices',
+					title: 'Invoices',
+					translate: 'INVOICES',
+					type: 'item',
+					icon: 'people',
+					url: '/invoices'
 				}
+
 			],
 		},
 	{

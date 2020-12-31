@@ -5,7 +5,7 @@ import reducer from '../store';
 import AppointmentsHeader from './AppointmentsHeader';
 import AppointmentsTable from './AppointmentsTable';
 import { useDispatch, useSelector } from 'react-redux';
-import {appointmentsList} from '../store/appointmentsSlice'
+import {appointmentsList} from '../store/appointmentsSlice';
 
 function Appointments() {
 	const user = useSelector(({ auth }) => auth.user);

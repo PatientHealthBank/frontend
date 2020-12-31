@@ -15,7 +15,8 @@ const locale = {
 	MYTREATMENTS: "My Treatments",
 	USER: "User",
 	FAMILYMEMBERS:"Family Members",
-	CLINICBRANCHES: "Clinic Branches"
+	CLINICBRANCHES: "Clinic Branches",
+	INVOICES: "Invoices"
 };
 
 export default locale;

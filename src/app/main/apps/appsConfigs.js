@@ -12,6 +12,7 @@ import ClinicAppConfig from './clinic/ClinicAppConfig';
 import TreatmentsAppConfig from './treatments/TreatmentsAppConfig';
 import ProviderAppConfig from './provider/ProviderAppConfig';
 import FamilyMembersAppConfig from './family-members/FamilyMembersAppConfig';
+import InvoicesAppConfig from './invoices/InvoicesAppConfig';
 
 
 const appsConfigs = [
@@ -28,7 +29,8 @@ const appsConfigs = [
 	ClinicAppConfig,
 	TreatmentsAppConfig,
 	ProviderAppConfig,
-	NotesAppConfig
+	NotesAppConfig,
+	InvoicesAppConfig
 ];
 
 export default appsConfigs;

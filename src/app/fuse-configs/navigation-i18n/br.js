@@ -15,7 +15,8 @@ const locale = {
 	USER: "Usuário",
 	MYTREATMENTS: "Meus Tratamentos",
 	FAMILYMEMBERS:"Familiares",
-	CLINICBRANCHES: "Filiais"
+	CLINICBRANCHES: "Filiais",
+	INVOICES: 'Comprovantes'
 
 };
 
