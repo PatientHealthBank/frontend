@@ -220,7 +220,8 @@ function AppointmentTopics(props) {
 														params: {
 															id: "labels",
                                                             labelHandle: label?.handle,
-															labelId: label?.id,                             
+															labelId: label?.id,
+															providerNote:true                             
 														}
 													}} />
 													<NoteDialog />

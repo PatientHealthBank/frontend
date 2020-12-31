@@ -228,7 +228,7 @@ function Appointment(props) {
 				)
 			}
 			contentToolbar={
-				<Tabs
+				<div>{routeParams.appointmentId != 'new' && (<Tabs
 					value={tabValue}
 					onChange={handleChangeTab}
 					variant="scrollable"
@@ -236,13 +236,14 @@ function Appointment(props) {
 					classes={{ root: 'w-full h-64' }}
 				>
 					<Tab className="h-64 normal-case" label="Appointment" />
-					{routeParams.appointmentId != 'new' && (
-					<><Tab className="h-64 normal-case" label="Your Check List" />
+					
+					<Tab className="h-64 normal-case" label="Your Check List" />
 					<Tab className="h-64 normal-case" label="Test Results" />
 					<Tab className="h-64 normal-case" label="Preparation for Your Appointment" />
-					<Tab className="h-64 normal-case" label="Topics for Discussion" /></>)
-					}
-				</Tabs>
+					<Tab className="h-64 normal-case" label="Topics for Discussion" />
+					
+				</Tabs>)}
+				</div>
 			}
 			content={
 				(form && (routeParams.appointmentId == "new" || form.specialty)) ? (
