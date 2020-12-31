@@ -1,6 +1,7 @@
 import phbApi from 'app/services/phbApi';
 import { createEntityAdapter, createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
+import { toast } from "react-toastify";
 
 export const getAppointment = createAsyncThunk('eCommerceApp/appointment/getAppointment', async (params, { getState, dispatch }) => {
 	var user = getState().auth.user;
@@ -17,6 +18,7 @@ export const updateAppointment = createAsyncThunk('eCommerceApp/appointment/upda
 	const response = await phbApi().put('/appointment', appointment);
 	const data = await response.data;
 	dispatch(closeLoading());
+	toast.success("Appointment Saved");
 	return data;
 });
 const appointmentAdapter = createEntityAdapter({});

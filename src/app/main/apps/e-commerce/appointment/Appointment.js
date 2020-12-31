@@ -256,7 +256,7 @@ function Appointment(props) {
 						)}
 						{tabValue === 2 && <AppointmentTestResults testResults={form}/>}
 						{tabValue === 3 && <AppointmentPreparation preparation ={form}/>}
-						{tabValue === 4 && <AppointmentTopics topics={form}/>}
+						{tabValue === 4 && <AppointmentTopics topics={form} setForm={setForm} handleChange={handleChange}/>}
 					</div>
 				) : (<FuseLoading></FuseLoading>)
 			}

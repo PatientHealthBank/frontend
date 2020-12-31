@@ -43,7 +43,7 @@ function StrengthWidget(props) {
 			]
 		},
 		options: {
-			cutoutPercentage: strengthParams.total,
+			cutoutPercentage: 75,
 			spanGaps: false,
 			legend: {
 				display: false
