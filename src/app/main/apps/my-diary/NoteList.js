@@ -23,13 +23,19 @@ function NoteList(props) {
 	useEffect(() => {
 		function filterData() {
 			const { params } = props.paramsLabel || props.match;
-			const { id, labelId } = params;
+			const { id, labelId, providerNote } = params;
 			console.log(params)
 
 			let data = notes;
 
 			if (labelId) {
 				data = data.filter(note => note.labels.includes(Number.parseInt(labelId)) && !note.archive);
+			}
+			if(providerNote){
+
+				data = data.filter(note =>{ 
+					console.log(note.labels)
+					return note.labels.includes(9) && !note.archive});
 			}
 
 			if (!id) {
