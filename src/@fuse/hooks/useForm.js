@@ -10,11 +10,11 @@ function useForm(initialState, onSubmit) {
 			_.setIn(
 				{ ..._form },
 				event.target.name,
-				event.target.type === 'checkbox' ? event.target.checked : event.target.value
+				event.target.type === 'checkbox' ? event.target.checked : event.target.type === 'file' ? event.target.files[0] : event.target.value
 			)
 		);
 	}, []);
-	
+
 
 
 	const resetForm = useCallback(() => {
@@ -27,7 +27,7 @@ function useForm(initialState, onSubmit) {
 		setForm(_form => _.setIn(_form, name, value));
 	}, []);
 
-	
+
 	const handleSubmit = useCallback(
 		event => {
 			if (event) {

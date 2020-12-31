@@ -13,8 +13,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getAppointmentTests, openNewTestDialog, deleteAppointmentTest } from '../../store/AppointmentTestSlice';
+import TestDialog from '../dialogs/TestDialog';
+import BackupIcon from '@material-ui/icons/Backup';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Tooltip from '@material-ui/core/Tooltip';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
 	typeIcon: {
@@ -77,97 +82,78 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function AppointmentTestResult(props) {
-    const theme = useTheme();
+	const dispatch = useDispatch();
+	const files = useSelector(state => state.AppointmentsApp.appointmentTest.files);
 
-    const classes = useStyles(props);
+	const theme = useTheme();
+	useEffect(() => {
+		dispatch(getAppointmentTests(props.appointmentId));
+	}, [dispatch]);
 
-    var files = [
-		{
-			id: '1',
-			name: 'Magnetic resonance imaging (MRI) Knee',
-			type: 'PDF',
-			owner: 'Me',
-			size: '750 Kb',
-			modified: 'July 8, 2020',
-			opened: 'July 8, 2020',
-			created: 'July 8, 2020',
-			extention: '',
-			location: 'My Files > Documents',
-			offline: true
-		},
-		{
-			id: '4',
-			name: 'Blood test',
-			type: 'document',
-			owner: 'Emily Bennett',
-			size: '1.2 Mb',
-			modified: 'July 8, 2020',
-			opened: 'July 8, 2020',
-			created: 'July 8, 2020',
-			extention: '',
-			location: 'My Files > Documents',
-			offline: true,
-			preview: 'assets/images/etc/sample-file-preview.jpg'
-		}
-	];
-return (
-    <div>
-    <Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h6">
-        <span className="mx-4">Add a Test Results</span>
-        <Icon className="text-35">
-            backup
-        </Icon>
-    </Typography>
-    <FuseAnimate animation="transition.slideUpIn" delay={300}>
-        <Table>
-            <TableHead>
-                <TableRow>
-                    <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell className="hidden sm:table-cell">Type</TableCell>
-                    <TableCell className="hidden sm:table-cell">Owner</TableCell>
-                    <TableCell className="text-center hidden sm:table-cell">Size</TableCell>
-                    <TableCell className="hidden sm:table-cell">Modified</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {files && files.map(item => {
-                    return (
-                        <TableRow
-                            key={item.id}
-                            hover
-                            // onClick={event => dispatch(setSelectedItem(item.id))}
-                            // selected={item.id === selectedItemId}
-                            className="cursor-pointer"
-                        >
-                            <TableCell className="max-w-64 w-64 p-0 text-center">
-                                <Icon className={clsx(classes.typeIcon, item.type)} />
-                            </TableCell>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell className="hidden sm:table-cell">{item.type}</TableCell>
-                            <TableCell className="hidden sm:table-cell">{item.owner}</TableCell>
-                            <TableCell className="text-center hidden sm:table-cell">
-                                {item.size === '' ? '-' : item.size}
-                            </TableCell>
-                            <TableCell className="hidden sm:table-cell">{item.modified}</TableCell>
-                            <Hidden lgUp>
-                                <TableCell>
-                                    <IconButton
-                                        onClick={ev => props.pageLayout.current.toggleRightSidebar()}
-                                        aria-label="open right sidebar"
-                                    >
-                                        <Icon>info</Icon>
-                                    </IconButton>
-                                </TableCell>
-                            </Hidden>
-                        </TableRow>
-                    );
-                })}
-            </TableBody>
-        </Table>
-    </FuseAnimate>
-    </div>    
-    );
+	function handleOpenDialog() {
+		dispatch(openNewTestDialog());
+	}
+	function handleDelete(item) {
+		dispatch(deleteAppointmentTest(item));
+	}
+
+	const classes = useStyles(props);
+
+	return (
+		<div>
+			<Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h6">
+				<span className="mx-4">Add a Test Results</span>
+				<IconButton onClick={ev => handleOpenDialog()} aria-label="Add Test Result">
+					<BackupIcon />
+				</IconButton>
+			</Typography>
+			<FuseAnimate animation="transition.slideUpIn" delay={300}>
+				<Table>
+					<TableHead>
+						<TableRow>
+							<TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
+							<TableCell>Name</TableCell>
+							<TableCell className="hidden sm:table-cell">Type</TableCell>
+							<TableCell className="text-center hidden sm:table-cell">Size</TableCell>
+							<TableCell className="hidden sm:table-cell">Modified</TableCell>
+							<TableCell className="hidden sm:table-cell">Actions</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{files && files.map(item => {
+							return (
+								<TableRow
+									key={item.id}
+									hover
+									// onClick={event => dispatch(setSelectedItem(item.id))}
+									// selected={item.id === selectedItemId}
+									className="cursor-pointer"
+								>
+									<TableCell className="max-w-64 w-64 p-0 text-center">
+										<Icon className={clsx(classes.typeIcon, item.type)} />
+									</TableCell>
+									<TableCell>{item.name}</TableCell>
+									<TableCell >{item.type}</TableCell>
+									<TableCell className="text-center">
+										{item.size === '' ? '-' : item.size}
+									</TableCell>
+									<TableCell >{moment(item.createDate).format("YYYY-MM-DD")}</TableCell>
+									<TableCell>
+										<Tooltip title="Delete">
+											<IconButton onClick={ev => handleDelete(item)} aria-label="delete">
+												<DeleteIcon />
+											</IconButton>
+										</Tooltip>
+									</TableCell>
+								</TableRow>
+							);
+						})}
+					</TableBody>
+				</Table>
+			</FuseAnimate>
+			<TestDialog appointmentId={props.appointmentId} />
+		</div>
+	);
 }
 
 export default AppointmentTestResult;

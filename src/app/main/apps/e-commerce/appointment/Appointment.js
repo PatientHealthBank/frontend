@@ -27,16 +27,20 @@ import { getNotes } from 'app/main/apps/my-diary/store/notesSlice';
 
 
 const useStyles = makeStyles(theme => ({
-	typeIcon: {
+	typeIcon: {	
+		'&.TXT:before': {
+			content: "'insert_drive_file'",
+			color: '#1565C0'
+		},
 		'&.PDF:before': {
 			content: "'picture_as_pdf'",
 			color: '#F44336'
 		},
-		'&.document:before': {
+		'&.DOCX:before': {
 			content: "'insert_drive_file'",
 			color: '#1565C0'
-		},
-		'&.spreadsheet:before': {
+		},	
+		'&.XLS:before': {
 			content: "'insert_chart'",
 			color: '#4CAF50'
 		}
@@ -254,7 +258,7 @@ function Appointment(props) {
 								<AppointmentCheckList appointmentCheckList={form.appointmentCheckList} setForm={setForm} handleChange={handleChange} classes={classes} />
 							</div>
 						)}
-						{tabValue === 2 && <AppointmentTestResults testResults={form}/>}
+						{tabValue === 2 && <AppointmentTestResults appointmentId={form.id}/>}
 						{tabValue === 3 && <AppointmentPreparation preparation ={form}/>}
 						{tabValue === 4 && <AppointmentTopics topics={form}/>}
 					</div>
