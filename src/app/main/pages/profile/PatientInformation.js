@@ -14,29 +14,61 @@ function PatientInformation() {
 
     const dispatch = useDispatch();
     const patientInformation = useSelector(({ ProfilesApp }) => ProfilesApp.patientInformation);
+    var currentFile = '';
 
     React.useEffect(() => {
         dispatch(patientInfo())
     }, [dispatch])
 
-    const EditPatientInformation = (name, birthdate, ssn, phone, email, photoURL) => {
+    const EditPatientInformation = (name, birthdate, ssn, phone, email, photoURL, currentPhoto) => {
+
         dispatch(openLoading())
+
+        if(photoURL){
+
+            if(currentPhoto){
+                phbApi().delete("/patient/info/profileImage?imageName="+currentPhoto);
+            }
+
+            var formData = new FormData();
+            formData.append("file", photoURL);
+            phbApi().post("/Invoices/file", formData, { headers: {
+                'Content-Type': 'multipart/form-data'}
+            }).then(res => {
+                EditInfomation(name, birthdate, ssn, phone, email, res.data);           
+            }).
+            catch(err => {
+                dispatch(closeLoading())
+            });
+        }else{
+            EditInfomation(name, birthdate, ssn, phone, email, photoURL);
+        }
+
+        
+
+    }
+
+    const EditInfomation = (name, birthdate, ssn, phone, email, photoURL) => {
         phbApi().post("/patient/edit/", { Id: user.currentUser.id, Name: name, Birthdate: birthdate, SSN: ssn, Phone: phone, Email: email, PhotoURL: photoURL, PatientTypeId: user.currentUser.patientType}).then(res => {
             dispatch(closeLoading())
             dispatch(patientInfo())
         }).
-            catch(err => {
-                console.log(err);
-                dispatch(closeLoading())
-            })
+        catch(err => {
+            console.log(err);
+            dispatch(closeLoading())
+        });	
     }
+    
+    if (patientInformation) {
+        currentFile = patientInformation.photoURL;
+    }   
 
     return (
         <>
             <div className="p-16 sm:p-24">
                 <div>
 
-                    <PatientInformationWidget patientInformation={patientInformation} editPatientInformation={ EditPatientInformation } />
+                    <PatientInformationWidget patientInformation={patientInformation} editPatientInformation={ EditPatientInformation } currentFile={currentFile} />
                     <AdressInformationWidget adresstInformation={patientInformation} />
                     <InsurancePlanWidget insurancePlan={patientInformation} />
 

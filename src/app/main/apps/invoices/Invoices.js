@@ -80,13 +80,26 @@ function Invoices() {
 			});
 	}
 
-	const DeleteInvoicesFiles = (fileUrl)=>{
+	const DeleteInvoicesFiles = (id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl)=>{
 
 		phbApi().delete("/Invoices/file?imageName="+fileUrl).then(res => {
 			dispatch(listInvoices())
 			dispatch(closeLoading())
 		}).catch(err => {
 			dispatch(closeLoading())
+		});
+
+		phbApi().put("/Invoices/update", {
+			Id: id,
+			CompanyName: companyName, 
+			ServiceDate: serviceDate, 
+			ServiceValue: serviceValue, 
+			RegisterServiceProvider: registerServiceProvider, 
+			FileUrl: '', 
+			UserId: user.uuid
+		}).then(res => {
+			dispatch(closeLoading());
+			dispatch(listInvoices());
 		});
 
 	}
@@ -112,27 +125,23 @@ function Invoices() {
 
 		if(fileUrl){
 
-			if(currentFile && currentFile != fileUrl){
+			if(currentFile){
 				phbApi().delete("/Invoices/file?imageName="+currentFile);
-
-				var formData = new FormData();
-				formData.append("file", fileUrl);
-				phbApi().post("/Invoices/file", formData, { headers: {
-					'Content-Type': 'multipart/form-data'}
-				}).then(res => {
-					EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, res.data, user.uuid);
-				}).
-				catch(err => {
-					dispatch(closeLoading())
-				});
-			}else{
-				EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, user.uuid);
 			}
 
-			
-		}else{
+			var formData = new FormData();
+			formData.append("file", fileUrl);
 
-			EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl , user.uuid);
+			phbApi().post("/Invoices/file", formData, { headers: {
+				'Content-Type': 'multipart/form-data'}
+			}).then(res => {
+				EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, res.data, user.uuid);
+			}).
+			catch(err => {
+				dispatch(closeLoading())
+			});
+		}else{
+			EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, user.uuid);
 		}
 			
 	}
@@ -145,7 +154,7 @@ function Invoices() {
 			ServiceValue: serviceValue, 
 			RegisterServiceProvider: registerServiceProvider, 
 			FileUrl: fileUrl, 
-			UserId: userId,
+			UserId: userId
 		}).then(res => {
 			dispatch(closeLoading());
 			dispatch(listInvoices());

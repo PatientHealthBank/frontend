@@ -246,9 +246,9 @@ function InvoicesTable(props) {
 		
 	}
 
-	const handleDelFile = (e, fileUrl) => {
+	const handleDelFile = (id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl) => {
 
-			props.DeleteInvoicesFiles(fileUrl);
+			props.DeleteInvoicesFiles(id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl);
 	}
 
 	const handleDownload = (fileUrl) => {
@@ -403,16 +403,23 @@ function InvoicesTable(props) {
 												<TableCell >{row.serviceDate}</TableCell>
 												<TableCell >{row.serviceValue}</TableCell>
 												<TableCell >{row.registerServiceProvider}</TableCell>
-												<TableCell 
+												<TableCell>
+													<IconButton  
+													style={ row.fileUrl ? {} : {display: 'none', padding: '25px'}}
 													title={row.fileUrl} 
-													onClick={(event) => handleDownload(row.fileUrl)}>
-													<button style={ row.fileUrl ? {} : {display: 'none', padding: '25px'}}>
-														<span 
-															className={"material-icons MuiIcon-root text-22 MuiIcon-colorAction"} 
-															aria-hidden={true}>
-																insert_drive_file
-														</span>
-													</button>
+													onClick={(event) => handleDownload(row.fileUrl)}
+													className={"w-2/12 p-8 min-h-420 h-420 align-top "}
+													>
+														<Icon style={{color: 'green'}}>insert_drive_file</Icon>
+													</IconButton>
+													<IconButton 
+													 style={ row.fileUrl ? {} : {display: 'none', padding: '25px'}}
+													 title="Delete File" 
+													 onClick={(event) => handleDelFile(row.id, row.companyName, new Date(row.serviceDate), parseFloat(row.serviceValue), row.registerServiceProvider, row.fileUrl,)}
+													 className={"w-2/12 p-8 min-h-420 h-420 align-top "}
+													 >
+														<Icon style={{color: 'red'}}>clear</Icon>
+													</IconButton>
 												</TableCell>
 											</TableRow>
 										);
