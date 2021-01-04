@@ -13,9 +13,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import withReducer from 'app/store/withReducer';
 import reducer from './store';
+import phbApi from 'app/services/phbApi';
+import { patientInfo } from './store/patientInformationSlice';
+
+
 
 function ProfilePage({ content, route }) {
 	const user = useSelector(({ auth }) => auth.user);
+	const dispatch = useDispatch();
+	const patientInformation = useSelector(({ ProfilesApp }) => ProfilesApp.patientInformation);
+   
+	React.useEffect(() => {
+        dispatch(patientInfo())
+    }, [dispatch]);
+
+	var currentPhoto = '';
+
+	if (patientInformation) {
+		currentPhoto = patientInformation.photoURL;
+		currentPhoto = "https://phbbucket.s3.us-east-2.amazonaws.com/profileImages/"+ currentPhoto;
+    }
 
 	const pageLayout = useRef(null);
 	return (
@@ -54,7 +71,7 @@ function ProfilePage({ content, route }) {
 							<Typography variant="subtitle1">{user.role}</Typography>
 						</Grid>
 						<Grid item xs={4}>
-							<Avatar className="w-64 h-64" src="assets/images/avatars/Velazquez.jpg" />
+							<Avatar className="w-64 h-64" src={currentPhoto} />
 						</Grid>
 					</Grid>
 				</div>

@@ -15,11 +15,23 @@ import AppointmentsTableHead from './AppointmentsTableHead';
 import AppointmentPriority from './AppointmentPriority';
 import CheckIn from '../../dashboards/dashboard/widgets/CheckIn';
 import { useTranslation } from "react-i18next";
-import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import AppointmentDialog from './AppointmentDialog';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import { lighten, makeStyles } from '@material-ui/core/styles';
+
 
 
 function AppointmentTable(props) {
 	const { t } = useTranslation();
+
+	const [open, setOpen] = React.useState(false);
+	const [invoice, setInvoice] = React.useState(false);
+	const [title, setTitle] = React.useState(false);
+	const [appointmentId, setAppointmentId] = React.useState(false);
+	const [currentFile, setCurrentFile] = React.useState(false);
 	const useStyles = makeStyles((theme) => ({
 		avatarMain: {
 			width: theme.spacing(5),
@@ -28,6 +40,33 @@ function AppointmentTable(props) {
 		},
 	}));
 	const classes = useStyles();
+
+	const handleOpenModal = (row) => {	
+		setOpen(true);
+		var stop = 0;
+		props.invoices.map(function(value, i) {
+
+			if(value.appointmentId == row.id && stop == 0){
+				setInvoice(value);
+				setTitle('Edit');
+				setAppointmentId('');
+				setCurrentFile(value.fileUrl);
+				stop++;
+			}
+		});
+
+		if(stop == 0){
+			setInvoice({});
+			setTitle('New');
+			setAppointmentId(row.id);
+			setCurrentFile();
+		}
+		
+	}			
+
+	const setDisplay = (param) => {	
+		return {display: param};
+	}
 
 	// const dispatch = useDispatch();
 	// const appointments = useSelector(selectAppointments);
@@ -204,12 +243,24 @@ function AppointmentTable(props) {
 											<AppointmentPriority name={"Ready"} />
 										</TableCell>
 										<TableCell className="p-4 md:p-16" component="th" scope="row">
+										<IconButton title="invoice" style={setDisplay(row)} onClick={() => handleOpenModal(row)} aria-label="delete">
+											<Icon>note</Icon>
+										</IconButton>
 											{/* <CheckIn specialty={n.specialtyDescription} date={n.date} disabled={n.priority === "Pending"}/> */}
 										</TableCell>
 									</TableRow>
 								);
 							})}
 					</TableBody>
+					<AppointmentDialog open={open} setOpen={setOpen}
+							member={invoice}
+							handleEdit={props.UpdateInvoices}
+							handleAdd={props.RegisterNewInvoices}
+							setMember={setInvoice}
+							title={title}
+							appointmentId={appointmentId}
+							currentFile={currentFile}
+						/>
 				</Table>
 			</FuseScrollbars>
 

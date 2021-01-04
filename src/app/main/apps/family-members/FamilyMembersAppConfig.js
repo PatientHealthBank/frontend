@@ -1,4 +1,5 @@
 import React from 'react';
+import FamilyMembers from './FamilyMembers';
 
 const FamilyMembersAppConfig = {
 	settings: {
@@ -7,7 +8,7 @@ const FamilyMembersAppConfig = {
 	routes: [
 		{
 			path: '/family-members',
-			component: React.lazy(() => import('./FamilyMembers'))
+			component: FamilyMembers
 		},
 	]
 };

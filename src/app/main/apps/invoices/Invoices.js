@@ -1,40 +1,33 @@
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import withReducer from 'app/store/withReducer';
 import React from 'react';
-import reducer from '../store';
-import AppointmentsHeader from './AppointmentsHeader';
-import AppointmentsTable from './AppointmentsTable';
-import { useDispatch, useSelector } from 'react-redux';
-import {appointmentsList} from '../store/appointmentsSlice';
-import phbApi from 'app/services/phbApi';
+import InvoicesHeader from './InvoicesHeader';
+import InvoicesTable from './InvoicesTable';
 
+import phbApi from 'app/services/phbApi'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import LoadingModal from 'app/fuse-layouts/shared-components/loadingModal/LoadingModal';
 import { useTranslation } from "react-i18next";
+import withReducer from 'app/store/withReducer';
+import reducer from './store';
+import {listInvoices} from './store/invoicesSlice';
 
 
-function Appointments() {
+function Invoices() {
+
+	const { t } = useTranslation();
 	const user = useSelector(({ auth }) => auth.user);
 	const dispatch = useDispatch();
-	const appointments = useSelector(( {AppointmentsApp} ) => AppointmentsApp.appointments);
-	const [invoices, setInvoices] = React.useState(false);
-	
-	const invoiceList = (user) => {
-		phbApi().get('/Invoices/list/'+user.uuid)
-		.then(({data}) => {
-			setInvoices(data);
-		});
-	}
-	
-	React.useEffect(()=>{
-		invoiceList(user);
 
-		if(appointments.length == 0){
-			dispatch(appointmentsList())
+	const invoiceRows = useSelector(( {Invoices} ) => Invoices.invoices);
+
+	React.useEffect(()=>{
+		if(invoiceRows.length == 0){
+			dispatch(listInvoices());
 		}
 	},[dispatch]);
 
-	const RegisterNewInvoices = (companyName, serviceDate, serviceValue, registerServiceProvider, appointmentId, fileUrl)=>{
+	const RegisterNewInvoices = (companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl)=>{
 		dispatch(openLoading())
 
 		if(fileUrl){
@@ -44,30 +37,28 @@ function Appointments() {
 			phbApi().post("/Invoices/file", formData, { headers: {
 				'Content-Type': 'multipart/form-data'}
 			}).then(res => {
-				NewInvoice(companyName, serviceDate, serviceValue, registerServiceProvider, appointmentId, res.data, user.uuid);
+				NewInvoice(companyName, serviceDate, serviceValue, registerServiceProvider, res.data, user.uuid);
 			}).
 			catch(err => {
 				dispatch(closeLoading())
 			});
 		}else{
-			NewInvoice(companyName, serviceDate, serviceValue, registerServiceProvider, appointmentId, fileUrl, user.uuid);
+			NewInvoice(companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, user.uuid);
 		}
 				
 	}
 
-	const NewInvoice = (companyName, serviceDate, serviceValue, registerServiceProvider, appointmentId, fileUrl, userId) => {
+	const NewInvoice = (companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, userId) => {
 		phbApi().post("/Invoices/register", {
 			CompanyName: companyName, 
 			ServiceDate: serviceDate, 
 			ServiceValue: serviceValue, 
 			RegisterServiceProvider: registerServiceProvider, 
 			FileUrl: fileUrl, 
-			UserId: userId,
-			AppointmentId: appointmentId
+			UserId: userId
 		}).then(res => {
-			invoiceList(user);
 			dispatch(closeLoading());
-			dispatch(appointmentsList());
+			dispatch(listInvoices());
 		});	
 	}
 
@@ -81,7 +72,7 @@ function Appointments() {
 
 		dispatch(openLoading())
 		phbApi().delete("/Invoices/delete/"+id).then(res => {
-			dispatch(appointmentsList())
+			dispatch(listInvoices())
 			dispatch(closeLoading())
 		}).
 			catch(err => {
@@ -89,15 +80,27 @@ function Appointments() {
 			});
 	}
 
-	const DeleteInvoicesFiles = (fileUrl)=>{
+	const DeleteInvoicesFiles = (id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl)=>{
 
 		phbApi().delete("/Invoices/file?imageName="+fileUrl).then(res => {
-			dispatch(appointmentsList())
+			dispatch(listInvoices())
 			dispatch(closeLoading())
 		}).catch(err => {
 			dispatch(closeLoading())
 		});
 
+		phbApi().put("/Invoices/update", {
+			Id: id,
+			CompanyName: companyName, 
+			ServiceDate: serviceDate, 
+			ServiceValue: serviceValue, 
+			RegisterServiceProvider: registerServiceProvider, 
+			FileUrl: '', 
+			UserId: user.uuid
+		}).then(res => {
+			dispatch(closeLoading());
+			dispatch(listInvoices());
+		});
 
 	}
 
@@ -117,9 +120,9 @@ function Appointments() {
 
 	}
 
-	const UpdateInvoices = (id, companyName, serviceDate, serviceValue, registerServiceProvider, appointmentId, fileUrl, currentFile)=>{
+	const UpdateInvoices = (id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, currentFile)=>{
 		dispatch(openLoading());
-			
+
 		if(fileUrl){
 
 			if(currentFile){
@@ -132,18 +135,18 @@ function Appointments() {
 			phbApi().post("/Invoices/file", formData, { headers: {
 				'Content-Type': 'multipart/form-data'}
 			}).then(res => {
-				EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, appointmentId, res.data, user.uuid);
+				EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, res.data, user.uuid);
 			}).
 			catch(err => {
 				dispatch(closeLoading())
 			});
 		}else{
-			EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, appointmentId, fileUrl, user.uuid);
+			EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, user.uuid);
 		}
 			
 	}
 
-	const EditInvoice = (id, companyName, serviceDate, serviceValue, registerServiceProvider, appointmentId, fileUrl, userId) => {
+	const EditInvoice = (id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, userId) => {
 		phbApi().put("/Invoices/update", {
 			Id: id,
 			CompanyName: companyName, 
@@ -151,35 +154,34 @@ function Appointments() {
 			ServiceValue: serviceValue, 
 			RegisterServiceProvider: registerServiceProvider, 
 			FileUrl: fileUrl, 
-			UserId: userId,
-			ApointmentId: appointmentId
+			UserId: userId
 		}).then(res => {
-			invoiceList(user);
 			dispatch(closeLoading());
-			dispatch(appointmentsList());
+			dispatch(listInvoices());
 		});	
 	}
 
 	return (
-
 		<FusePageCarded
 			classes={{
 				content: 'flex',
 				contentCard: 'overflow-hidden',
 				header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
 			}}
-			header={<AppointmentsHeader/>}
-			content={<AppointmentsTable 
-					appointments={appointments} 
+			header={<InvoicesHeader />}
+			content={
+				<InvoicesTable 
+					invoiceRows={invoiceRows} 
 					RegisterNewInvoices={RegisterNewInvoices}
 					DeleteInvoices={DeleteInvoices}
 					UpdateInvoices={UpdateInvoices} 
 					DeleteInvoicesFiles={DeleteInvoicesFiles}
 					DownloadInvoiceFile={DownloadInvoiceFile}
-					invoices={invoices}/>}
+				/>
+			}
 			innerScroll
 		/>
 	);
 }
 
-export default withReducer('AppointmentsApp', reducer)(Appointments);
+export default withReducer('Invoices', reducer)(Invoices);
