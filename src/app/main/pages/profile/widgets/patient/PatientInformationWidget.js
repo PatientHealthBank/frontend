@@ -4,16 +4,28 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
-import { useForm } from '@fuse/hooks';
-import React, { useEffect } from 'react';
-import { useTranslation } from "react-i18next";
+import {useForm } from '@fuse/hooks';
+import React, { useEffect, createRef, useState, onClick } from 'react';
+import { useTranslation } from "react-i18next"
+import ReactDOM from "react-dom";
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+    patientImage: {
+        '&:hover': {
+            opacity: 0.5
+        }
+    }
+}));
 
 function PatientInformationWidget(props) {
     const { t } = useTranslation();
+    const classes = useStyles();
     const { form, handleChange, setForm } = useForm();
+    const imageProfile = "https://phbbucket.s3.us-east-2.amazonaws.com/profileImages/"+ props.currentFile;
     
     const handleSubmit = () => {
-        props.editPatientInformation(form.name, form.birthdate, form.ssn, form.phone, form.email, form.photoURL);
+        props.editPatientInformation(form.name, form.birthdate, form.ssn, form.phone, form.email, form.photoURL, props.currentFile);
     }
 
     useEffect(() => {
@@ -22,6 +34,15 @@ function PatientInformationWidget(props) {
         }
     }, [form, props.patientInformation, setForm]);
 
+    const handleFileChange = (event) => {
+        setForm({ ...form, [event.target.name]: event.target.files[0] });
+    }
+
+    const teste = (event) => {
+        var name = document.getElementById('select-file');
+        name.click();
+    }
+    
     return (
         form && (
             <Grid container spacing={3} alignContent="center" alignItems="center" justify="center" >
@@ -30,14 +51,24 @@ function PatientInformationWidget(props) {
                     <Typography variant="h5">
                         Patient Info
 		        </Typography>
-
+                    <button>
                     <img
                         key="1"
-                        style={{ display: "inline" }}
-                        className="w-128 m-4 rounded-4"
-                        src="assets/images/avatars/Velazquez.jpg"
+                        style={{ display: "inline"}}
+                        className={"w-128 m-4 rounded-4 " + classes.patientImage}
+                        src={imageProfile}
+                        onClick={teste}
                         alt="Profile"
                     />
+                    </button>
+                    <TextField
+                              type='file'
+                              id="select-file"
+                              variant="outlined"
+                              name={"photoURL"}
+                              onChange={handleFileChange}
+                              style={{display: 'none'}}
+                            />
                     <TextField
                         className="mt-8 mb-16"
                         required
