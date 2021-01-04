@@ -5,7 +5,7 @@ import _ from '@lodash';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
-import { useTheme , withStyles} from '@material-ui/core/styles';
+import { useTheme, withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withReducer from 'app/store/withReducer';
@@ -13,56 +13,82 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import reducer from '../store';
-import { getClinicBranch, newClinicBranch, saveClinicBranch } from '../store/clinicBranchSlice';
+import { setGeoCoordinate, saveClinic, getClinic, newClinic, updateClinic } from '../store/clinicSlice.js';
+import { getUsers } from '../../../../auth/store/userSlice';
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
+import Geocode from 'react-geocode';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
-const PrimaryButton = withStyles((theme) => ({
-    root: {
-      color: "#ffffff",
-      backgroundColor: '#24aae0',
-      '&:hover': {
-        backgroundColor: '#1d8ab5',
-      },
-    },
-  }))(Button);
+const PrimaryButton = withStyles(theme => ({
+	root: {
+		color: '#ffffff',
+		backgroundColor: '#24aae0',
+		'&:hover': {
+			backgroundColor: '#1d8ab5'
+		}
+	}
+}))(Button);
 
 function ClinicBranch(props) {
 	const dispatch = useDispatch();
-	const clinic = useSelector(({ ClinicBranchsApp }) => ClinicBranchsApp.clinicBranch);
-
+	const clinic = useSelector(({ ClinicApp }) => ClinicApp.clinic);
+	const users = useSelector(({ auth }) => auth.user);
+	console.log('users', users);
 	const theme = useTheme();
 	const { form, handleChange, setForm } = useForm(null);
 	const routeParams = useParams();
 
 	useDeepCompareEffect(() => {
-		function updateClinicBranchState() {
+		function updateClinicState() {
+			dispatch(getUsers());
 			const { clinicId } = routeParams;
-			if (clinicId === 'new') {
-				dispatch(newClinicBranch());
+			console.log('update', clinicId);
+			if (clinicId == 'new') {
+				console.log('salvando');
+				dispatch(newClinic());
 			} else {
-				dispatch(getClinicBranch(routeParams));
+				console.log('pegando');
+				dispatch(getClinic(routeParams));
 			}
 		}
 
-		updateClinicBranchState();
+		updateClinicState();
 	}, [dispatch, routeParams]);
 
+	
+	const handleSubmit = form => {
+		console.log('handlesubmit', form);
+		if (form.id == null) {
+			dispatch(saveClinic(form));
+		} else {
+			dispatch(updateClinic(form));
+		}
+	};
+	const getAddress = e => {
+		e.persist();
+		Geocode.setApiKey('AIzaSyB0pi7GKm7Fd39VMSmIiz8uJweF9tBTkYs');
 
+		Geocode.fromAddress('Eiffel Tower').then(
+			response => {
+				dispatch(setGeoCoordinate(response.results[0].geometry.location));
+			},
+			error => {
+				console.error(error);
+			}
+		);
+
+	};
 	useEffect(() => {
 		if ((clinic && !form) || (clinic && form && clinic.id !== form.id)) {
 			setForm(clinic);
 		}
 	}, [form, clinic, setForm]);
 
-
 	function canBeSubmitted() {
-		return form.clinicName && form.clinicName.length > 0 && !_.isEqual(clinic, form);
+		return form.companyName && form.companyName.length > 0 && !_.isEqual(clinic, form);
 	}
-
-	// if ((!clinic || (clinic && routeParams.memberId !== clinic.id)) && routeParams.memberId !== 'new') {
-	// 	return <FuseLoading />;
-	// }
-
+	// return(<h1>Hello world</h1>)
 	return (
 		<FusePageCarded
 			classes={{
@@ -90,7 +116,7 @@ function ClinicBranch(props) {
 								<div className="flex flex-col min-w-0 mx-8 sm:mc-16">
 									<FuseAnimate animation="transition.slideLeftIn" delay={300}>
 										<Typography className="text-16 sm:text-20 truncate">
-											{form.clinicName ? form.clinicName : 'New Clinic'}
+											{form.companyName ? form.companyName : 'New Clinic'}
 										</Typography>
 									</FuseAnimate>
 								</div>
@@ -102,7 +128,7 @@ function ClinicBranch(props) {
 								variant="contained"
 								color="secondary"
 								disabled={!canBeSubmitted()}
-								onClick={() => dispatch(saveClinicBranch(form))}
+								onClick={() => handleSubmit(form)}
 							>
 								Save
 							</PrimaryButton>
@@ -116,13 +142,34 @@ function ClinicBranch(props) {
 						<div>
 							<Grid container spacing={3}>
 								<Grid item xs={6}>
+									{/* <Autocomplete
+										id="combo-box-demo"
+										options={top100Films}
+										getOptionLabel={option => option.title}
+										style={{ width: 300 }}
+										renderInput={params => (
+											<TextField {...params} label="Usuário" variant="outlined" />
+										)}
+									/> */}
+									<br></br>
 									<TextField
 										className="mt-8 mb-16"
 										required
 										label="Clinic Name"
-										id="clinicName"
-										name="clinicName"
-										value={form.clinicName}
+										id="companyName"
+										name="companyName"
+										value={form.companyName}
+										onChange={handleChange}
+										variant="outlined"
+										fullWidth
+									/>
+									<TextField
+										className="mt-8 mb-16"
+										required
+										label="Email"
+										id="email"
+										name="email"
+										value={form.email}
 										onChange={handleChange}
 										variant="outlined"
 										fullWidth
@@ -133,9 +180,9 @@ function ClinicBranch(props) {
 												className="mt-8 mb-16"
 												required
 												label="Zip Code"
-												id="zipcode"
-												name="zipcode"
-												value={form.zipcode}
+												id="address.zipCode"
+												name="address.zipCode"
+												value={form.address.zipCode}
 												onChange={handleChange}
 												variant="outlined"
 												fullWidth
@@ -145,10 +192,10 @@ function ClinicBranch(props) {
 											<TextField
 												className="mt-8 mb-16"
 												required
-												label="Number"
-												id="number"
-												name="number"
-												value={form.number}
+												label="Country"
+												id="address.country"
+												name="address.country"
+												value={form.address.country}
 												onChange={handleChange}
 												variant="outlined"
 												fullWidth
@@ -160,21 +207,11 @@ function ClinicBranch(props) {
 										className="mt-8 mb-16"
 										required
 										label="Address Line 1"
-										id="AddressLine1"
-										name="AddressLine1"
-										value={form.addressLine1}
+										id="address.addressLine1"
+										name="address.addressLine1"
+										value={form.address.addressLine1}
 										onChange={handleChange}
-										variant="outlined"
-										fullWidth
-									/>
-									<TextField
-										className="mt-8 mb-16"
-										required
-										label="Address Line 2"
-										id="addressLine2"
-										name="addressLine2"
-										value={form.addressLine2}
-										onChange={handleChange}
+										onBlur={e => getAddress(e)}
 										variant="outlined"
 										fullWidth
 									/>
@@ -185,9 +222,9 @@ function ClinicBranch(props) {
 												className="mt-8"
 												required
 												label="City"
-												id="city"
-												name="city"
-												value={form.city}
+												id="address.city"
+												name="address.city"
+												value={form.address.city}
 												onChange={handleChange}
 												variant="outlined"
 												fullWidth
@@ -198,9 +235,9 @@ function ClinicBranch(props) {
 												className="mt-8"
 												required
 												label="State / Province / Region"
-												id="state"
-												name="state"
-												value={form.state}
+												id="address.state"
+												name="address.state"
+												value={form.address.state}
 												onChange={handleChange}
 												variant="outlined"
 												fullWidth
@@ -211,9 +248,9 @@ function ClinicBranch(props) {
 												className="mb-16"
 												required
 												label="Telephone"
-												id="telephone"
-												name="telephone"
-												value={form.telephone}
+												id="phone"
+												name="phone"
+												value={form.phone}
 												onChange={handleChange}
 												variant="outlined"
 												fullWidth
@@ -223,9 +260,9 @@ function ClinicBranch(props) {
 												className="mt-8 mb-16"
 												required
 												label="TAX ID"
-												id="TaxId"
-												name="TaxId"
-												value={form.TaxId}
+												id="taxId"
+												name="taxId"
+												value={form.taxId}
 												onChange={handleChange}
 												variant="outlined"
 												fullWidth
@@ -235,8 +272,7 @@ function ClinicBranch(props) {
 								</Grid>
 							</Grid>
 						</div>
-
-					</ div>
+					</div>
 				)
 			}
 			innerScroll
@@ -244,4 +280,4 @@ function ClinicBranch(props) {
 	);
 }
 
-export default withReducer('ClinicBranchsApp', reducer)(ClinicBranch);
+export default withReducer('ClinicApp', reducer)(ClinicBranch);

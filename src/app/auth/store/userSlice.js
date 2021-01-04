@@ -11,11 +11,9 @@ import auth0Service from 'app/services/auth0Service';
 import firebaseService from 'app/services/firebaseService';
 import jwtService from 'app/services/jwtService';
 import { getStrength } from 'app/main/pages/profile/store/strengthSlice';
+import phbApi from '../../services/phbApi';
 
-import {
-	getEvents
-} from 'app/main/apps/calendar/store/eventsSlice';
-
+import { getEvents } from 'app/main/apps/calendar/store/eventsSlice';
 
 export const setUserDataAuth0 = tokenData => async dispatch => {
 	const user = {
@@ -33,6 +31,12 @@ export const setUserDataAuth0 = tokenData => async dispatch => {
 	};
 
 	return dispatch(setUserData(user));
+};
+
+export const getUsers = () => async dispatch => {
+	const response = await phbApi().get('/user');
+	const data = await response.data;
+	return data;
 };
 
 export const setUserDataFirebase = (user, authUser) => async dispatch => {
@@ -78,37 +82,32 @@ export const createUserSettingsFirebase = authUser => async (dispatch, getState)
 };
 
 export const setUserData = user => async (dispatch, getState) => {
-	var reducer = getState().confirmAppointment
-	var confirmAppointment = reducer ? reducer.state : false
+	var reducer = getState().confirmAppointment;
+	var confirmAppointment = reducer ? reducer.state : false;
 	/*
 		You can redirect the logged-in user to a specific route depending on his role
 		 */
 	if (user.role.includes('patient')) {
-
 		if (confirmAppointment == false || !confirmAppointment.jobDay) {
 			history.location.state = {
-				redirectUrl: "dashboard"
+				redirectUrl: 'dashboard'
 			};
-		}
-		else{
+		} else {
 			history.location.state = {
-				redirectUrl: "confirm-appointment" 
+				redirectUrl: 'confirm-appointment'
 			};
 		}
-	}
-	else if (user.role.includes('provider')) {
+	} else if (user.role.includes('provider')) {
 		history.location.state = {
-			redirectUrl: "apps/provider/patients"
+			redirectUrl: 'provider/calendar'
 		};
-	}
-	else if (user.role.includes('clinic')) {
+	} else if (user.role.includes('clinic')) {
 		history.location.state = {
-			redirectUrl: "apps/clinic/appointment" // for example 'apps/academy'
+			redirectUrl: 'apps/clinic/appointment' // for example 'apps/academy'
 		};
-	}
-	else {
+	} else {
 		history.location.state = {
-			redirectUrl: "pages/profile" // for example 'apps/academy'
+			redirectUrl: 'pages/profile' // for example 'apps/academy'
 		};
 	}
 	/*
@@ -174,19 +173,19 @@ export const logoutUser = () => async (dispatch, getState) => {
 	dispatch(userLoggedOut());
 };
 
-export const setCurrentUser = currentUser => (dispatch, getState) =>{
-	var state = getState().auth.user
+export const setCurrentUser = currentUser => (dispatch, getState) => {
+	var state = getState().auth.user;
 	var newCurrentUser = currentUser;
-	var dependents = state.dependents.filter(dependent=> dependent.id != newCurrentUser.id)
+	var dependents = state.dependents.filter(dependent => dependent.id != newCurrentUser.id);
 	var oldCurrentUser = state.currentUser;
 	dependents.push(oldCurrentUser);
-	dispatch(setUser({...state, dependents, currentUser: newCurrentUser}))
-	dispatch(listVaccines())
-	dispatch(listAllergies())
-	dispatch(listMedicines())
-	dispatch(getEvents())
-	dispatch(getStrength())
-}
+	dispatch(setUser({ ...state, dependents, currentUser: newCurrentUser }));
+	dispatch(listVaccines());
+	dispatch(listAllergies());
+	dispatch(listMedicines());
+	dispatch(getEvents());
+	dispatch(getStrength());
+};
 
 export const updateUserData = user => async (dispatch, getState) => {
 	if (!user.role || user.role.length === 0) {
@@ -241,7 +240,7 @@ const initialState = {
 		email: 'johndoe@withinpixels.com',
 		shortcuts: ['calendar', 'mail', 'contacts', 'todo']
 	},
-	dependents:[]
+	dependents: []
 };
 
 const userSlice = createSlice({
@@ -249,9 +248,9 @@ const userSlice = createSlice({
 	initialState,
 	reducers: {
 		setUser: (state, action) => action.payload,
-		userLoggedOut: (state, action) => initialState,
+		userLoggedOut: (state, action) => initialState
 	},
-	extraReducers: {}
+	extraReducers: { [getUsers.fullfiled]: (state, action) => action.payload }
 });
 
 export const { setUser, userLoggedOut } = userSlice.actions;

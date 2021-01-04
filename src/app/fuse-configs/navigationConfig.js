@@ -15,21 +15,21 @@ i18next.addResourceBundle('ar', 'navigation', ar);
 const navigationConfig = [
 	{
 		id: 'User',
-		title: 'User',
+		title: '',
 		translate: 'USER',
 		type: 'group',
 		auth:['patient'],
 		icon: 'pages',
 		children: [
-			{
-				id: 'dashboard',
-				title: 'Dashboard',
-				translate: 'Dashboard',
-				type: 'item',
+			// {
+			// 	id: 'dashboard',
+			// 	title: 'Dashboard',
+			// 	translate: 'Dashboard',
+			// 	type: 'item',
 				
-				icon: 'menu',
-				url: '/dashboard'
-			},
+			// 	icon: 'menu',
+			// 	url: '/dashboard'
+			// },
 				{
 					id: 'appointments',
 					title: 'My Appointments',
@@ -38,14 +38,14 @@ const navigationConfig = [
 					icon: 'today',
 					url: '/appointments'
 				},
-				{
-					id: 'treatments',
-					title: 'My Treatments',
-					translate: 'MYTREATMENTS',
-					type: 'item',
-					icon: 'healing',
-					url: '/treatments'
-				},
+				// {
+				// 	id: 'treatments',
+				// 	title: 'My Treatments',
+				// 	translate: 'MYTREATMENTS',
+				// 	type: 'item',
+				// 	icon: 'healing',
+				// 	url: '/treatments'
+				// },
 				{
 					id: 'calendar',
 					title: 'Calendar',
@@ -74,18 +74,18 @@ const navigationConfig = [
 		},
 	{
 		id: 'clinic',
-		title: 'Clinic',
+		title: '',
 		type: 'group',
 		auth:['clinic'],
 		icon: 'pages',
 		children: [
-			{
-				id: 'appointmentBook',
-				title: 'Appointment Book',
-				type: 'item',
-				icon: 'calendar_today',
-				url: '/apps/clinic/appointment'
-			},
+			// {
+			// 	id: 'appointmentBook',
+			// 	title: 'Appointment Book',
+			// 	type: 'item',
+			// 	icon: 'calendar_today',
+			// 	url: '/apps/clinic/appointment'
+			// },
 			{
 				id: 'members',
 				title: 'My Team',
@@ -93,30 +93,30 @@ const navigationConfig = [
 				icon: 'people',
 				url: '/apps/clinic/members'
 			},
-			{
-				id: 'clinicbranchs',
-				title: 'Clinic Branches',
-				translate: 'CLINICBRANCHES',
-				type: 'item',
-				icon: 'business',
-				url: '/apps/clinic/clinicbranchs'
-			}
+			// {
+			// 	id: 'clinics',
+			// 	title: 'Clinic',
+			// 	translate: 'CLINICBRANCHES',
+			// 	type: 'item',
+			// 	icon: 'business',
+			// 	url: '/apps/clinics/clinics'
+			// }
 		]
 	},
 	{
 		id: 'provider',
-		title: 'Provider',
+		title: '',
 		type: 'group',
 		auth:['provider'],
 		icon: 'pages',
 		children: [
-			{
-				id: 'patients',
-				title: 'Patients',
-				type: 'item',
-				icon: 'people',
-				url: '/apps/provider/patients'
-			},
+			// {
+			// 	id: 'patients',
+			// 	title: 'Patients',
+			// 	type: 'item',
+			// 	icon: 'people',
+			// 	url: '/apps/provider/patients'
+			// },
 			{
 				id: 'Calendar',
 				title: 'Calendar',

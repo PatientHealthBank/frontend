@@ -1,12 +1,14 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import order from './orderSlice';
 import orders from './ordersSlice';
-import product from './productSlice';
+import appointment from './appointmentSlice';
 import appointments from './appointmentsSlice';
+import appointmentTest from './AppointmentTestSlice';
 
 const reducer = combineReducers({
 	appointments,
-	product,
+	appointment,
+	appointmentTest,
 	orders,
 	order
 });

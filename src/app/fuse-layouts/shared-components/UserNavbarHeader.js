@@ -41,7 +41,7 @@ function UserNavbarHeader(props) {
 
 			<Button
 					component={Link}
-					to="/apps/e-commerce/products/new"
+					to="/appointment/new"
 					className="username whitespace-no-wrap normal-case"
 					variant="contained"
 					color="secondary"

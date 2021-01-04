@@ -4,14 +4,14 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
-import {useForm } from '@fuse/hooks';
+import { useForm } from '@fuse/hooks';
 import React, { useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 
 function PatientInformationWidget(props) {
     const { t } = useTranslation();
     const { form, handleChange, setForm } = useForm();
-   
+    
     const handleSubmit = () => {
         props.editPatientInformation(form.name, form.birthdate, form.ssn, form.phone, form.email, form.photoURL);
     }
@@ -58,35 +58,28 @@ function PatientInformationWidget(props) {
                         }}
                         fullWidth
                     />
+
                     <TextField
-                        className="mt-8 mb-16"
-                        required
-                        label="User Name"
-                        id="name"
-                        name="name"
-                        //value={patient}
-                        //onChange={handleChange}
-                        variant="outlined"
+                        className="mb-16"
+                        type="text"
+                        disabled={ true }
+                        name="email"
+                        label="Email"
+                        value={form.email}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <Icon className="text-20" color="action">
-                                        person
-											</Icon>
+                                        email
+								</Icon>
                                 </InputAdornment>
                             )
                         }}
-                        fullWidth
-                    />
-                    <TextField
-                        className="mb-16"
-                        type="text"
-                        name="zipCode"
-                        label="Zip Code"
                         variant="outlined"
                         required
                         fullWidth
                     />
+
                     <Grid container className="mb-16" spacing={3}>
                         <Grid item xs>
                             <TextField
@@ -95,6 +88,7 @@ function PatientInformationWidget(props) {
                                 name="birthdate"
                                 label="BirthDate"
                                 value={new Date(form.birthdate).toLocaleDateString()}
+                                onChange={handleChange}
                                 className="mr-8"
                                 InputProps={{
                                     endAdornment: (
@@ -120,6 +114,7 @@ function PatientInformationWidget(props) {
                                 name="ssn"
                                 label="SSN (Last 4 digits)"
                                 value={form.ssn}
+                                onChange={handleChange}
                                 InputProps={{
                                     endAdornment: (
                                         <InputAdornment position="end">
@@ -156,14 +151,10 @@ function PatientInformationWidget(props) {
                     <TextField
                         className="mb-16"
                         type="text"
-                        id="email"
                         name="email"
+                        disabled={true}
                         label="Email"
                         value={form.email}
-                        //validations="isEmail"
-                        //validationErrors={{
-                        //    isEmail: 'Please enter a valid email'
-                        //}}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
@@ -177,18 +168,18 @@ function PatientInformationWidget(props) {
                         required
                         fullWidth
                     />
-                    <Button
-                        className="whitespace-no-wrap normal-case float-right"
-                        variant="contained"
-                        color="secondary"
-                        //disabled={canBeNotSubmitted()}
-                        onClick={handleSubmit}
-                    >
-                        {t("Save Edit")}
-                    </Button>
-                </Grid>
-
+                <Button
+                    className="whitespace-no-wrap normal-case float-right"
+                    variant="contained"
+                    color="secondary"
+                    //disabled={canBeNotSubmitted()}
+                    onClick={handleSubmit}
+                >
+                    {t("Save")}
+                </Button>
             </Grid>
+
+            </Grid >
         )
     );
 }

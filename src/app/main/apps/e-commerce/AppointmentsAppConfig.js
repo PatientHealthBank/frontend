@@ -1,14 +1,14 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-
+import Appointment from './appointment/Appointment'
 const AppointmentsAppConfig = {
 	settings: {
 		layout: {}
 	},
 	routes: [
 		{
-			path: '/apps/e-commerce/appointments/:productId/:productHandle?',
-			component: React.lazy(() => import('./product/Product'))
+			path: '/appointment/:appointmentId',
+			component: Appointment
 		},
 		{
 			path: '/appointments',

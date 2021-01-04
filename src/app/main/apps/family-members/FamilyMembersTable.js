@@ -381,7 +381,7 @@ function FamilyMembersTable(props) {
 												<TableCell >{row.address}</TableCell>
 												<TableCell >{row.phone}</TableCell>
 												<TableCell >{row.relationship}</TableCell>
-												<TableCell>{row.dateofBirth}</TableCell>
+												<TableCell>{new Date(row.dateofBirth).toLocaleDateString()}</TableCell>
 											</TableRow>
 										);
 									})}

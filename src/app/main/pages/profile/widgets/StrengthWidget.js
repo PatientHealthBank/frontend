@@ -43,7 +43,7 @@ function StrengthWidget(props) {
 			]
 		},
 		options: {
-			cutoutPercentage: strengthParams.total,
+			cutoutPercentage: 75,
 			spanGaps: false,
 			legend: {
 				display: false
@@ -88,7 +88,13 @@ function StrengthWidget(props) {
 			</div>
 
 			<div className="p-16 flex flex-row items-center justify-center">
-				<Typography className="h1 px-12">Intermediate Level</Typography>
+			{strengthParams.total  && (!strengthParams.total ||  strengthParams.total < 40 ? 
+						(<Typography className="h1 px-12">Basic Level</Typography>)
+							:
+							strengthParams.total < 60 ? (<Typography className="h1 px-12">Intermediate Level</Typography>):
+							(<Typography className="h1 px-12">Advanced Level</Typography>)
+
+					)}
 				{/* {data.labels.map((label, index) => (
 					<div key={label} className="px-16 flex flex-col items-center">
 						<Typography className="h4" color="textSecondary">
