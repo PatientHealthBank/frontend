@@ -14,12 +14,24 @@ export const getAppointment = createAsyncThunk('eCommerceApp/appointment/getAppo
 });
 
 export const updateAppointment = createAsyncThunk('eCommerceApp/appointment/updateAppointment', async (appointment, { dispatch }) => {
-	dispatch(openLoading())
-	const response = await phbApi().put('/appointment', appointment);
-	const data = await response.data;
-	dispatch(closeLoading());
-	toast.success("Appointment Saved");
-	return data;
+	try {
+		dispatch(openLoading())
+		console.log(appointment)
+		var response
+		if(appointment.id){
+			response = await phbApi().put('/appointment', appointment);
+		}
+		else{
+			response = await phbApi().post('/appointment/new', appointment);
+		}
+		const data = await response.data;
+		dispatch(closeLoading());
+		toast.success("Appointment Saved");
+		return data;
+	}
+	catch (ex) {
+		toast.warn("Internal Server Error");
+	}
 });
 const appointmentAdapter = createEntityAdapter({});
 
@@ -32,17 +44,19 @@ const appointmentSlice = createSlice({
 			reducer: (state, action) => action.payload,
 			prepare: event => ({
 				payload: {
-					clinic: '',
+					clinic: null,
 					handle: '',
-					description:'',
+					description: '',
+					comments: '',
 					doctorName: '',
 					specialty: null,
 					specialtyDescription: '',
 					featuredImageId: '',
-					meansTransport:'',
+					meansTransport: '',
 					patient: '',
-					priority:'',
-					date:new Date(),
+					priority: '',
+					date: new Date().toISOString(),
+					scheduleDate: new Date().toISOString(),
 					firstAppointment: false,
 					includeTravelTime: false,
 					caregiverAppointment: false,

@@ -53,7 +53,7 @@ class FuseAuthorization extends Component {
 			defaultRoute += "dashboard" 
 		}
 		else if(userRole == 'provider'){
-				defaultRoute += "apps/provider/patients" // for example 'apps/academy'
+				defaultRoute += "provider/calendar" // for example 'apps/academy'
 		}
 		else if(userRole == 'clinic'){
 			defaultRoute += "apps/clinic/appointment" 

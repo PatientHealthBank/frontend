@@ -170,7 +170,7 @@ function Appointment(props) {
 	}
 
 	function canBeSubmitted() {
-		return form.clinic && !_.isEqual(appointment, form);
+		return (form.clinic || routeParams.appointmentId == 'new') && !_.isEqual(appointment, form);
 	}
 	return (
 		<FusePageCarded
@@ -252,7 +252,7 @@ function Appointment(props) {
 			content={
 				(form && (routeParams.appointmentId == "new" || form.specialty)) ? (
 					<div className="p-16 sm:p-24">
-						{tabValue === 0 && <AppointmentTab appointment={form} handleChange={handleChange}/>}
+						{tabValue === 0 && <AppointmentTab appointment={form} type={routeParams.appointmentId} handleChange={handleChange}/>}
 						{tabValue === 1 && (
 							<div>
 								<AppointmentCheckList appointmentCheckList={form.appointmentCheckList} setForm={setForm} handleChange={handleChange} classes={classes} />

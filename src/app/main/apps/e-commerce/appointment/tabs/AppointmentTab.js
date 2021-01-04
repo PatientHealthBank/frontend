@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField';
 import React, { useEffect, useRef, useState } from 'react';
 import AlertTransportsDialog from '../AlertTransportsDialog';
 
-function AppointmentTab({appointment,handleChange}) {
+function AppointmentTab({appointment,handleChange,type}) {
         const [open, setOpen] = useState(false);
         const [dialogContent, setDialogContent] = useState([]);
         const [dialogTitle, setDialogTitle] = useState("Title");
@@ -43,6 +43,8 @@ function AppointmentTab({appointment,handleChange}) {
             handleChange(event);
     
         }
+
+        console.log(appointment.clinic )
     return (
         <div>
             <Grid container spacing={3}>
@@ -50,14 +52,26 @@ function AppointmentTab({appointment,handleChange}) {
                     <TextField
                         className="mt-8 mb-16"
                         label="Clinic"
-                        id="clinic.companyName"
-                        name="clinic.companyName"
-                        disabled = {appointment.clinic === null? false:true}
-                        value={appointment.clinic === null? appointment.clinicName : appointment.clinic?.companyName}
+                        id={(appointment.clinic|| type != 'new') ? 'clinic.companyName' : 'clinicName'}
+                        name={(appointment.clinic || type != 'new')  ? 'clinic.companyName' : 'clinicName'}
+                        disabled={appointment.clinic}
+                        value={(!appointment.clinic || type == 'new')? appointment.clinicName : appointment.clinic?.companyName}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
                     />
+                    {
+                        (appointment.providerName || type == 'new') && 
+                    <TextField
+                        className="mt-8 mb-16"
+                        label="Provider Name"
+                        id={'providerName'}
+                        name={'providerName'}
+                        value={appointment.providerName}
+                        onChange={handleChange}
+                        variant="outlined"
+                        fullWidth
+                    />}
                     <TextField
                         className="mt-8 mb-16"
                         id="comments"
