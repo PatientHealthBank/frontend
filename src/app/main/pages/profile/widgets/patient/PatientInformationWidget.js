@@ -9,6 +9,8 @@ import React, { useEffect, createRef, useState, onClick } from 'react';
 import { useTranslation } from "react-i18next"
 import ReactDOM from "react-dom";
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+
 
 const useStyles = makeStyles(theme => ({
     patientImage: {
@@ -22,8 +24,13 @@ function PatientInformationWidget(props) {
     const { t } = useTranslation();
     const classes = useStyles();
     const { form, handleChange, setForm } = useForm();
-    const imageProfile = "https://phbbucket.s3.us-east-2.amazonaws.com/profileImages/"+ props.currentFile;
-    
+
+    var imageProfile = "assets/images/avatars/Velazquez.jpg";
+
+    if(props.currentFile){
+        imageProfile = "https://phbbucket.s3.us-east-2.amazonaws.com/profileImages/"+ props.currentFile;
+    }
+     
     const handleSubmit = () => {
         props.editPatientInformation(form.name, form.birthdate, form.ssn, form.phone, form.email, form.photoURL, props.currentFile);
     }
