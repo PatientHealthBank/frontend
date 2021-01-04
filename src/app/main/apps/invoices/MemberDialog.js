@@ -17,8 +17,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -38,8 +36,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MemberDialog({open, setOpen, title, member, setMember, handleAdd, handleEdit, handleDelFile}) {
+function MemberDialog({open, setOpen, title, member, setMember, handleAdd, handleEdit, handleDelFile, currentFile}) {
   
+    var labelFile ='';
+
+  if(title === 'Edit'){
+    labelFile = currentFile ? 'Replace File' : 'New File';
+  }
+
   const classes = useStyles();
   const { t } = useTranslation();
   const handleChange = (event) => {
@@ -56,7 +60,7 @@ function MemberDialog({open, setOpen, title, member, setMember, handleAdd, handl
   const handleSave = event => {
 
     if(title === "Edit"){
-      handleEdit(member.id, member.companyName, new Date(member.serviceDate), parseFloat(member.serviceValue), member.registerServiceProvider, member.fileUrl)
+      handleEdit(member.id, member.companyName, new Date(member.serviceDate), parseFloat(member.serviceValue), member.registerServiceProvider, member.fileUrl, currentFile)
     }
     else{
       handleAdd(member.companyName, new Date(member.serviceDate), parseFloat(member.serviceValue), member.registerServiceProvider, member.fileUrl)
@@ -74,6 +78,8 @@ function MemberDialog({open, setOpen, title, member, setMember, handleAdd, handl
   const handleDateChange = (date) => {
     setMember({ ...member, "serviceDate": date });
   }
+
+  const colorLabel = {color: '#c2c2c2'};
 
   return (
     <div>
@@ -137,6 +143,9 @@ function MemberDialog({open, setOpen, title, member, setMember, handleAdd, handl
                             />
                         </FormControl >
                         <FormControl fullWidth className={classes.margin} variant="outlined">
+                        <div class="ml-8" style={colorLabel}> 
+                            {labelFile} 
+                          </div>
                             <TextField
                               type='file'
                               variant="outlined"

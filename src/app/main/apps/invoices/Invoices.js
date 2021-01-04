@@ -31,42 +31,35 @@ function Invoices() {
 		dispatch(openLoading())
 
 		if(fileUrl){
-
 			var formData = new FormData();
-
 			formData.append("file", fileUrl);
 
 			phbApi().post("/Invoices/file", formData, { headers: {
 				'Content-Type': 'multipart/form-data'}
-			}
-			
-			).then(res => {
-
-				phbApi().post("/Invoices/register", {
-					CompanyName: companyName, 
-					ServiceDate: serviceDate, 
-					ServiceValue: serviceValue, 
-					RegisterServiceProvider: registerServiceProvider, 
-					FileUrl: res.data, 
-					UserId: user.uuid,
-					ApointmentId: null
-				}).then(response => {
-				
-				}).
-					catch(error => {
-						dispatch(closeLoading())
-				});
-
-				dispatch(closeLoading())
-				dispatch(listInvoices())
-
+			}).then(res => {
+				NewInvoice(companyName, serviceDate, serviceValue, registerServiceProvider, res.data, user.uuid);
 			}).
 			catch(err => {
 				dispatch(closeLoading())
-			})
-
+			});
+		}else{
+			NewInvoice(companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, user.uuid);
 		}
 				
+	}
+
+	const NewInvoice = (companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, userId) => {
+		phbApi().post("/Invoices/register", {
+			CompanyName: companyName, 
+			ServiceDate: serviceDate, 
+			ServiceValue: serviceValue, 
+			RegisterServiceProvider: registerServiceProvider, 
+			FileUrl: fileUrl, 
+			UserId: userId
+		}).then(res => {
+			dispatch(closeLoading());
+			dispatch(listInvoices());
+		});	
 	}
 
 	const DeleteInvoices = (id, fileUrl)=>{
@@ -96,7 +89,6 @@ function Invoices() {
 			dispatch(closeLoading())
 		});
 
-
 	}
 
 	const DownloadInvoiceFile = (fileUrl) => {
@@ -115,26 +107,49 @@ function Invoices() {
 
 	}
 
-	const UpdateInvoices = (id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl)=>{
+	const UpdateInvoices = (id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, currentFile)=>{
+		dispatch(openLoading());
 
-			dispatch(openLoading())
-			phbApi().put("/Invoices/update", {
-					Id: id,
-					CompanyName: companyName, 
-					ServiceDate: serviceDate, 
-					ServiceValue: serviceValue, 
-					RegisterServiceProvider: registerServiceProvider, 
-					FileUrl: fileUrl, 
-					UserId: user.uuid,
-					ApointmentId: null
+		if(fileUrl){
+
+			if(currentFile && currentFile != fileUrl){
+				phbApi().delete("/Invoices/file?imageName="+currentFile);
+
+				var formData = new FormData();
+				formData.append("file", fileUrl);
+				phbApi().post("/Invoices/file", formData, { headers: {
+					'Content-Type': 'multipart/form-data'}
 				}).then(res => {
-				dispatch(closeLoading())
-				dispatch(listInvoices())
-			}).
+					EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, res.data, user.uuid);
+				}).
 				catch(err => {
 					dispatch(closeLoading())
-			})
+				});
+			}else{
+				EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, user.uuid);
+			}
 
+			
+		}else{
+
+			EditInvoice(id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl , user.uuid);
+		}
+			
+	}
+
+	const EditInvoice = (id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, userId) => {
+		phbApi().put("/Invoices/update", {
+			Id: id,
+			CompanyName: companyName, 
+			ServiceDate: serviceDate, 
+			ServiceValue: serviceValue, 
+			RegisterServiceProvider: registerServiceProvider, 
+			FileUrl: fileUrl, 
+			UserId: userId,
+		}).then(res => {
+			dispatch(closeLoading());
+			dispatch(listInvoices());
+		});	
 	}
 
 	return (

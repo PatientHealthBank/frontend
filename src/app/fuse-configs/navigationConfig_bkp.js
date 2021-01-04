@@ -73,7 +73,7 @@ const navigationConfig = [
 					title: 'Invoices',
 					translate: 'INVOICES',
 					type: 'item',
-					icon: 'people',
+					icon: 'note',
 					url: '/invoices'
 				}
 			],

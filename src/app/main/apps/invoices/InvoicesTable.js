@@ -233,6 +233,7 @@ function InvoicesTable(props) {
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
 	const [rows, setRows] = React.useState(invoiceRows);
 	const [selectedRow, setSelectedRow] = React.useState({});
+	const [currentFile, setCurrentFile] = React.useState(false);
 
 	const handleDelete = () => {
 
@@ -277,6 +278,10 @@ function InvoicesTable(props) {
 	const handleOpenModal = (titleModal) => {
 		setTitle(titleModal)
 		if (titleModal === "Edit") {
+
+			var file = rows.find((x,i) => selected.includes(i));
+
+			setCurrentFile(file.fileUrl);
 			setSelectedRow(rows.find((x,i) => selected.includes(i)))
 		}			
 			setOpen(true)
@@ -341,6 +346,7 @@ function InvoicesTable(props) {
 					handleDownload={props.DownloadInvoiceFile}
 					member={selectedRow}
 					setMember={setSelectedRow} 
+					currentFile={currentFile}
 				/>
 				<Paper className={classes.paper}>
 					<EnhancedTableToolbar

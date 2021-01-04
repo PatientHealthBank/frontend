@@ -17,7 +17,6 @@ import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 
-
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: '100%',
@@ -43,12 +42,41 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AppointmentsTable(props) {
+
 	const { t } = useTranslation();
 	const [open, setOpen] = React.useState(false);
 	const classes = useStyles();
+	const [invoice, setInvoice] = React.useState(false);
+	const [title, setTitle] = React.useState(false);
+	const [appointmentId, setAppointmentId] = React.useState(false);
+	const [currentFile, setCurrentFile] = React.useState(false);
 
-	const handleOpenModal = (titleModal) => {	
-		setOpen(true)
+
+	const handleOpenModal = (row) => {	
+		setOpen(true);
+		var stop = 0;
+		props.invoices.map(function(value, i) {
+
+			if(value.appointmentId == row.id && stop == 0){
+				setInvoice(value);
+				setTitle('Edit');
+				setAppointmentId('');
+				setCurrentFile(value.fileUrl);
+				stop++;
+			}
+		});
+
+		if(stop == 0){
+			setInvoice({});
+			setTitle('New');
+			setAppointmentId(row.id);
+			setCurrentFile();
+		}
+		
+	}			
+
+	const setDisplay = (param) => {	
+		return {display: param};
 	}
 
 	// function handleChangePage(event, value) {
@@ -136,21 +164,28 @@ function AppointmentsTable(props) {
 
 									<TableCell className="p-4 md:p-16" component="th" scope="row" >
 
-									<IconButton onClick={() => handleOpenModal("Edit")} aria-label="delete">
-										<Icon>edit</Icon>
+									<IconButton title="invoice" style={setDisplay(row)} onClick={() => handleOpenModal(row)} aria-label="delete">
+										<Icon>note</Icon>
 									</IconButton>
 										{
 											// <CheckIn specialty={n.specialtyDescription} date={n.date} disabled={n.priority === "Pending"}/>
 										}
 									</TableCell>
 
-									<AppointmentDialog open={open} setOpen={setOpen}
-										member={row.provider}
-									/>
+									
 								</TableRow>
 								
 							)}
 						</TableBody>
+						<AppointmentDialog open={open} setOpen={setOpen}
+							member={invoice}
+							handleEdit={props.UpdateInvoices}
+							handleAdd={props.RegisterNewInvoices}
+							setMember={setInvoice}
+							title={title}
+							appointmentId={appointmentId}
+							currentFile={currentFile}
+						/>
 					</Table>
 				</FuseScrollbars>
 				{/* <TablePagination

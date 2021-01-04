@@ -3,6 +3,7 @@ import order from './orderSlice';
 import orders from './ordersSlice';
 import product from './productSlice';
 import appointments from './appointmentsSlice';
+import invoices from './invoicesSlice';
 
 const reducer = combineReducers({
 	appointments,
