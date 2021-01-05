@@ -25,7 +25,7 @@ import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-const appointments = useSelector(( {AppointmentsApp} ) => AppointmentsApp.appointments);
+// const appointments = useSelector(( {AppointmentsApp} ) => AppointmentsApp.appointments);
 	
 // React.useEffect(()=>{
 
