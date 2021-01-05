@@ -2,7 +2,7 @@ import CalendarAppConfig from './calendar/CalendarAppConfig';
 import CalendarProviderConfig from './calendar-provider/CalendarProviderConfig';
 import HomeAppConfig from './dashboards/home/HomeAppConfig';
 import ConfirmAppointmentsConfig from './dashboards/confirm-appointments/ConfirmAppointmentsConfig';
-import DashboardAppConfig from './dashboards/dashboard/DashboardAppConfig';
+import DashboardAppConfig from './dashboards/main/DashboardAppConfig';
 import FindAClinicAppConfig from './dashboards/find-a-clinic/FindAClinicAppConfig';
 import DoctorsAppConfig from './dashboards/doctors/DoctorsAppConfig';
 import AppointmentsAppConfig from './e-commerce/AppointmentsAppConfig';

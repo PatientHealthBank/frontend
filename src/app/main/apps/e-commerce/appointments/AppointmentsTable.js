@@ -13,7 +13,7 @@ import { withRouter } from 'react-router-dom';
 import { getAppointments, selectAppointments } from '../store/appointmentsSlice';
 import AppointmentsTableHead from './AppointmentsTableHead';
 import AppointmentPriority from './AppointmentPriority';
-import CheckIn from '../../dashboards/dashboard/widgets/CheckIn';
+import CheckIn from '../../dashboards/main/widgets/CheckIn';
 import { useTranslation } from "react-i18next";
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
