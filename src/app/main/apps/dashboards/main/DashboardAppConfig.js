@@ -7,8 +7,7 @@ const DashboardAppConfig = {
 	routes: [
 		{
 			path: '/dashboard',
-			//component: React.lazy(() => import('./DashboardApp'))
-			component: ()=> (<div></div>)
+			component: React.lazy(() => import('./DashboardApp'))
 		},
 	]
 };

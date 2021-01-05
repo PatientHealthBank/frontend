@@ -12,6 +12,8 @@ import Card from '@material-ui/core/Card';
 import StrengthWidget from 'app/main/pages/profile/widgets/StrengthWidget';
 import VaccinesTakenWidget from 'app/main/pages/profile/widgets/ImmunizationWidget';
 import TableRow from '@material-ui/core/TableRow';
+import {appointmentsList} from '../../../e-commerce/store/appointmentSlice'
+
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import CheckIn from './CheckIn'
@@ -21,7 +23,17 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Icon from '@material-ui/core/Icon';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
+const appointments = useSelector(( {AppointmentsApp} ) => AppointmentsApp.appointments);
+	
+React.useEffect(()=>{
+	invoiceList(user);
+
+	if(appointments.length == 0){
+		dispatch(appointmentsList())
+	}
+},[dispatch]);
 var allergies = [
 	{
 		id: '1',
@@ -63,6 +75,7 @@ var medicines = [
 		RefillStatus: "Yes"
 	}
 ];
+
 
 var strength = {
 	id: 'widget7',

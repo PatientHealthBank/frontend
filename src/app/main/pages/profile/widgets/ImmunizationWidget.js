@@ -5,22 +5,22 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import {listVaccines} from '../store/vaccinesSlice'
+import { listVaccines } from '../store/vaccinesSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import withReducer from 'app/store/withReducer';
 import reducer from '../store';
 
 function ImmunizationWidget(props) {
 	const { t } = useTranslation();
-	const {vaccines} = useSelector(( {ProfilesApp} ) => ProfilesApp);
+	const { vaccines } = useSelector(({ ProfilesApp }) => ProfilesApp);
 	const dispatch = useDispatch()
-	React.useEffect(()=>{
-		if(vaccines.length == 0){
+	React.useEffect(() => {
+		if (vaccines.length == 0) {
 			dispatch(listVaccines())
 		}
-	},[])
+	}, [])
 	return (
-		<Card className="w-full rounded-8 shadow-1" style={{height:'359px'}} >
+		<Card className="w-full rounded-8 shadow-1" style={{ height: '359px' }} >
 			<div className="p-16 px-4 flex flex-row items-center justify-between">
 				<Typography className="h1 px-12">{t('My Vaccines')}</Typography>
 
@@ -30,7 +30,7 @@ function ImmunizationWidget(props) {
 					</IconButton>
 				</div>
 			</div>
-			<div class="overflow-scroll" style={{height:'278px'}}>
+			<div class="overflow-scroll" style={{ height: '278px' }}>
 				<table className="simple clickable sticky-table">
 					<thead>
 						<tr>
@@ -42,14 +42,31 @@ function ImmunizationWidget(props) {
 					<tbody>
 						{vaccines.map(row => (
 							<tr key={row.id}>
-								<td className="text-right">{t(row.description)}</td>
+								<td className="text-right">Vaccine Oxford</td>
 								<td className="text-right">{new Date(row.date).toLocaleDateString()}</td>
 								<td className="text-right">{t(row.location)}</td>
 							</tr>
 						))}
+						<tr >
+							<td className="text-right">China Vaccine</td>
+							<td className="text-right">01/04/2020</td>
+							<td className="text-right"> China</td>
+						</tr>
+						<tr>
+							<td className="text-right"> Sputnik Vaccine</td>
+							<td className="text-right">01/04/2020</td>
+							<td className="text-right">Russia</td>
+						</tr>
+						<tr>
+							<td className="text-right">Oxford Vaccine</td>
+							<td className="text-right">01/04/2020</td>
+							<td className="text-right">England</td>
+
+						</tr>
 					</tbody>
 				</table>
 			</div>
+
 
 
 			<Divider className="card-divider w-full" />
