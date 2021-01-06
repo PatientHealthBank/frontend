@@ -2,12 +2,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 //ToDo migra table pra share component
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 
 import Typography from '@material-ui/core/Typography';
 import AllergiesWidget from 'app/main/pages/profile/widgets/AllergiesWidget';
@@ -187,9 +181,6 @@ function Widget5(props) {
         setEmergency(emergency.splice(index, 1));
     };
 
-
-
-
 	return (
 		<Grid container spacing={2}>
 			{widgets.appointments &&
@@ -243,7 +234,7 @@ function Widget5(props) {
 				<StrengthWidget data={strength} />
 			</Grid>}
 			{widgets.vaccines && <Grid item xs={12} sm={6} md={4}>
-				<VaccinesTakenWidget data={takenVaccines} />
+				<VaccinesTakenWidget data={vaccines} />
 			</Grid>}
 			{widgets.medicines && <Grid item xs={12} sm={6} md={4}>
 				<MedicinesWidget data={medicines} />
