@@ -12,6 +12,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import { useForm, useDeepCompareEffect, useDebounce } from '@fuse/hooks';
 
 function AppointmentWidget(props) {
 	const dispatch = useDispatch();
@@ -21,12 +22,17 @@ function AppointmentWidget(props) {
 
 	useEffect(() => {
 		if (appointments.length == 0 && appointments) {
-			dispatch(getAppointments());
-		}
-		{
 			setData(appointments);
 		}
+
 	}, [dispatch, appointments]);
+
+	useDeepCompareEffect(() => {
+		function updateAppointmentWidgetState() {
+			dispatch(getAppointments());
+		}
+		updateAppointmentWidgetState();
+	}, [dispatch]);
 
 	return (
 		appointments && (
