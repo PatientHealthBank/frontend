@@ -9,8 +9,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { useTranslation } from "react-i18next";
 function EmergencyContactListWidget(props) {
+	const { emergencyContact } = useSelector(({ ProfilesApp }) => ProfilesApp);
 	const { t } = useTranslation();
 	const handleDelete = (id) => {
 		props.deleteEmergencyContact(id);
@@ -40,15 +43,7 @@ function EmergencyContactListWidget(props) {
 			</div>
 			<div className="table-responsive">
 				<Table className="w-full min-w-full">
-					<TableHead>
-						<TableRow>
-							{columns.map(column => (
-								<TableCell key={column.id} className="whitespace-no-wrap">
-									{t(column.title)}
-								</TableCell>
-							))}
-						</TableRow>
-					</TableHead>
+				
 					<TableBody>
 						{props.emergencyContact.map(row =>
 							<TableRow key={row.id}>
