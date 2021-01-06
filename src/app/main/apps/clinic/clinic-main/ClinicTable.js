@@ -8,8 +8,9 @@ import TableRow from '@material-ui/core/TableRow';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { getClinics, selectClinics,deleteClinic } from '../store/clinicsSlice';
+import { getClinics, selectClinics, deleteClinic } from '../store/clinicsSlice';
 import ClinicBranchsTableHead from './ClinicTableHead';
+import { useForm, useDeepCompareEffect, useDebounce } from '@fuse/hooks';
 
 function ClinicTable(props) {
 	const dispatch = useDispatch();
@@ -25,15 +26,12 @@ function ClinicTable(props) {
 	});
 
 	useEffect(() => {
-		console.log('realizando dispastch');
-		if (clinic.length == 0 && clinic) {
-			dispatch(getClinics());
-		}{
-			setData(clinic);
+		setData(clinic);
+	}, [dispatch, clinic]);
 
-		}
-	}, [dispatch,clinic]);
-
+	useDeepCompareEffect(() => {
+		dispatch(getClinics());
+	}, [dispatch]);
 
 	function handleRequestSort(event, property) {
 		const id = property;
@@ -57,9 +55,9 @@ function ClinicTable(props) {
 		setSelected([]);
 	}
 
-	function handleDelete(id, e){
-		console.log('handle delete',id)
-		dispatch(deleteClinic(id))
+	function handleDelete(id, e) {
+		console.log('handle delete', id);
+		dispatch(deleteClinic(id));
 	}
 	function handleClick(item) {
 		console.log('handle click');
@@ -116,26 +114,44 @@ function ClinicTable(props) {
 										key={n.id}
 										selected={isSelected}
 									>
-										<TableCell className="p-4 md:p-16"  onClick={event => handleClick(n)} component="th" scope="row">
+										<TableCell
+											className="p-4 md:p-16"
+											onClick={event => handleClick(n)}
+											component="th"
+											scope="row"
+										>
 											{n.companyName}
 										</TableCell>
 
-										<TableCell className="p-4 md:p-16"  onClick={event => handleClick(n)} component="th" scope="row">
+										<TableCell
+											className="p-4 md:p-16"
+											onClick={event => handleClick(n)}
+											component="th"
+											scope="row"
+										>
 											{n.address.addressLine1}
 										</TableCell>
 
-										<TableCell className="p-4 md:p-16" onClick={event => handleClick(n)} component="th" scope="row">
+										<TableCell
+											className="p-4 md:p-16"
+											onClick={event => handleClick(n)}
+											component="th"
+											scope="row"
+										>
 											{n.address.city}
 										</TableCell>
 
-										<TableCell className="p-4 md:p-16" onClick={event => handleClick(n)} component="th" scope="row">
+										<TableCell
+											className="p-4 md:p-16"
+											onClick={event => handleClick(n)}
+											component="th"
+											scope="row"
+										>
 											{n.address.state}
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row">
-											<button onClick={e => handleDelete(n.id,e)} >
-												Remove
-											</button>
+											<button onClick={e => handleDelete(n.id, e)}>Remove</button>
 										</TableCell>
 									</TableRow>
 								);

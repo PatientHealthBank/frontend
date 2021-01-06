@@ -21,17 +21,11 @@ function AppointmentWidget(props) {
 	const [data, setData] = useState(appointments);
 
 	useEffect(() => {
-		if (appointments.length == 0 && appointments) {
-			setData(appointments);
-		}
-
+		setData(appointments);
 	}, [dispatch, appointments]);
 
 	useDeepCompareEffect(() => {
-		function updateAppointmentWidgetState() {
-			dispatch(getAppointments());
-		}
-		updateAppointmentWidgetState();
+		dispatch(getAppointments());
 	}, [dispatch]);
 
 	return (
