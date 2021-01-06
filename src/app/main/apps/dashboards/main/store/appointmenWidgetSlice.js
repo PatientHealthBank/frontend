@@ -5,15 +5,18 @@ import phbApi from 'app/services/phbApi'
 import axios from 'axios';
 
 export const getAppointments = createAsyncThunk('AppointmentsWidgetApp/appointments/getAppointments', async (params, { getState, dispatch }) => {
+	dispatch(openLoading());
 
 	const { user } = getState().auth;
 
-	return phbApi().get('/appointment/'+user.uuid)
+	return phbApi().get('/appointment/'+user.currentUser.id)
 		.then(response => {
+			dispatch(closeLoading());
+
 			return response.data;
 		})
 		.catch(error => {
-            return dispatch(closeLoading())
+             dispatch(closeLoading())
 		});
 });
 
