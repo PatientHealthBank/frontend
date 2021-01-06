@@ -28,12 +28,12 @@ function ClinicTable(props) {
 		console.log('realizando dispastch');
 		if (clinic.length == 0 && clinic) {
 			dispatch(getClinics());
-		}
-	}, [dispatch]);
+		}{
+			setData(clinic);
 
-	useEffect(() => {
-		setData(clinic);
-	}, [clinic]);
+		}
+	}, [dispatch,clinic]);
+
 
 	function handleRequestSort(event, property) {
 		const id = property;

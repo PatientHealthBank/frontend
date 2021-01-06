@@ -1,22 +1,26 @@
 
 import { makeStyles } from '@material-ui/core/styles';
+//ToDo migra table pra share component
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
 import Typography from '@material-ui/core/Typography';
 import AllergiesWidget from 'app/main/pages/profile/widgets/AllergiesWidget';
 import MedicinesWidget from 'app/main/pages/profile/widgets/MedicinesWidget';
 import Card from '@material-ui/core/Card';
 import StrengthWidget from 'app/main/pages/profile/widgets/StrengthWidget';
 import VaccinesTakenWidget from 'app/main/pages/profile/widgets/ImmunizationWidget';
-import TableRow from '@material-ui/core/TableRow';
 // import {appointmentsList} from '../../../e-commerce/store/appointmentSlice'
 
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import CheckIn from './CheckIn'
+import AppointmentWidget from './AppointmentWidget'
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import Paper from '@material-ui/core/Paper';
@@ -26,7 +30,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // const appointments = useSelector(( {AppointmentsApp} ) => AppointmentsApp.appointments);
-	
+
 // React.useEffect(()=>{
 
 // 	if(appointments.length == 0){
@@ -213,19 +217,7 @@ function RowToComp(prop) {
 		</div>)
 }
 
-function createData(name, specialty, date) {
-	return { name, specialty, date };
-}
 
-const rows = [
-	createData('Henry', 'Physical Therapist - Knee', new Date("12/03/2020 11:00")),
-	createData('Sam', 'Sports Medicine', new Date("12/05/2020 11:00")),
-	createData('Henry', 'Physical Therapis', new Date("11/07/2020 11:00")),
-	createData('Sam', 'Sports Medicine', new Date("11/13/2020 11:00")),
-	createData('Henry', 'Physical Therapis', new Date("11/16/2020 11:00")),
-	createData('Sam', 'Sports Medicine', new Date("11/18/2020 11:00")),
-
-];
 function createContact(name, phone, kinship, email) {
 	return { name, phone, kinship, email }
 }
@@ -263,7 +255,7 @@ function Widget5(props) {
 		<Grid container spacing={2}>
 			{widgets.appointments &&
 				<Grid item xs={12} sm={12} md={4}>
-					<Card className="w-full rounded-8 shadow-1" style={{height:'359px'}}>
+					<Card className="w-full rounded-8 shadow-1" style={{ height: '359px' }}>
 						<div className="p-16 px-4 flex flex-row items-center justify-between">
 							<Typography className="h1 px-12">Appointments</Typography>
 
@@ -275,35 +267,16 @@ function Widget5(props) {
 						</div>
 
 						<div className="w-full p-8 min-h-420 h-420">
-							<TableContainer style={{height:'278px'}}>
-								<Table aria-label="simple table sticky-table" >
-									<TableHead>
-										<TableRow>
-											<TableCell align="center">Appointments</TableCell>
-											<TableCell align="center">Actions</TableCell>
-										</TableRow>
-									</TableHead>
-									<TableBody>
-										{rows.sort((a, b) => b.date.getDate() - a.date.getDate())
-											.slice(0, 4)
-											.map((row) => (
-												<TableRow key={row.name}>
-													<TableCell align="center">{row.specialty}<br /> {row.date.toGMTString()}</TableCell>
-													<TableCell align="center">{row.date.getDate() > 8 ? <CheckIn specialty={row.specialty} date={row.date.toGMTString()} /> : "Done"}</TableCell>
-												</TableRow>
-											))}
-									</TableBody>
-								</Table>
-							</TableContainer>
+							<AppointmentWidget />
 						</div>
 					</Card>
 				</Grid>}
 			{(widgets.careTeam || widgets.emergencyContact) &&
 				<Grid item xs={12} sm={12} md={8}>
 					<Grid container spacing={2}>
-					{widgets.emergencyContact &&
+						{widgets.emergencyContact &&
 							<Grid item sm={12} md={6}>
-								<Card className="w-full rounded-8 shadow-1 " style={{height:'359px'}}>
+								<Card className="w-full rounded-8 shadow-1 " style={{ height: '359px' }}>
 									<div className="p-16 px-4 flex flex-row items-center justify-between">
 										<Typography className="h1 px-12">Emergency Contact</Typography>
 
@@ -313,30 +286,30 @@ function Widget5(props) {
 											</IconButton>
 										</div>
 									</div>
-									<div className="overflow-scroll" style={{height:'278px'}}>
-									<Table aria-label="simple table sticky-table">
-										<TableHead>
-											<TableRow>
-												<TableCell align="left">Name</TableCell>
-												<TableCell align="left">Phone</TableCell>
-												<TableCell align="left">Email</TableCell>
+									<div className="overflow-scroll" style={{ height: '278px' }}>
+										<Table aria-label="simple table sticky-table">
+											<TableHead>
+												<TableRow>
+													<TableCell align="left">Name</TableCell>
+													<TableCell align="left">Phone</TableCell>
+													<TableCell align="left">Email</TableCell>
 
-												<TableCell align="left">Kinship</TableCell>
-											</TableRow>
-										</TableHead>
-										<TableBody>
-											{emergencyContact.map((row, index) => (
-												<TableRow key={index}>
-													<TableCell align="left">{row.name}</TableCell>
-													<TableCell align="left" style={{whiteSpace:"nowrap"}}>{row.phone}</TableCell>
-													<TableCell align="left">{row.email}</TableCell>
-
-													<TableCell align="left">{row.kinship}</TableCell>
-													{/* <TableCell align="left"><IconButton onClick={() => handleDeleteContact(index)}><DeleteIcon /></IconButton > </TableCell> */}
+													<TableCell align="left">Kinship</TableCell>
 												</TableRow>
-											))}
-										</TableBody>
-									</Table>
+											</TableHead>
+											<TableBody>
+												{emergencyContact.map((row, index) => (
+													<TableRow key={index}>
+														<TableCell align="left">{row.name}</TableCell>
+														<TableCell align="left" style={{ whiteSpace: "nowrap" }}>{row.phone}</TableCell>
+														<TableCell align="left">{row.email}</TableCell>
+
+														<TableCell align="left">{row.kinship}</TableCell>
+														{/* <TableCell align="left"><IconButton onClick={() => handleDeleteContact(index)}><DeleteIcon /></IconButton > </TableCell> */}
+													</TableRow>
+												))}
+											</TableBody>
+										</Table>
 									</div>
 								</Card>
 							</Grid>}
@@ -364,7 +337,7 @@ function Widget5(props) {
 								</Card>
 							</Grid>}
 
-					
+
 
 					</Grid>
 				</Grid>}
