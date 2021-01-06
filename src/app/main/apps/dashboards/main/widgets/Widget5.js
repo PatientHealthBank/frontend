@@ -1,10 +1,14 @@
 
 import { makeStyles } from '@material-ui/core/styles';
+//ToDo migra table pra share component
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
 import Typography from '@material-ui/core/Typography';
 import AllergiesWidget from 'app/main/pages/profile/widgets/AllergiesWidget';
 import MedicinesWidget from 'app/main/pages/profile/widgets/MedicinesWidget';
@@ -18,6 +22,7 @@ import TableRow from '@material-ui/core/TableRow';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import CheckIn from './CheckIn'
+import AppointmentWidget from './AppointmentWidget'
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import Paper from '@material-ui/core/Paper';
@@ -155,19 +160,6 @@ function RowToComp(prop) {
         </div>)
 }
 
-function createData(name, specialty, date) {
-    return { name, specialty, date };
-}
-
-const rows = [
-    createData('Henry', 'Physical Therapist - Knee', new Date("12/03/2020 11:00")),
-    createData('Sam', 'Sports Medicine', new Date("12/05/2020 11:00")),
-    createData('Henry', 'Physical Therapis', new Date("11/07/2020 11:00")),
-    createData('Sam', 'Sports Medicine', new Date("11/13/2020 11:00")),
-    createData('Henry', 'Physical Therapis', new Date("11/16/2020 11:00")),
-    createData('Sam', 'Sports Medicine', new Date("11/18/2020 11:00")),
-
-];
 
 const emergencyContact = [
 
@@ -195,13 +187,16 @@ function Widget5(props) {
         setEmergency(emergency.splice(index, 1));
     };
 
-    return (
-        <Grid container spacing={2}>
-            {widgets.appointments &&
-                <Grid item xs={12} sm={12} md={4}>
-                    <Card className="w-full rounded-8 shadow-1" style={{ height: '359px' }}>
-                        <div className="p-16 px-4 flex flex-row items-center justify-between">
-                            <Typography className="h1 px-12">Appointments</Typography>
+
+
+
+	return (
+		<Grid container spacing={2}>
+			{widgets.appointments &&
+				<Grid item xs={12} sm={12} md={4}>
+					<Card className="w-full rounded-8 shadow-1" style={{ height: '359px' }}>
+						<div className="p-16 px-4 flex flex-row items-center justify-between">
+							<Typography className="h1 px-12">Appointments</Typography>
 
                             <div>
                                 <IconButton aria-label="more">
@@ -210,30 +205,11 @@ function Widget5(props) {
                             </div>
                         </div>
 
-                        <div className="w-full p-8 min-h-420 h-420">
-                            <TableContainer style={{ height: '278px' }}>
-                                <Table aria-label="simple table sticky-table" >
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell align="center">Appointments</TableCell>
-                                            <TableCell align="center">Actions</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {rows.sort((a, b) => b.date.getDate() - a.date.getDate())
-                                            .slice(0, 4)
-                                            .map((row) => (
-                                                <TableRow key={row.name}>
-                                                    <TableCell align="center">{row.specialty}<br /> {row.date.toGMTString()}</TableCell>
-                                                    <TableCell align="center">{row.date.getDate() > 8 ? <CheckIn specialty={row.specialty} date={row.date.toGMTString()} /> : "Done"}</TableCell>
-                                                </TableRow>
-                                            ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </div>
-                    </Card>
-                </Grid>}
+						<div className="w-full p-8 min-h-420 h-420">
+							<AppointmentWidget />
+						</div>
+					</Card>
+				</Grid>}
             {widgets.emergencyContact && <Grid item xs={12} sm={6} md={4}>
                 <EmergencyContactWidget data={emergencyContact} />
             </Grid>}
@@ -260,22 +236,22 @@ function Widget5(props) {
 
                     </Card>
                 </Grid>}
-            {widgets.allergies && <Grid item xs={12} sm={6} md={4}>
-                <AllergiesWidget data={allergies} />
-            </Grid>}
-            {widgets.strength && <Grid item xs={12} sm={6} md={4}>
-                <StrengthWidget data={strength} />
-            </Grid>}
-            {widgets.vaccines && <Grid item xs={12} sm={6} md={4}>
-                <VaccinesTakenWidget data={vaccines} />
-            </Grid>}
-            {widgets.medicines && <Grid item xs={12} sm={6} md={4}>
-                <MedicinesWidget data={medicines} />
-            </Grid>}
-            {widgets.testResults && <Grid item xs={12} sm={6} md={4}>
-                <Card className="w-full rounded-8 shadow-1">
-                    <div className="p-16 px-4 flex flex-row items-center justify-between">
-                        <Typography className="h1 px-12">Test Results</Typography>
+			{widgets.allergies && <Grid item xs={12} sm={6} md={4}>
+				<AllergiesWidget data={allergies} />
+			</Grid>}
+			{widgets.strength && <Grid item xs={12} sm={6} md={4}>
+				<StrengthWidget data={strength} />
+			</Grid>}
+			{widgets.vaccines && <Grid item xs={12} sm={6} md={4}>
+				<VaccinesTakenWidget data={takenVaccines} />
+			</Grid>}
+			{widgets.medicines && <Grid item xs={12} sm={6} md={4}>
+				<MedicinesWidget data={medicines} />
+			</Grid>}
+			{widgets.testResults && <Grid item xs={12} sm={6} md={4}>
+				<Card className="w-full rounded-8 shadow-1">
+					<div className="p-16 px-4 flex flex-row items-center justify-between">
+						<Typography className="h1 px-12">Test Results</Typography>
 
                         <div>
                             <IconButton aria-label="more">
