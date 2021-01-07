@@ -119,13 +119,13 @@ const navigationConfig = [
 		auth:['provider'],
 		icon: 'pages',
 		children: [
-			// {
-			// 	id: 'patients',
-			// 	title: 'Patients',
-			// 	type: 'item',
-			// 	icon: 'people',
-			// 	url: '/apps/provider/patients'
-			// },
+			{
+				id: 'patients',
+				title: 'Patients',
+				type: 'item',
+				icon: 'people',
+				url: '/apps/provider/patients'
+			},
 			{
 				id: 'Calendar',
 				title: 'Calendar',

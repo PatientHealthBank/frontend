@@ -99,7 +99,7 @@ export const setUserData = user => async (dispatch, getState) => {
 		}
 	} else if (user.role.includes('provider')) {
 		history.location.state = {
-			redirectUrl: 'provider/calendar'
+			redirectUrl: 'provider/patients'
 		};
 	} else if (user.role.includes('clinic')) {
 		history.location.state = {
