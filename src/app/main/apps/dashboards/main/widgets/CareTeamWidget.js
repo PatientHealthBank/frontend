@@ -1,85 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import CheckIn from './CheckIn';
 import withReducer from 'app/store/withReducer';
-import reducer from '../store';
-// import { selectAppointmentsWidget, getAppointments } from '../store/appointmenWidgetSlice';
 import { useDispatch, useSelector } from 'react-redux';
-
-//To Do migra table pra share component
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
+import AvatarGroup from '@material-ui/lab/AvatarGroup';
+import Avatar from '@material-ui/core/Avatar';
+import Tooltip from '@material-ui/core/Tooltip';
+import { useDeepCompareEffect } from '@fuse/hooks';
+import { selectCareTeamWidget, getCareTeamByAppointment } from '../store/careTeamSlice';
+import reducer from '../store';
 
 function CareTeamWidget(props) {
 	const dispatch = useDispatch();
 
-	// const appointments = useSelector(selectAppointmentsWidget);
-	// const [data, setData] = useState(appointments);
+	// todor receber estado do componente pai
+	const careTeam = useSelector(selectCareTeamWidget);
+	const [data, setData] = useState(careTeam);
 
-	// useEffect(() => {
-	// 	if (appointments.length == 0 && appointments) {
-	// 		dispatch(getAppointments());
-	// 	}
-	// 	{
-	// 		setData(appointments);
-	// 	}
-	// }, [dispatch, appointments]);
+	useEffect(() => {
+		setData(careTeam);
+	}, [dispatch, careTeam]);
 
-	return (
-		<Grid item sm={12} md={7} lg={6}>
-			<Card className="w-full rounded-8 shadow-1">
-				<div className="p-16 px-4 flex flex-row items-center justify-between">
-					<Typography className="h1 px-12">Care Team</Typography>
+	useDeepCompareEffect(() => {
+		if (careTeam.length == 0 && careTeam) {
+			dispatch(getCareTeamByAppointment());
+		}
+	}, [dispatch]);
 
-					<div>
-						<IconButton aria-label="more">
-							<Icon>more_vert</Icon>
-						</IconButton>
-					</div>
+	return ( 
+		<Card className="w-full rounded-8 shadow-1">
+			<div className="p-16 px-4 flex flex-row items-center justify-between">
+				<Typography className="h1 px-12">Care Team</Typography>
+
+				<div>
+					<IconButton aria-label="more">
+						<Icon>more_vert</Icon>
+					</IconButton>
 				</div>
-				<AvatarGroup max={5}>
-					<DoctorComp
-						img={'assets\\images\\avatars\\Nancy.jpg'}
-						classe={classes.avatar}
-						name="Samanta Nole"
-						specialty="Physical Therapist"
-					></DoctorComp>
-					<DoctorComp
-						img={'assets\\images\\avatars\\Shepard.jpg'}
-						classe={classes.avatar}
-						name="Sam Smith"
-						specialty="Sports Medicine"
-					></DoctorComp>
-					<DoctorComp
-						img={'assets\\images\\avatars\\vincent.jpg'}
-						classe={classes.avatar}
-						name="Sam Tunner"
-						specialty="Sports Medicine"
-					></DoctorComp>
-					<DoctorComp
-						img={'assets\\images\\avatars\\Helen.jpg'}
-						classe={classes.avatar}
-						name="Hanna Smith"
-						specialty="Sports Medicine"
-					></DoctorComp>
-					<DoctorComp
-						img={'assets\\images\\avatars\\doctor1.png'}
-						classe={classes.avatar}
-						name="Sam Smith"
-						specialty="Sports Medicine"
-					></DoctorComp>
-					<DoctorComp
-						img={'assets\\images\\avatars\\doctor3.jpg'}
-						classe={classes.avatar}
-						name="Hanna Tunner"
-						specialty="Sports Medicine"
-					></DoctorComp>
-				</AvatarGroup>
-			</Card>
-		</Grid>
+			</div>
+			<AvatarGroup max={5}>
+				{careTeam
+					.sort((a, b) => Date(b.scheduleDate) - Date(a.scheduleDate))
+					.slice(0, 4)
+					.filter((v, i, a) => a.findIndex(t => t.provider.name === v.provider.name) === i)
+
+					.map(appointment => (
+						//TODO Arrumar size da imagem
+						<Tooltip title={appointment.provider.name} aria-label="add">
+							<Avatar class={props.classes.avatar} alt="Remy Sharp" src={appointment.provider.imageUrl} />
+						</Tooltip>
+					))}
+			</AvatarGroup>
+		</Card>
 	);
 }
 

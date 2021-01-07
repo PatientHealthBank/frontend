@@ -30,7 +30,9 @@ function ClinicTable(props) {
 	}, [dispatch, clinic]);
 
 	useDeepCompareEffect(() => {
-		dispatch(getClinics());
+		if ((clinic.length == 0 && clinic)) {
+			dispatch(getClinics());
+		}
 	}, [dispatch]);
 
 	function handleRequestSort(event, property) {

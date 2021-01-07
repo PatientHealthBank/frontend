@@ -28,3 +28,4 @@ yarn-error.log*
 .pnp*
 src/app/services/phbApi.js
 package-lock.json
+.eslintrc

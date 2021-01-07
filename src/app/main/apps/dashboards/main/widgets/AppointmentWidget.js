@@ -19,6 +19,7 @@ function AppointmentWidget(props) {
 
 	const appointments = useSelector(selectAppointmentsWidget);
 	const [data, setData] = useState(appointments);
+	// todor receber estado do componente pai
 
 	useEffect(() => {
 		setData(appointments);

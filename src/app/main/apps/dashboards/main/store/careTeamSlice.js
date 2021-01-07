@@ -4,8 +4,8 @@ import phbApi from 'app/services/phbApi';
 
 import axios from 'axios';
 
-export const getAppointments = createAsyncThunk(
-	'AppointmentsWidgetApp/appointments/getAppointments',
+export const getCareTeamByAppointment = createAsyncThunk(
+	'CareTeamWidgetApp/careTeam/getCareTeamByAppointment',
 	async (params, { getState, dispatch }) => {
 		dispatch(openLoading());
 
@@ -15,7 +15,6 @@ export const getAppointments = createAsyncThunk(
 			.get(`/appointment/${user.currentUser.id}`)
 			.then(response => {
 				dispatch(closeLoading());
-
 				return response.data;
 			})
 			.catch(error => {
@@ -24,21 +23,21 @@ export const getAppointments = createAsyncThunk(
 	}
 );
 
-const appointmentWidgetAdapter = createEntityAdapter({});
+const careTeamWidgetAdapter = createEntityAdapter({});
 
 export const {
-	selectAll: selectAppointmentsWidget,
-	selectEntities: selectAppointmentsEntities,
-	selectById: selectAppointmentsById
-} = appointmentWidgetAdapter.getSelectors(state => state.AppointmentWidgetApp.appointments);
+	selectAll: selectCareTeamWidget,
+	selectEntities: selectCareTeamEntities,
+	selectById: selectCareTeamById
+} = careTeamWidgetAdapter.getSelectors(state => state.CareTeamWidgetApp.careTeam);
 
-const appointmentsWidgetSlice = createSlice({
-	name: 'AppointmentsWidgetApp/appointments',
-	initialState: appointmentWidgetAdapter.getInitialState(),
+const careTeamWidgetSlice = createSlice({
+	name: 'CareTeamWidgetApp/careTeam',
+	initialState: careTeamWidgetAdapter.getInitialState(),
 	reducers: {},
 	extraReducers: {
-		[getAppointments.fulfilled]: appointmentWidgetAdapter.setAll
+		[getCareTeamByAppointment.fulfilled]: careTeamWidgetAdapter.setAll
 	}
 });
 
-export default appointmentsWidgetSlice.reducer;
+export default careTeamWidgetSlice.reducer;
