@@ -30,7 +30,7 @@ function DoctorsApp(props) {
 		strength: true,
 		vaccines: true,
 		medicines: true,
-		testResults: true
+		appointmentTest: true
 	});
 	const [open, setOpen] = React.useState(false);
 	const handleWidgetsChange = event => {

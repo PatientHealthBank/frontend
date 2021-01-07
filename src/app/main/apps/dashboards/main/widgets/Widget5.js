@@ -15,6 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import CheckIn from './CheckIn';
 import AppointmentWidget from './AppointmentWidget';
+import AppointmentTestWidget from './AppointmentTestWidget';
 import CareTeamWidget from './CareTeamWidget';
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
@@ -82,6 +83,8 @@ var strength = {
 };
 
 const vaccines = [];
+
+const appointmentTest = [];
 
 const useStyles = makeStyles(theme => ({
 	paper: {
@@ -177,6 +180,9 @@ function Widget5(props) {
 	const handleChange = event => {
 		setState({ ...state, [event.target.name]: event.target.checked });
 	};
+	console.log(widgets);
+	console.log(widgets);
+	console.log(widgets);
 
 	const classes = useStyles(props);
 
@@ -235,47 +241,9 @@ function Widget5(props) {
 					<MedicinesWidget data={medicines} />
 				</Grid>
 			)}
-			{widgets.testResults && (
+			{widgets.appointmentTest && (
 				<Grid item xs={12} sm={6} md={4}>
-					<Card className="w-full rounded-8 shadow-1">
-						<div className="p-16 px-4 flex flex-row items-center justify-between">
-							<Typography className="h1 px-12">Test Results</Typography>
-
-							<div>
-								<IconButton aria-label="more">
-									<Icon>more_vert</Icon>
-								</IconButton>
-							</div>
-						</div>
-						<RowToComp
-							class={classes}
-							handleChange={handleChange}
-							checked={state.checkedB}
-							name="checkedB"
-							status={2}
-							day={2}
-							description="New Intake Form Solicitation"
-						></RowToComp>
-						<RowToComp
-							class={classes}
-							handleChange={handleChange}
-							checked={state.checkedC}
-							name="checkedC"
-							status={3}
-							day={10}
-							description="Physical Therapist - Exam Solicitation"
-						></RowToComp>
-
-						<RowToComp
-							class={classes}
-							handleChange={handleChange}
-							checked={state.checkedD}
-							name="checkedD"
-							status={1}
-							day={22}
-							description="New Intake Form Solicitation"
-						></RowToComp>
-					</Card>
+					<AppointmentTestWidget data={appointmentTest} />
 				</Grid>
 			)}
 		</Grid>
