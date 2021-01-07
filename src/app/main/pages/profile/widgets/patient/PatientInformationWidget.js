@@ -45,7 +45,7 @@ function PatientInformationWidget(props) {
         setForm({ ...form, [event.target.name]: event.target.files[0] });
     }
 
-    const teste = (event) => {
+    const clickInputImage = (event) => {
         var name = document.getElementById('select-file');
         name.click();
     }
@@ -64,7 +64,7 @@ function PatientInformationWidget(props) {
                         style={{ display: "inline"}}
                         className={"w-128 m-4 rounded-4 " + classes.patientImage}
                         src={imageProfile}
-                        onClick={teste}
+                        onClick={clickInputImage}
                         alt="Profile"
                     />
                     </button>
