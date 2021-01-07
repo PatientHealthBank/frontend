@@ -1,38 +1,33 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
-import axios from 'axios';
+import phbApi from 'app/services/phbApi'
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
-export const getPatients = createAsyncThunk('providerApp/patients/getPatients', async () => {
-	const response = await axios.get('/api/provider-app/patients');
-
-	const data = await response.data;
-
-	return data;
-});
+export const patientList = () => async (dispatch, getState) => {
+	console.log("data")
+    dispatch(openLoading())
+    var user = getState().auth.user
+	return phbApi().get('/provider/getPatients/'+user.currentUser.id)
+		.then(({data}) => {
+			dispatch(closeLoading())
+			return dispatch(getPatientList(data));
+		})
+		.catch(error => {
+            return dispatch(closeLoading())
+		});
+};
 
 const patientsAdapter = createEntityAdapter({});
-
-export const { selectAll: selectPatients, selectById: selectPatientById } = patientsAdapter.getSelectors(
-	state => state.providerApp.patients
+export const {  } = patientsAdapter.getSelectors(
+	state => state.PatientsApp.patients
 );
-
 const patientsSlice = createSlice({
-	name: 'providerApp/patients',
-	initialState: patientsAdapter.getInitialState({
-		searchText: ''
-	}),
+	name: 'provider/Patients',
+	initialState: [],
 	reducers: {
-		setPatientsSearchText: {
-			reducer: (state, action) => {
-				state.searchText = action.payload;
-			},
-			prepare: event => ({ payload: event.target.value || '' })
-		}
-	},
-	extraReducers: {
-		[getPatients.fulfilled]: patientsAdapter.setAll
+        getPatientList:{reducer: (state, action) => {
+            return action.payload
+        }}
 	}
 });
-
-export const { setPatientsSearchText } = patientsSlice.actions;
-
+export const { getPatientList } = patientsSlice.actions;
 export default patientsSlice.reducer;
