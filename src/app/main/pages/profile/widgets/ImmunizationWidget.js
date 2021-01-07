@@ -42,27 +42,11 @@ function ImmunizationWidget(props) {
 					<tbody>
 						{vaccines.map(row => (
 							<tr key={row.id}>
-								<td className="text-right">Vaccine Oxford</td>
+								<td className="text-right">{row.description}</td>
 								<td className="text-right">{new Date(row.date).toLocaleDateString()}</td>
 								<td className="text-right">{t(row.location)}</td>
 							</tr>
 						))}
-						<tr >
-							<td className="text-right">China Vaccine</td>
-							<td className="text-right">01/04/2020</td>
-							<td className="text-right"> China</td>
-						</tr>
-						<tr>
-							<td className="text-right"> Sputnik Vaccine</td>
-							<td className="text-right">01/04/2020</td>
-							<td className="text-right">Russia</td>
-						</tr>
-						<tr>
-							<td className="text-right">Oxford Vaccine</td>
-							<td className="text-right">01/04/2020</td>
-							<td className="text-right">England</td>
-
-						</tr>
 					</tbody>
 				</table>
 			</div>
