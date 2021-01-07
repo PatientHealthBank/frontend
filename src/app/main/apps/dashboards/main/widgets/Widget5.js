@@ -223,22 +223,22 @@ function Widget5(props) {
 			)}
 			{widgets.allergies && (
 				<Grid item xs={12} sm={6} md={4}>
-					<AllergiesWidget data={allergies} />
+					<AllergiesWidget />
 				</Grid>
 			)}
 			{widgets.strength && (
 				<Grid item xs={12} sm={6} md={4}>
-					<StrengthWidget data={strength} />
+					<StrengthWidget />
 				</Grid>
 			)}
 			{widgets.vaccines && (
 				<Grid item xs={12} sm={6} md={4}>
-					<VaccinesTakenWidget data={vaccines} />
+					<VaccinesTakenWidget />
 				</Grid>
 			)}
 			{widgets.medicines && (
 				<Grid item xs={12} sm={6} md={4}>
-					<MedicinesWidget data={medicines} />
+					<MedicinesWidget />
 				</Grid>
 			)}
 			{widgets.appointmentTest && (

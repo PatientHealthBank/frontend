@@ -50,7 +50,7 @@ function AppointmentWidget(props) {
 										<br /> {Date(row.scheduleDate)}
 									</TableCell>
 									<TableCell align="center">
-										{Date(row.scheduleDate) > 8 ? (
+										{Date(row.scheduleDate) <= Date(row.createDate) ? (
 											<CheckIn
 												specialty={row.specialty.description}
 												date={Date(row.scheduleDate)}
