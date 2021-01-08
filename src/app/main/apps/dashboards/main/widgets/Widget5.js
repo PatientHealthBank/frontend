@@ -157,7 +157,7 @@ function Widget5(props) {
 			)}
 			{widgets.medicalHistory && (
 				<Grid item sm={12} md={6} lg={4}>
-					<MedicalHistoryWidget classes={medicalHistory} />
+					<MedicalHistoryWidget />
 				</Grid>
 			)}
 			{widgets.medicines && (
