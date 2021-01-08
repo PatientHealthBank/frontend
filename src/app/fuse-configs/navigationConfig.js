@@ -15,7 +15,7 @@ i18next.addResourceBundle('ar', 'navigation', ar);
 const navigationConfig = [
 	{
 		id: 'User',
-		title: '',
+		title: 'Patient',
 		translate: 'USER',
 		type: 'group',
 		auth:['patient'],
@@ -83,7 +83,7 @@ const navigationConfig = [
 		},
 	{
 		id: 'clinic',
-		title: '',
+		title: 'CLINIC',
 		type: 'group',
 		auth:['clinic'],
 		icon: 'pages',
@@ -114,7 +114,7 @@ const navigationConfig = [
 	},
 	{
 		id: 'provider',
-		title: '',
+		title: 'PROVIDER',
 		type: 'group',
 		auth:['provider'],
 		icon: 'pages',
@@ -132,7 +132,14 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'today',
 				url: '/provider/calendar'
-			}
+			},
+			{
+				id: 'members',
+				title: 'Profile',
+				type: 'item',
+				icon: 'people',
+				url: '/apps/clinic/members/providerProfile'
+			},
 		]
 	},
 	{

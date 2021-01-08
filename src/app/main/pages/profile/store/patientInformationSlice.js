@@ -5,7 +5,7 @@ import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/lo
 export const patientInfo = () => async (dispatch, getState) => {
 	dispatch(openLoading())
 	var user = getState().auth.user
-	return phbApi().get('/patient/list/' + user.currentUser.id)
+	return phbApi().get('/patient/' + user.currentUser.id)
 		.then(({ data }) => {
 			dispatch(closeLoading())
 			return dispatch(getPatientInformation(data));

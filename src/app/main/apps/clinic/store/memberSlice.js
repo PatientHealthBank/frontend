@@ -4,9 +4,9 @@ import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/lo
 import FuseUtils from '@fuse/utils';
 import DateFnsUtils from '@date-io/date-fns';
 
-export const getMember = createAsyncThunk('MembersApp/member/getMember', async (params, { getState, dispatch }) => {
+export const getMember = createAsyncThunk('MembersApp/member/getMember', async (membersId, { getState, dispatch }) => {
 	dispatch(openLoading());
-	const response = await phbApi().get('/provider/' + params.membersId);
+	const response = await phbApi().get('/provider/' + membersId);
 	const data = await response.data.data;
 	dispatch(closeLoading());
 	return data;

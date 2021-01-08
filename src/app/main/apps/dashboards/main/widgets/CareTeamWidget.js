@@ -10,7 +10,7 @@ import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
 import { useDeepCompareEffect } from '@fuse/hooks';
-import { selectCareTeamWidget, getCareTeamByAppointment } from '../store/careTeamSlice';
+import { selectCareTeamWidget, getCareTeamByAppointment } from '../store/careTeamWidgetSlice';
 import reducer from '../store';
 
 function CareTeamWidget(props) {
@@ -25,13 +25,13 @@ function CareTeamWidget(props) {
 	}, [dispatch, careTeam]);
 
 	useDeepCompareEffect(() => {
-		if (careTeam.length == 0 && careTeam) {
+		if (careTeam.length === 0 && careTeam) {
 			dispatch(getCareTeamByAppointment());
 		}
 	}, [dispatch]);
 
-	return ( 
-		<Card className="w-full rounded-8 shadow-1">
+	return (
+		<Card className="w-full rounded-8 shadow-1" style={{ height: '359px' }}>
 			<div className="p-16 px-4 flex flex-row items-center justify-between">
 				<Typography className="h1 px-12">Care Team</Typography>
 
@@ -48,7 +48,6 @@ function CareTeamWidget(props) {
 					.filter((v, i, a) => a.findIndex(t => t.provider.name === v.provider.name) === i)
 
 					.map(appointment => (
-						//TODO Arrumar size da imagem
 						<Tooltip title={appointment.provider.name} aria-label="add">
 							<Avatar class={props.classes.avatar} alt="Remy Sharp" src={appointment.provider.imageUrl} />
 						</Tooltip>
