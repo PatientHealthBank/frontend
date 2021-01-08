@@ -25,64 +25,7 @@ import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-// const appointments = useSelector(( {AppointmentsApp} ) => AppointmentsApp.appointments);
 
-// React.useEffect(()=>{
-
-// 	if(appointments.length == 0){
-// 		dispatch(appointmentsList())
-// 	}
-// },[dispatch]);
-var allergies = [];
-
-var medicines = [];
-
-var strength = {
-	id: 'widget7',
-	labels: ['Complate', 'Incomplete'],
-	datasets: {
-		Today: [
-			{
-				data: [74.0, 26.0],
-				change: [-0.6, 0.7]
-			}
-		],
-		Yesterday: [
-			{
-				data: [77.2, 8.4],
-				change: [-2.3, 0.3]
-			}
-		],
-		'Last 7 days': [
-			{
-				data: [88.2, 9.2],
-				change: [1.9, -0.4]
-			}
-		],
-		'Last 28 days': [
-			{
-				data: [65.2, 2.6],
-				change: [-12.6, -0.7]
-			}
-		],
-		'Last 90 days': [
-			{
-				data: [93.5, 4.2],
-				change: [2.6, -0.7]
-			}
-		]
-	},
-	options: {
-		cutoutPercentage: 75,
-		spanGaps: false,
-		legend: {
-			display: false
-		},
-		maintainAspectRatio: false
-	}
-};
-
-const vaccines = [];
 
 const appointmentTest = [];
 
