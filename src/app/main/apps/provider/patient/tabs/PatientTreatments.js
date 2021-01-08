@@ -75,6 +75,10 @@ function PatientTreatments(props) {
     function handleChangeRowsPerPage(event) {
         setRowsPerPage(event.target.value);
     }
+
+    function handleClick(){
+        props.history.push(`/treatments/1/true`);
+    }
     return (
         <div className="w-full flex flex-col">
 
@@ -152,6 +156,7 @@ function PatientTreatments(props) {
                                         role="checkbox"
                                         tabIndex={-1}
                                         key={n.id}
+                                        onClick={event => handleClick()}
                                     >
 
                                         <TableCell className="p-4 md:p-16" component="th" scope="row">
