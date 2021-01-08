@@ -166,10 +166,11 @@ function Widget5(props) {
 					<AppointmentTestWidget data={appointmentTest} />
 				</Grid>
 			)}
-
-			<Grid item xs={12} sm={6} md={4}>
-				<FamilyMembersWidget />
-			</Grid>
+			{widgets.familyMembers && (
+				<Grid item xs={12} sm={6} md={4}>
+					<FamilyMembersWidget />
+				</Grid>
+			)}
 		</Grid>
 	);
 }

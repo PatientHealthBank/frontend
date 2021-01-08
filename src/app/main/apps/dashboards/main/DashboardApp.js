@@ -28,6 +28,7 @@ function DoctorsApp(props) {
 		emergencyContact: true,
 		allergies: true,
 		strength: true,
+		familyMembers: true,
 		vaccines: true,
 		medicines: true,
 		appointmentTest: true
@@ -42,7 +43,6 @@ function DoctorsApp(props) {
 			// First access
 			if (!user.updateDate) {
 				props.history.push(`/reset-password/${user.uuid}`);
-
 			}
 		}
 	}, [user]);
@@ -115,6 +115,16 @@ function DoctorsApp(props) {
 								<Switch checked={widgets.strength} onChange={handleWidgetsChange} name="strength" />
 							}
 							label="Strength"
+						/>
+						<FormControlLabel
+							control={
+								<Switch
+									checked={widgets.familyMembers}
+									onChange={handleWidgetsChange}
+									name="familyMembers"
+								/>
+							}
+							label="Family members"
 						/>
 						<FormControlLabel
 							control={
