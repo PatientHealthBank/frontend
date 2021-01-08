@@ -1,11 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 import FuseUtils from '@fuse/utils';
+import phbApi from 'app/services/phbApi'
 
-export const getPatient = createAsyncThunk('providerApp/patient/getPatient', async params => {
-	const response = await axios.get('/api/provider-app/patient', { params });
+export const getPatient = createAsyncThunk('providerApp/patient/getPatient', async (patientId, { getState, dispatch }) => {
+	dispatch(openLoading())
+	const response = await phbApi().get('/patient/' + patientId);
 	const data = await response.data;
-
+	dispatch(closeLoading());
 	return data;
 });
 
