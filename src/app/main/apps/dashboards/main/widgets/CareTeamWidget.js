@@ -31,7 +31,7 @@ function CareTeamWidget(props) {
 	}, [dispatch]);
 
 	return ( 
-		<Card className="w-full rounded-8 shadow-1">
+		<Card className="w-full rounded-8 shadow-1"  style={{height:'359px'}}> 
 			<div className="p-16 px-4 flex flex-row items-center justify-between">
 				<Typography className="h1 px-12">Care Team</Typography>
 

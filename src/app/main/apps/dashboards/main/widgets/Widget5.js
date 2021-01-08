@@ -25,8 +25,6 @@ import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-
-
 const appointmentTest = [];
 
 const useStyles = makeStyles(theme => ({
@@ -36,7 +34,9 @@ const useStyles = makeStyles(theme => ({
 		marginBottom: '15px'
 	},
 	avatar: {
-		margin: '10px'
+		height: '192px',
+		width: '192px',
+		margin:'10px',
 	},
 	table: {
 		'& tr': {
@@ -65,13 +65,6 @@ const useStyles = makeStyles(theme => ({
 		}
 	}
 }));
-function DoctorComp(prop) {
-	return (
-		<Tooltip title={prop.name} aria-label="add">
-			<Avatar class={prop.classe} alt="Remy Sharp" src={prop.img} />
-		</Tooltip>
-	);
-}
 function RowToComp(prop) {
 	return (
 		<div className="flex flex-row">
