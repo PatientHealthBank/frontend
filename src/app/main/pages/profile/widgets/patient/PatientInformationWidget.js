@@ -56,7 +56,7 @@ function PatientInformationWidget(props) {
 
                 <Grid item xs={6} style={{ textAlign: 'center' }}>
                     <Typography variant="h5">
-                        Patient Info
+                        Patient Info 
 		        </Typography>
                     <button>
                     <img

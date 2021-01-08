@@ -51,9 +51,9 @@ function PatientProfile(props) {
                             <div>
                                 <Typography className="font-bold text-15">Locations</Typography>
 
-                                {props.patient.locations.map(location => (
-                                    <div className="flex items-center" key={location}>
-                                        <Typography>{location}</Typography>
+                                {props.patient.address.map(address => (
+                                    <div className="flex items-center" key={address.id}>
+                                        <Typography>{address.addressLine1}</Typography>
                                         <Icon className="text-15" color="action">
                                             location_on
                                         </Icon>
@@ -84,12 +84,12 @@ function PatientProfile(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {props.patient.medicines.map(row => (
+                                    {/* {props.patient.medicines.map(row => (
                                         <tr key={row.id}>
                                             <td className="text-left">{row.description}</td>
                                             <td className="text-left">{row.quantity}</td>
                                         </tr>
-                                    ))}
+                                    ))} */}
                                 </tbody>
                             </table>
                         </CardContent>
@@ -124,12 +124,12 @@ function PatientProfile(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {props.patient.allergies.map(row => (
+                                    {/* {props.patient.allergies.map(row => (
                                         <tr key={row.id}>
                                             <td className="text-left">{row.description}</td>
                                             <td className="text-left">{row.age}</td>
                                         </tr>
-                                    ))}
+                                    ))} */}
                                 </tbody>
                             </table>
 
@@ -161,13 +161,13 @@ function PatientProfile(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {props.patient.vaccines.map(row => (
+                                    {/* {props.patient.vaccines.map(row => (
                                         <tr key={row.id}>
                                             <td className="text-left">{row.description}</td>
                                             <td className="text-left">{row.location}</td>
                                             <td className="text-left">{row.date}</td>
                                         </tr>
-                                    ))}
+                                    ))} */}
                                 </tbody>
                             </table>
 
