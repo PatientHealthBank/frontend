@@ -103,7 +103,7 @@ const PrimaryButton = withStyles((theme) => ({
 function Member(props) {
 	const dispatch = useDispatch();
 	const member = useSelector(({ MembersApp }) => MembersApp.member);
-
+	const user = useSelector(({ auth }) => auth.user.currentUser);
 	const theme = useTheme();
 	const classes = useStyles(props);
 	const { form, handleChange, setForm } = useForm(null);
@@ -118,8 +118,12 @@ function Member(props) {
 			const { membersId } = routeParams;
 			if (membersId === 'new') {
 				dispatch(newMember());
-			} else {
-				dispatch(getMember(routeParams));
+			} 
+			else if(membersId === 'providerProfile') {
+				dispatch(getMember(user.id));
+			}
+			else {
+				dispatch(getMember(routeParams.membersId));
 			}
 		}
 
@@ -130,7 +134,6 @@ function Member(props) {
 		if ((member && !form) || (member && form && member.id !== form.id)) {
 			setForm(member);
 		}
-
 		if (form && form.specialty) {
 			findClinicalInterest(form.specialty.join());
 		}
@@ -171,7 +174,8 @@ function Member(props) {
 				form && (
 					<div className="flex flex-1 w-full items-center justify-between">
 						<div className="flex flex-col items-start max-w-full">
-							<Typography
+							{user.role=="provider" && 
+							(<Typography
 								className="normal-case flex items-center sm:mb-12"
 								component={Link}
 								role="button"
@@ -182,7 +186,7 @@ function Member(props) {
 									{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
 								</Icon>
 								<span className="mx-4">Members</span>
-							</Typography>
+							</Typography>)}
 
 							<div className="flex items-center max-w-full">
 								<div className="flex flex-col min-w-0 mx-8 sm:mc-16">

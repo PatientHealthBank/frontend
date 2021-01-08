@@ -26,7 +26,7 @@ export const getAppointmentTest = createAsyncThunk(
 const appointmentTestAdapter = createEntityAdapter({});
 
 export const {
-	selectAll: selectAppointmentTestWidget,
+	selectAll: selectAppointmentsWidget,
 	selectEntities: selectAppointmentTestEntities,
 	selectById: selectAppointmentTestById
 } = appointmentTestAdapter.getSelectors(state => state.AppointmentTestWidgetApp.appointmentTest);

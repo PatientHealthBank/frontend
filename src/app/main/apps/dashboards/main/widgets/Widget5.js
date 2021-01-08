@@ -9,14 +9,13 @@ import StrengthWidget from 'app/main/pages/profile/widgets/StrengthWidget';
 import VaccinesTakenWidget from 'app/main/pages/profile/widgets/ImmunizationWidget';
 import EmergencyContactWidget from 'app/main/pages/profile/widgets/EmergencyContactWidget';
 import TableRow from '@material-ui/core/TableRow';
-// import {appointmentsList} from '../../../e-commerce/store/appointmentSlice'
-
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import CheckIn from './CheckIn';
 import AppointmentWidget from './AppointmentWidget';
 import AppointmentTestWidget from './AppointmentTestWidget';
 import CareTeamWidget from './CareTeamWidget';
+import MedicalHistoryWidget from './MedicalHistoryWidget';
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import Paper from '@material-ui/core/Paper';
@@ -24,8 +23,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-
+import FamilyMembersWidget from './FamilyMembersWidget';
 
 const appointmentTest = [];
 
@@ -36,6 +34,8 @@ const useStyles = makeStyles(theme => ({
 		marginBottom: '15px'
 	},
 	avatar: {
+		height: '192px',
+		width: '192px',
 		margin: '10px'
 	},
 	table: {
@@ -65,13 +65,6 @@ const useStyles = makeStyles(theme => ({
 		}
 	}
 }));
-function DoctorComp(prop) {
-	return (
-		<Tooltip title={prop.name} aria-label="add">
-			<Avatar class={prop.classe} alt="Remy Sharp" src={prop.img} />
-		</Tooltip>
-	);
-}
 function RowToComp(prop) {
 	return (
 		<div className="flex flex-row">
@@ -123,9 +116,6 @@ function Widget5(props) {
 	const handleChange = event => {
 		setState({ ...state, [event.target.name]: event.target.checked });
 	};
-	console.log(widgets);
-	console.log(widgets);
-	console.log(widgets);
 
 	const classes = useStyles(props);
 
@@ -137,21 +127,7 @@ function Widget5(props) {
 		<Grid container spacing={2}>
 			{widgets.appointments && (
 				<Grid item xs={12} sm={12} md={4}>
-					<Card className="w-full rounded-8 shadow-1" style={{ height: '359px' }}>
-						<div className="p-16 px-4 flex flex-row items-center justify-between">
-							<Typography className="h1 px-12">Appointments</Typography>
-
-							<div>
-								<IconButton aria-label="more">
-									<Icon>more_vert</Icon>
-								</IconButton>
-							</div>
-						</div>
-
-						<div className="w-full p-8 min-h-420 h-420">
-							<AppointmentWidget />
-						</div>
-					</Card>
+					<AppointmentWidget />
 				</Grid>
 			)}
 			{widgets.emergencyContact && (
@@ -179,6 +155,11 @@ function Widget5(props) {
 					<VaccinesTakenWidget />
 				</Grid>
 			)}
+			{widgets.medicalHistory && (
+				<Grid item sm={12} md={6} lg={4}>
+					<MedicalHistoryWidget />
+				</Grid>
+			)}
 			{widgets.medicines && (
 				<Grid item xs={12} sm={6} md={4}>
 					<MedicinesWidget />
@@ -187,6 +168,11 @@ function Widget5(props) {
 			{widgets.appointmentTest && (
 				<Grid item xs={12} sm={6} md={4}>
 					<AppointmentTestWidget data={appointmentTest} />
+				</Grid>
+			)}
+			{widgets.familyMembers && (
+				<Grid item xs={12} sm={6} md={4}>
+					<FamilyMembersWidget />
 				</Grid>
 			)}
 		</Grid>

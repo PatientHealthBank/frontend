@@ -38,12 +38,10 @@ function Widget5(props) {
 			dispatch(closeLoading())
 			dispatch(removeConfirmAppointment())
 			setOpen(true)
-			console.log(res)
 		})
 		.catch(err=>{
 			toast.warn("Internal Server Error");
 			dispatch(closeLoading())
-			console.log(err)
 		})
 	}
 
