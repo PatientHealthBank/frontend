@@ -19,7 +19,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import reducer from '../store';
-import { getPatient, newPatient } from '../store/patientSlice';
+import { getPatient } from '../store/patientSlice';
 import PatientAppointments from './tabs/PatientAppointments';
 import PatientComments from './tabs/PatientComments';
 import PatientExams from './tabs/PatientExams';
@@ -108,11 +108,7 @@ function Patient(props) {
 		function updatePatientState() {
 			const { patientId } = routeParams;
 
-			if (patientId === 'new') {
-				dispatch(newPatient());
-			} else {
-				dispatch(getPatient(routeParams));
-			}
+			dispatch(getPatient(patientId));
 		}
 
 		updatePatientState();
@@ -130,7 +126,6 @@ function Patient(props) {
 	}
 	useEffect(() => {
 		if ((patient && !form) || (patient && form && patient.id !== form.id)) {
-			console.log(patient.treatments);
 			setForm(patient);
 		}
 	}, [form, patient, setForm]);
@@ -148,8 +143,8 @@ function Patient(props) {
 	// function canBeSubmitted() {
 	// 	return form.clinic && form.clinic.length > 0 && !_.isEqual(patient, form);
 	// }
-
-	if ((!patient || (patient && routeParams.patientId !== patient.id)) && routeParams.patientId !== 'new') {
+	
+	if ((!patient || (patient && routeParams.patientId != patient.id)) && routeParams.patientId !== 'new') {
 		return <FuseLoading />;
 	}
 
@@ -178,11 +173,11 @@ function Patient(props) {
 
 							<div className="flex items-center max-w-full">
 								<FuseAnimate animation="transition.expandIn" delay={300}>
-									{form.images.length > 0 && form.featuredImageId ? (
+									{form.PhotoURL? (
 										<img
 											className="w-32 sm:w-48 rounded"
-											src={form.featuredImageId}
-											alt="featuredImageId"
+											src={form.PhotoURL}
+											alt="patientImage"
 										/>
 									) : (
 											<img
@@ -238,7 +233,7 @@ function Patient(props) {
 				form && (
 					<div className="p-16 sm:p-24">
 						{tabValue === 0 && <PatientProfile patient={form} />}
-						{tabValue === 1 && <PatientExams exams={form.exams} />}
+						{/* {tabValue === 1 && <PatientExams exams={form.exams} />}
 						{tabValue === 2 && <PatientAppointments appointments={form.appointments} />}
 						{tabValue === 3 && <PatientTreatments treatments={form.treatments} />}
 						{tabValue === 4 &&
@@ -291,7 +286,7 @@ function Patient(props) {
 
 
 
-						{tabValue === 5 && <PatientVideoLibrary videos={form.videoLibrary} />}
+						{tabValue === 5 && <PatientVideoLibrary videos={form.videoLibrary} />} */}
 					</div>
 				)
 			}
