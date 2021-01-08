@@ -17,6 +17,7 @@ import CheckIn from './CheckIn';
 import AppointmentWidget from './AppointmentWidget';
 import AppointmentTestWidget from './AppointmentTestWidget';
 import CareTeamWidget from './CareTeamWidget';
+import MedicalHistoryWidget from './MedicalHistoryWidget';
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import Paper from '@material-ui/core/Paper';
@@ -25,17 +26,11 @@ import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-// const appointments = useSelector(( {AppointmentsApp} ) => AppointmentsApp.appointments);
-
-// React.useEffect(()=>{
-
-// 	if(appointments.length == 0){
-// 		dispatch(appointmentsList())
-// 	}
-// },[dispatch]);
 var allergies = [];
 
 var medicines = [];
+
+var medicalHistory = [];
 
 var strength = {
 	id: 'widget7',
@@ -180,9 +175,6 @@ function Widget5(props) {
 	const handleChange = event => {
 		setState({ ...state, [event.target.name]: event.target.checked });
 	};
-	console.log(widgets);
-	console.log(widgets);
-	console.log(widgets);
 
 	const classes = useStyles(props);
 
@@ -234,6 +226,11 @@ function Widget5(props) {
 			{widgets.vaccines && (
 				<Grid item xs={12} sm={6} md={4}>
 					<VaccinesTakenWidget />
+				</Grid>
+			)}
+			{widgets.medicalHistory && (
+				<Grid item sm={12} md={6} lg={4}>
+					<MedicalHistoryWidget classes={medicalHistory} />
 				</Grid>
 			)}
 			{widgets.medicines && (

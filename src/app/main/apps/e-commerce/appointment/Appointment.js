@@ -142,7 +142,6 @@ function Appointment(props) {
 			setSpecialty(form.specialtyDescription)
 		}
 		if (form && form.meansTransport) {
-			console.log(form.meansTransport);
 			switch (form.meansTransport) {
 				case 'Uber':
 					setDialogTitle('Uber');
