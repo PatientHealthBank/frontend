@@ -1,8 +1,8 @@
-import { createEntityAdapter, createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const getWidgets = createAsyncThunk('projectDashboardApp/widgets/getWidgets', async () => {
-	const response = await axios.get('/api/project-dashboard-app/widgets');
+export const getWidgets = createAsyncThunk('analyticsDashboardApp/widgets/getWidgets', async () => {
+	const response = await axios.get('/api/analytics-dashboard-app/widgets');
 	const data = await response.data;
 
 	return data;
@@ -10,13 +10,13 @@ export const getWidgets = createAsyncThunk('projectDashboardApp/widgets/getWidge
 
 const widgetsAdapter = createEntityAdapter({});
 
-export const { selectEntities: selectWidgets, selectById: selectWidgetById } = widgetsAdapter.getSelectors(
-	state => state.projectDashboardApp.widgets
+export const { selectEntities: selectWidgetsEntities, selectById: selectWidgetById } = widgetsAdapter.getSelectors(
+	state => state.analyticsDashboardApp.widgets
 );
 
 const widgetsSlice = createSlice({
-	name: 'projectDashboardApp/widgets',
-	initialState: widgetsAdapter.getInitialState(),
+	name: 'analyticsDashboardApp/widgets',
+	initialState: widgetsAdapter.getInitialState({}),
 	reducers: {},
 	extraReducers: {
 		[getWidgets.fulfilled]: widgetsAdapter.setAll
