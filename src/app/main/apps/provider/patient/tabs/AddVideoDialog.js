@@ -55,8 +55,8 @@ function AddVideoDialog({ open, setOpen, setVideoLibrary, videos }) {
                 animation: 'transition.slideUpBigIn'
               }}
             >
-              {videos.map(period => (
-                <div key={period.id} className="mb-48">
+              {videos.map((period, i) => (
+                <div key={i} className="mb-48">
                   <ListSubheader component="div" className="flex items-center px-0 mb-24">
                     <Typography variant="h6">{period.otherName}</Typography>
                   </ListSubheader>
@@ -81,14 +81,14 @@ function AddVideoDialog({ open, setOpen, setVideoLibrary, videos }) {
                         />
                       </GridListTile>
                     ))}
-                    {period.media.map(media => (
+                    {period.media.map((media, i) => (
                       <GridListTile
                         style={{ width: "110px", height: "90px" }}
                         classes={{
                           root: 'w-full sm:w-1/2 md:w-1/4',
                           tile: 'rounded-8'
                         }}
-                        key={media.preview}
+                        key={i}
                       >
                         <img src={media.preview} alt={media.title} />
                         <GridListTileBar
@@ -101,14 +101,14 @@ function AddVideoDialog({ open, setOpen, setVideoLibrary, videos }) {
                         />
                       </GridListTile>
                     ))}
-                    {period.media.map(media => (
+                    {period.media.map((media,i) => (
                       <GridListTile
                         style={{ width: "110px", height: "90px" }}
                         classes={{
                           root: 'w-full sm:w-1/2 md:w-1/4',
                           tile: 'rounded-8'
                         }}
-                        key={media.preview}
+                        key={i}
                       >
                         <img src={media.preview} alt={media.title} />
                         <GridListTileBar

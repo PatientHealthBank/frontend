@@ -34,7 +34,8 @@ function UserMenu(props) {
 	const dispatch = useDispatch();
 
 	const classes = useStyles();
-	const user = useSelector(({ auth }) => auth.user);
+	const user = useSelector(({ auth }) => auth.user); 
+	const photoUrl = "https://phbbucket.s3.us-east-2.amazonaws.com/profileImages/"+ user.currentUser.photoUrl ;
 
 	const [userMenu, setUserMenu] = useState(null);
 
@@ -63,8 +64,9 @@ function UserMenu(props) {
 					</Typography>
 				</div>
 
-				{user.currentUser.photoURL ? (
-					<Avatar className="md:mx-4" alt="user photo" src={user.currentUser.photoURL} />
+				{user.currentUser.photoUrl ? (
+
+					<Avatar className="md:mx-4" alt="user photo" src={photoUrl} />
 				) : (
 						<Avatar className={classes.avatarMain} >{user.currentUser.displayName[0]}</Avatar>
 					)}
