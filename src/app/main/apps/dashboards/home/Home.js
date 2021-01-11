@@ -43,13 +43,13 @@ function AnalyticsDashboardApp(props) {
 		var code = value || city
 		if (code) {
 			geocodingApi.get(code).then(res => {
-				if (res.data.status !== "ZERO_RESULTS") {
-					setLocation(res.data.results[0].geometry.location)
+				if (res.status === "OK") {
+					setLocation(res.results[0].geometry.location)
 					phbApi().get("Clinic/ByRange", {
 						params: {
 							range,
-							latitude: parseFloat(res.data.results[0].geometry.location.lat),
-							longitude: parseFloat(res.data.results[0].geometry.location.lng),
+							latitude: parseFloat(res.results[0].geometry.location.lat),
+							longitude: parseFloat(res.results[0].geometry.location.lng),
 							specialty,
 							clinicalInterest
 						}
@@ -72,8 +72,8 @@ function AnalyticsDashboardApp(props) {
 		var code = value || zipCode
 		if (code) {
 			geocodingApi.get(code).then(res => {
-				if (res.data.status !== "ZERO_RESULTS") {
-					setLocation(res.data.results[0].geometry.location)
+				if (res.status === "OK") {
+					setLocation(res.results[0].geometry.location)
 					phbApi().get("Clinic/ByZipCode", {
 						params:
 						{
@@ -92,7 +92,7 @@ function AnalyticsDashboardApp(props) {
 							updateNotFound(res.data)
 						})
 				}
-			})
+			}).catch(err=>console.log(err))
 		}
 	}
 

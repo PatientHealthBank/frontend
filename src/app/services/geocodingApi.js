@@ -5,7 +5,7 @@ Geocode.setApiKey("AIzaSyB0pi7GKm7Fd39VMSmIiz8uJweF9tBTkYs");
 
 const apiKey = 'AIzaSyB0pi7GKm7Fd39VMSmIiz8uJweF9tBTkYs';
 
-const geocodingApi = {
+const latlong = {
 	get(value) {
 		var api = axios.create({
 			baseURL: 'https://maps.googleapis.com/maps/api/geocode/',
@@ -18,20 +18,12 @@ const geocodingApi = {
 	},
 
 };
- const getLatLong =  {
-	get(){
-	Geocode.fromAddress("Eiffel Tower").then(
-		response => {
-		  return response.results[0].geometry.location;
-
-		},
-		error => {
-		  console.error(error);
-		}
-	  );
+ const geocodingApi =  {
+	get(value){
+		return Geocode.fromAddress(value)
 	}
 }
 // Get latitude & longitude from address.
 
 
-export default {geocodingApi,getLatLong};
+export default geocodingApi;
