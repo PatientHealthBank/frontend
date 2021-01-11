@@ -15,9 +15,6 @@ import withReducer from 'app/store/withReducer';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import reducer from '../../../main/shared/store/notification';
-import { getData } from '../../../main/shared/store/notification/dataSlice';
-import { toggleQuickPanel } from '../../../main/shared/store/notification/stateSlice';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -32,6 +29,9 @@ import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 import PropTypes from 'prop-types';
+import { toggleQuickPanel } from '../../store/notification/stateSlice';
+import reducer from '../../store/notification';
+import { getData } from '../../store/notification/dataSlice';
 
 const useStyles = makeStyles(theme => ({
 	root: {

@@ -17,7 +17,7 @@ import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AppointmentWidget from './AppointmentWidget';
-import CheckIn from '../components/CheckIn';
+import CheckIn from '../components/checkin/CheckIn';
 import MedicalHistoryWidget from './MedicalHistoryWidget';
 import CareTeamWidget from './CareTeamWidget';
 import AppointmentTestWidget from './AppointmentTestWidget';
