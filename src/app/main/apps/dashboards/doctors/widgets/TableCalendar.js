@@ -105,46 +105,53 @@ function TableCalendar(props) {
 
     const classes = useStyles(props);
     var itens = [];
-    var momentStartJob = moment(`${(startJob.hours).toString().padStart(2, 0)}:00`,'H:m')
-    console.log(momentStartJob)
-    var calcInterval = (appointmentInterval/60)
-    for (let i = 0; i < (endJob.hours - startJob.hours) / calcInterval; i++) {
-        var jobTimeFormated = momentStartJob.add((appointmentInterval),'minutes').format('HH:mm')
-        console.log(appointmentInterval)
 
+    var momentStartJob = moment(startJob,'hh:mm:ss')
+    var momentEndJob = moment(endJob,'hh:mm:ss')
+    var calcInterval = (60/appointmentInterval)
+    var workTime = (momentEndJob.hours()-momentStartJob.hours())
+
+
+    for (let i = 0; i < workTime* calcInterval; i++) {
+        var newTime = momentStartJob.add((appointmentInterval),'minutes');
+
+        var jobTimeFormated =newTime.format('HH:mm')
+
+        if(momentEndJob.diff(newTime) > 0){
         itens.push(
             <tr key={i}>
                 {
-                    (availableTime(0, i) ? (<td ><a onClick={()=>handleConfirmAppointment(`${momentStartJob.add((appointmentInterval),'minutes').format('HH:mm')}`,today)} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
+                    (availableTime(0, i) ? (<td ><a onClick={()=>handleConfirmAppointment(`${newTime.format('HH:mm')}`,today)} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
                         {jobTimeFormated}</a></td>) :
                         (<td style={{ padding: "5px" }}>----</td>)) 
                 }
                 {
-                    (availableTime(1, i) ? (<td><a  onClick={()=>handleConfirmAppointment(`${momentStartJob.add((appointmentInterval),'minutes').format('HH:mm')}`,today.addDays(1))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
+                    (availableTime(1, i) ? (<td><a  onClick={()=>handleConfirmAppointment(`${newTime.format('HH:mm')}`,today.addDays(1))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
                         {jobTimeFormated}</a></td>) :
                         (<td style={{ padding: "5px" }}>----</td>))
                 }
                 {
-                    (availableTime(2,i) ? (<td><a onClick={()=>handleConfirmAppointment(`${momentStartJob.add((appointmentInterval),'minutes').format('hh:mm')}`,today.addDays(2))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
+                    (availableTime(2,i) ? (<td><a onClick={()=>handleConfirmAppointment(`${newTime.format('hh:mm')}`,today.addDays(2))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
                         {jobTimeFormated}</a></td>) :
                         (<td style={{ padding: "5px" }}>----</td>))
                 }
                 {
-                    (availableTime(3, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${momentStartJob.add((appointmentInterval),'minutes').format('hh:mm')}`,today.addDays(3))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
+                    (availableTime(3, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${newTime.format('hh:mm')}`,today.addDays(3))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
                         {jobTimeFormated}</a></td>) :
                         (<td style={{ padding: "5px" }}> ----</td>))
                 }
                 {
-                    (availableTime(4, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${momentStartJob.add((appointmentInterval),'minutes').format('hh:mm')}`,today.addDays(4))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
+                    (availableTime(4, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${newTime.format('hh:mm')}`,today.addDays(4))} style={{ backgroundColor: "aliceblue", padding: "5px" ,cursor: 'pointer'}}>
                         {jobTimeFormated}</a></td>) :
                         (<td style={{ padding: "5px" }}>----</td>))
                 }
                 {
-                    (availableTime(5, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${momentStartJob.add((appointmentInterval),'minutes').format('hh:mm')}` ,today.addDays(5))} style={{ backgroundColor: "aliceblue", padding: "5px",cursor: 'pointer' }}>
+                    (availableTime(5, i) ? (<td><a   onClick={()=>handleConfirmAppointment(`${newTime.format('hh:mm')}` ,today.addDays(5))} style={{ backgroundColor: "aliceblue", padding: "5px",cursor: 'pointer' }}>
                         {jobTimeFormated}</a></td>) :
                         (<td style={{ padding: "5px" }}>----</td>))
                 }
             </tr>)
+            }
 
     }
     return (
