@@ -45,7 +45,7 @@ function CareTeamWidget(props) {
 				{careTeam
 					.sort((a, b) => Date(b.scheduleDate) - Date(a.scheduleDate))
 					.slice(0, 4)
-
+					.filter((v, i, a) => a.findIndex(t => t.provider.name === v.provider.name) === i)
 					.map(appointment => (
 						<Tooltip title={appointment.provider.name} aria-label="add">
 							<Avatar class={props.classes.avatar} alt="Remy Sharp" src={appointment.provider.imageUrl} />
