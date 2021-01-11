@@ -7,7 +7,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import withReducer from 'app/store/withReducer';
 import React, { useRef, useEffect } from 'react';
-import reducer from './store';
 import { grey } from '@material-ui/core/colors';
 import IconButton from '@material-ui/core/IconButton';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,7 +17,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { useSelector } from 'react-redux';
 
 import Icon from '@material-ui/core/Icon';
-import Widget5 from './widgets/Widget5';
+import reducer from '../../../shared/store';
+import Widget5 from '../../../shared/widgets/DashboardWidget';
 
 function DoctorsApp(props) {
 	const user = useSelector(({ auth }) => auth.user);

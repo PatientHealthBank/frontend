@@ -1,6 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles';
-//ToDo migra table pra share component
-
 import Typography from '@material-ui/core/Typography';
 import AllergiesWidget from 'app/main/pages/profile/widgets/AllergiesWidget';
 import MedicinesWidget from 'app/main/pages/profile/widgets/MedicinesWidget';
@@ -11,11 +9,6 @@ import EmergencyContactWidget from 'app/main/pages/profile/widgets/EmergencyCont
 import TableRow from '@material-ui/core/TableRow';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
-import CheckIn from './CheckIn';
-import AppointmentWidget from './AppointmentWidget';
-import AppointmentTestWidget from './AppointmentTestWidget';
-import CareTeamWidget from './CareTeamWidget';
-import MedicalHistoryWidget from './MedicalHistoryWidget';
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import Paper from '@material-ui/core/Paper';
@@ -23,6 +16,11 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import AppointmentWidget from './AppointmentWidget';
+import CheckIn from './CheckIn';
+import MedicalHistoryWidget from './MedicalHistoryWidget';
+import CareTeamWidget from './CareTeamWidget';
+import AppointmentTestWidget from './AppointmentTestWidget';
 import FamilyMembersWidget from './FamilyMembersWidget';
 
 const appointmentTest = [];
@@ -34,9 +32,13 @@ const useStyles = makeStyles(theme => ({
 		marginBottom: '15px'
 	},
 	avatar: {
-		height: '192px',
-		width: '192px',
-		margin: '10px'
+		height: '128px',
+		width: '128px',
+		marginTop: '7%',
+		marginLeft: '5%',
+		alignItems: 'center',
+		justifyContent: 'center',
+		display: 'flex'
 	},
 	table: {
 		'& tr': {
@@ -65,52 +67,17 @@ const useStyles = makeStyles(theme => ({
 		}
 	}
 }));
-function RowToComp(prop) {
-	return (
-		<div className="flex flex-row">
-			<div className="w-3/12  p-8 max-h-420 min-h-420 h-420" style={{ marginLeft: '4%' }}>
-				{prop.status === 1 ? (
-					<div
-						className="text-center"
-						style={{ backgroundColor: '#E1F0FF', color: '#0A6CC1', padding: '3%', borderRadius: '100px' }}
-					>
-						<strong>Ready</strong>
-					</div>
-				) : (
-					<div
-						className="text-center"
-						style={{ backgroundColor: '#FFE2E5', color: '#F74E8B', padding: '3%', borderRadius: '100px' }}
-					>
-						<strong>Waiting</strong>
-					</div>
-				)}
-			</div>
-			<div className="w-7/12 p-8 min-h-420 h-420">
-				<div className="text-right font-bold text-base">
-					<span>{prop.description}</span>
-				</div>
-			</div>
-			<div className={'w-1/12 p-8 min-h-420 h-420 align-top ' + prop.class.myTestsResults}>
-				{prop.status === 1 && (
-					<IconButton>
-						<Icon>remove_red_eye</Icon>
-					</IconButton>
-				)}
-			</div>
-		</div>
-	);
-}
 
 const emergencyContact = [];
 
-function Widget5(props) {
+function DashboardWidget(props) {
 	const [state, setState] = React.useState({
 		checkedA: false,
 		checkedB: false,
 		checkedF: false,
 		checkedG: false
 	});
-	var { widgets } = props;
+	const { widgets } = props;
 	const [emergency, setEmergency] = React.useState(emergencyContact);
 
 	const handleChange = event => {
@@ -179,4 +146,4 @@ function Widget5(props) {
 	);
 }
 
-export default React.memo(Widget5);
+export default React.memo(DashboardWidget);
