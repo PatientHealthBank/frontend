@@ -9,7 +9,7 @@ import LoadingModal from 'app/fuse-layouts/shared-components/loadingModal/Loadin
 import { useTranslation } from "react-i18next";
 import withReducer from 'app/store/withReducer';
 import reducer from './store';
-import {listAllergies} from './store/allergiesSlice'
+import {listAllergies} from '../../shared/store/allergiesSlice'
 
 
 function Allergies() {

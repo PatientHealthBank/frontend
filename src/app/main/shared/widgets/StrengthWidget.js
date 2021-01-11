@@ -2,8 +2,8 @@ import _ from '@lodash';
 import Card from '@material-ui/core/Card';
 import Divider from '@material-ui/core/Divider';
 import withReducer from 'app/store/withReducer';
-import { getStrength } from '../store/strengthSlice';
-import reducer from '../store';
+import { getStrength } from '../store/strengthWidgetSlice';
+import reducer from '../../pages/profile/store';
 
 import Link from '@material-ui/core/Link';
 import Icon from '@material-ui/core/Icon';

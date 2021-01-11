@@ -1,9 +1,9 @@
 import Grid from '@material-ui/core/Grid';
 import React from 'react';
 import withReducer from 'app/store/withReducer';
-import AllergiesWidget from './widgets/AllergiesWidget';
-import MedicinesWidget from './widgets/MedicinesWidget';
-import StrengthWidget from './widgets/StrengthWidget';
+import AllergiesWidget from '../../shared/widgets/AllergiesWidget';
+import MedicinesWidget from '../../shared/widgets/MedicinesWidget';
+import StrengthWidget from '../../shared/widgets/StrengthWidget';
 import ImmunizationWidget from './widgets/ImmunizationWidget';
 
 function ProfileOverview() {

@@ -7,7 +7,7 @@ import reducer from '../store';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import { listEmergencyContact } from '../store/emergencyContactSlice'
+import { listEmergencyContact } from '../../../shared/store/emergencyContactSlice'
 
 function EmergencyContactWidget(props) {
 	const { emergencyContact } = useSelector(({ ProfilesApp }) => ProfilesApp);

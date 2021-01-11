@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import withReducer from 'app/store/withReducer';
 import reducer from './store';
 import phbApi from 'app/services/phbApi'
-import {listMedicines} from './store/medicinesSlice'
+import {listMedicines} from '../../shared/store/medicinesSlice'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
 

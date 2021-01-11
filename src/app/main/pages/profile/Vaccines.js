@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from "react-i18next";
 import withReducer from 'app/store/withReducer';
 import reducer from './store';
-import {listVaccines} from './store/vaccinesSlice'
+import {listVaccines} from '../../shared/store/vaccinesSlice'
 
 function Vaccines() {
 	const { t } = useTranslation();
