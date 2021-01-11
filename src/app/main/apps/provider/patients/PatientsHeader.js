@@ -7,11 +7,11 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
-import { setPatientsSearchText } from '../store/patientsSlice';
+// import { setPatientsSearchText } from '../store/patientsSlice';
 
 function PatientsHeader(props) {
 	const dispatch = useDispatch();
-	const searchText = useSelector(({ providerApp }) => providerApp.patients.searchText);
+	// const searchText = useSelector(({ providerApp }) => providerApp.patients.searchText);
 	const mainTheme = useSelector(selectMainTheme);
 
 	return (
@@ -38,11 +38,11 @@ function PatientsHeader(props) {
 								className="flex flex-1 mx-8"
 								disableUnderline
 								fullWidth
-								value={searchText}
+								// value={searchText}
 								inputProps={{
 									'aria-label': 'Search'
 								}}
-								onChange={ev => dispatch(setPatientsSearchText(ev))}
+								// onChange={ev => dispatch(setPatientsSearchText(ev))}
 							/>
 						</Paper>
 					</FuseAnimate>

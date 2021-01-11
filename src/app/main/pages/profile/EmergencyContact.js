@@ -1,6 +1,6 @@
 import React from 'react';
-import EmergencyContactListWidget from './widgets/emergencyContact/EmergencyContactListWidget';
-import NewEmergencyContactWidget from './widgets/emergencyContact/NewEmergencyContactWidget';
+import EmergencyContactListWidget from '../../shared/widgets/emergencyContact/EmergencyContactListWidget';
+import NewEmergencyContactWidget from '../../shared/widgets/emergencyContact/NewEmergencyContactWidget';
 import Grid from '@material-ui/core/Grid';
 import phbApi from 'app/services/phbApi'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from "react-i18next";
 import withReducer from 'app/store/withReducer';
 import reducer from './store';
-import { listEmergencyContact } from './store/emergencyContactSlice'
+import { listEmergencyContact } from '../../shared/store/emergencyContactSlice'
 
 function EmergencyContact() {
 	const { t } = useTranslation();

@@ -2,7 +2,7 @@ import withReducer from 'app/store/withReducer';
 import React, { useEffect, useState } from 'react';
 import reducer from './store';
 import Grid from '@material-ui/core/Grid';
-import Widget1 from './widgets/Widget1';
+import Widget1 from '../../../shared/widgets/Widget1';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import geocodingApi from '../../../../services/geocodingApi'
 import Paper from '@material-ui/core/Paper';

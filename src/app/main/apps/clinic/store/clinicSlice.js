@@ -53,6 +53,8 @@ export const saveClinic = createAsyncThunk(
 			.post(`/clinic`, clinic)
 			.then(response => {
 				dispatch(closeLoading());
+				dispatch(showMessage({ message: "Clinica cadastrada" }));
+
 				dispatch(getClinics())
 				return response.data;
 			})
@@ -72,6 +74,8 @@ export const updateClinic = createAsyncThunk(
 			.put(`/clinic`, clinic)
 			.then(response => {
 				dispatch(closeLoading());
+				dispatch(showMessage({ message: "Clinica atualizada" }));
+
 				dispatch(getClinics())
 				return response.data;
 			})

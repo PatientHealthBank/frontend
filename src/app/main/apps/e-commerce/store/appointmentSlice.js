@@ -8,8 +8,7 @@ export const getAppointment = createAsyncThunk('eCommerceApp/appointment/getAppo
 	var appointmentId = params.appointmentId;
 	const response = await phbApi().get('/appointment/getAppointment/' + appointmentId);
 	const data = await response.data;
-	console.log(data);
-
+	
 	return data;
 });
 

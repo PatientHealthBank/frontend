@@ -4,12 +4,13 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\main",
-    "\\src\\app\\main\\pages",
-    "\\src\\app\\main\\pages\\profile",
-    "\\src\\app\\main\\pages\\profile\\widgets",
-    "\\src\\app\\main\\pages\\profile\\widgets\\emergencyContact",
-    "\\src\\app\\main\\pages\\profile\\widgets\\patient"
+    "\\src\\app\\main\\apps",
+    "\\src\\app\\main\\apps\\dashboards",
+    "\\src\\app\\main\\apps\\dashboards\\main",
+    "\\src\\app\\main\\apps\\dashboards\\main\\store",
+    "\\src\\app\\main\\apps\\dashboards\\main\\widgets",
+    "\\src\\app\\main\\apps\\e-commerce\\store"
   ],
-  "SelectedNode": "\\src\\app\\main\\pages\\profile\\widgets\\patient\\AddressInformationWidget.js",
+  "SelectedNode": "\\src\\app\\main\\apps\\dashboards\\main\\widgets\\AppointmentWidget.js",
   "PreviewInSolutionExplorer": false
 }

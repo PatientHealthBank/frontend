@@ -22,22 +22,17 @@ export const submitLogin = ({ email, password }) => async dispatch => {
 };
 
 export const updateUser = user => async dispatch => {
-	console.log('atualizando user', user);
 	dispatch(openLoading());
-
 	return jwtService
 		.updateUser(user)
 		.then(result => {
-			console.log('resultado do update',result)
 			dispatch(closeLoading());
 			if (result) {
 				return dispatch(submitLogin({ email: user.currentUser.email, password: user.password }));
 			}
 		})
 		.catch(error => {
-			console.log('deu erro',error)
 			dispatch(closeLoading());
-
 		});
 };
 

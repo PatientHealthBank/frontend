@@ -19,13 +19,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import reducer from '../store';
-import { getPatient, newPatient } from '../store/patientSlice';
+import { getPatient } from '../store/patientSlice';
 import PatientAppointments from './tabs/PatientAppointments';
 import PatientComments from './tabs/PatientComments';
 import PatientExams from './tabs/PatientExams';
 import PatientProfile from './tabs/PatientProfile';
 import PatientTreatments from './tabs/PatientTreatments';
 import PatientVideoLibrary from './tabs/PatientVideoLibrary';
+import PatientMedicalHistory from './tabs/PatientMedicalHistory';
 
 
 const useStyles = makeStyles(theme => ({
@@ -108,11 +109,7 @@ function Patient(props) {
 		function updatePatientState() {
 			const { patientId } = routeParams;
 
-			if (patientId === 'new') {
-				dispatch(newPatient());
-			} else {
-				dispatch(getPatient(routeParams));
-			}
+			dispatch(getPatient(patientId));
 		}
 
 		updatePatientState();
@@ -130,7 +127,6 @@ function Patient(props) {
 	}
 	useEffect(() => {
 		if ((patient && !form) || (patient && form && patient.id !== form.id)) {
-			console.log(patient.treatments);
 			setForm(patient);
 		}
 	}, [form, patient, setForm]);
@@ -148,8 +144,8 @@ function Patient(props) {
 	// function canBeSubmitted() {
 	// 	return form.clinic && form.clinic.length > 0 && !_.isEqual(patient, form);
 	// }
-
-	if ((!patient || (patient && routeParams.patientId !== patient.id)) && routeParams.patientId !== 'new') {
+	
+	if ((!patient || (patient && routeParams.patientId != patient.id)) && routeParams.patientId !== 'new') {
 		return <FuseLoading />;
 	}
 
@@ -178,11 +174,11 @@ function Patient(props) {
 
 							<div className="flex items-center max-w-full">
 								<FuseAnimate animation="transition.expandIn" delay={300}>
-									{form.images.length > 0 && form.featuredImageId ? (
+									{form.PhotoURL? (
 										<img
 											className="w-32 sm:w-48 rounded"
-											src={form.featuredImageId}
-											alt="featuredImageId"
+											src={form.PhotoURL}
+											alt="patientImage"
 										/>
 									) : (
 											<img
@@ -227,71 +223,22 @@ function Patient(props) {
 					classes={{ root: 'w-full h-64' }}
 				>
 					<Tab className="h-64 normal-case" label="Profile" />
-					<Tab className="h-64 normal-case" label="Exams" />
-					<Tab className="h-64 normal-case" label="Appointments" />
+					<Tab className="h-64 normal-case" label="Medical History" />
+					<Tab className="h-64 normal-case" label="Tests" />
 					<Tab className="h-64 normal-case" label="Treatments" />
-					<Tab className="h-64 normal-case" label="Comments" />
 					<Tab className="h-64 normal-case" label="Video Library" />
+					<Tab className="h-64 normal-case" label="Appointments" />
 				</Tabs>
 			}
 			content={
 				form && (
 					<div className="p-16 sm:p-24">
-						{tabValue === 0 && <PatientProfile patient={form} />}
-						{tabValue === 1 && <PatientExams exams={form.exams} />}
-						{tabValue === 2 && <PatientAppointments appointments={form.appointments} />}
+						{tabValue === 0 && <PatientProfile patient={form} />} 
+						{tabValue === 1 && <PatientMedicalHistory />}
+						{/* {tabValue === 2 && <PatientExams exams={form.exams} />}
 						{tabValue === 3 && <PatientTreatments treatments={form.treatments} />}
-						{tabValue === 4 &&
-
-							<div>
-								<div className="rounded-lg shadow-xl flex flex-col pt-16 px-16 ltr:pl-56 rtl:pr-56 pb-40 overflow-scroll" style={{ height: '50vh', background: '#24aae007', border: '1px solid #00000044' }}>
-									<PatientComments dummyData={dummyData} />
-									<AlwaysScrollToBottom />
-								</div>
-								<div style={{ marginTop: "1vh" }}>
-									<FormControl className={clsx(classes.margin, classes.textField)} style={{ width: '99%' }} variant="outlined">
-										<InputLabel htmlFor="outlined-adornment-password">Type your message ...</InputLabel>
-										<OutlinedInput
-											className="mt-8 mb-16"
-											label="Extra Shipping Fee"
-											id="extraShippingFee"
-											name="extraShippingFee"
-											onChange={(event) => setComment(event.target.value)}
-											value={comment}
-											variant="outlined"
-											endAdornment={
-												<InputAdornment position="end">
-													<IconButton
-														aria-label="toggle password visibility"
-														edge="end"
-														onClick={() => {
-															var data = new Date();
-															var newComment =
-															{
-																message: comment,
-																date: `${data.getFullYear()}-${data.getMonth()}-${data.getDate()} ${formatAMPM(data)}`,
-																user: 1
-															}
-															setComments([...comments, newComment])
-														}}
-													>
-														<Icon>
-															send
-															</Icon>
-													</IconButton>
-												</InputAdornment>
-											}
-											fullWidth
-										/>
-									</FormControl>
-								</div>
-							</div>
-
-						}
-
-
-
-						{tabValue === 5 && <PatientVideoLibrary videos={form.videoLibrary} />}
+						{tabValue === 4 && <PatientVideoLibrary videos={form.videoLibrary} />}
+						{tabValue === 5 && <PatientAppointments appointments={form.appointments} />} */}
 					</div>
 				)
 			}
