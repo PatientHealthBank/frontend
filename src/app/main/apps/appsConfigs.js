@@ -12,9 +12,12 @@ import ClinicAppConfig from './clinic/ClinicAppConfig';
 import TreatmentsAppConfig from './treatments/TreatmentsAppConfig';
 import ProviderAppConfig from './provider/ProviderAppConfig';
 import FamilyMembersAppConfig from './family-members/FamilyMembersAppConfig';
+import AdmIntakeFormAppConfig from './intake-form/AdmIntakeFormAppConfig';
+
 
 
 const appsConfigs = [
+	AdmIntakeFormAppConfig,
 	FamilyMembersAppConfig,
 	DashboardAppConfig,
 	HomeAppConfig,
