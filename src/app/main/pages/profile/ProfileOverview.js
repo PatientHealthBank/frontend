@@ -4,7 +4,7 @@ import withReducer from 'app/store/withReducer';
 import AllergiesWidget from '../../shared/widgets/AllergiesWidget';
 import MedicinesWidget from '../../shared/widgets/MedicinesWidget';
 import StrengthWidget from '../../shared/widgets/StrengthWidget';
-import ImmunizationWidget from './widgets/ImmunizationWidget';
+import ImmunizationWidget from '../../shared/widgets/ImmunizationWidget';
 
 function ProfileOverview() {
 

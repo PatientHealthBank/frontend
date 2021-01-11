@@ -5,10 +5,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { listVaccines } from '../../../shared/store/vaccinesSlice'
+import { listVaccines } from '../store/vaccinesSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import withReducer from 'app/store/withReducer';
-import reducer from '../store';
+import reducer from '../../pages/profile/store';
 
 function ImmunizationWidget(props) {
 	const { t } = useTranslation();

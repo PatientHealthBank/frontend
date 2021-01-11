@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import React from 'react';
-import AllergiesListWidget from './widgets/allergies/AllergiesListWidget';
-import NewAllergiesWidget from './widgets/allergies/NewAllergiesWidget';
+import AllergiesListWidget from '../../shared/widgets/allergies/AllergiesListWidget';
+import NewAllergiesWidget from '../../shared/widgets/allergies/NewAllergiesWidget';
 import phbApi from 'app/services/phbApi'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 import { useDispatch, useSelector } from 'react-redux';

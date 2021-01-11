@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import reducer from './store';
 import phbApi from 'app/services/phbApi'
 import withReducer from 'app/store/withReducer';
-import PatientInformationWidget from './widgets/patient/PatientInformationWidget';
-import AddressInformationWidget from './widgets/patient/AddressInformationWidget';
-import InsurancePlanWidget from './widgets/patient/InsurancePlanWidget';
+import PatientInformationWidget from '../../shared/widgets/patient/PatientInformationWidget';
+import AddressInformationWidget from '../../shared/widgets/patient/AddressInformationWidget';
+import InsurancePlanWidget from '../../shared/widgets/patient/InsurancePlanWidget';
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { patientInfo } from './store/patientInformationSlice';

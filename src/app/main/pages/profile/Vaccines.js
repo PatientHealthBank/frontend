@@ -1,6 +1,6 @@
 import React from 'react';
-import ImmunizationListWidget from './widgets/vaccines/ImmunizationListWidget';
-import NewImmunizationWidget from './widgets/vaccines/NewImmunizationWidget';
+import ImmunizationListWidget from '../../shared/widgets/vaccines/ImmunizationListWidget';
+import NewImmunizationWidget from '../../shared/widgets/vaccines/NewImmunizationWidget';
 import Grid from '@material-ui/core/Grid';
 import phbApi from 'app/services/phbApi'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';

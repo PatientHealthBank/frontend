@@ -3,11 +3,11 @@ import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
 import { useDispatch, useSelector } from 'react-redux';
 import withReducer from 'app/store/withReducer';
-import reducer from '../store';
+import reducer from '../../pages/profile/store';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import { listEmergencyContact } from '../../../shared/store/emergencyContactSlice'
+import { listEmergencyContact } from '../store/emergencyContactSlice'
 
 function EmergencyContactWidget(props) {
 	const { emergencyContact } = useSelector(({ ProfilesApp }) => ProfilesApp);
