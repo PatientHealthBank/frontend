@@ -11,40 +11,38 @@ import TextField from '@material-ui/core/TextField';
 import React, { useEffect, useRef, useState } from 'react';
 import AlertTransportsDialog from '../AlertTransportsDialog';
 
-function AppointmentTab({appointment,handleChange,type}) {
-        const [open, setOpen] = useState(false);
-        const [dialogContent, setDialogContent] = useState([]);
-        const [dialogTitle, setDialogTitle] = useState("Title");
-        console.log(appointment.caregiverAppointment)
-        function handleMeansTranportChange(event) {
-    
-            switch (event.target.value) {
-                case 'Uber':
-                    setDialogTitle('Reminder for Uber');
-                    setDialogContent(["This will generate a reminder/notification for you 2 hours before your appointment."
-                        , "This option doesn't book an Uber for you, please use the link to go to Uber app or website"]);
-                    setOpen(true);
-                    break;
-                case 'Taxi':
-                    setDialogTitle('Reminder for Taxi');
-                    setDialogContent(["This will generate a reminder/notification for you 2 hours before your appointment."
-                        , "This option doesn't book a taxi for you. Please call your local company if you want to book a taxi in advance"]);
-                    setOpen(true);
-                    break;
-                case 'Caregiver':
-                    setDialogTitle('Reminder for Caregiver');
-                    setDialogContent(["This will send a text message, 2 hours before your appointment, to the caregiver you selected on your profile."
-                        , "If you need to update this information, go to profile page"]);
-                    setOpen(true);
-                    break;
-                default:
-            }
-    
-            handleChange(event);
-    
+function AppointmentTab({ appointment, handleChange, type }) {
+    const [open, setOpen] = useState(false);
+    const [dialogContent, setDialogContent] = useState([]);
+    const [dialogTitle, setDialogTitle] = useState("Title");
+    function handleMeansTranportChange(event) {
+
+        switch (event.target.value) {
+            case 'Uber':
+                setDialogTitle('Reminder for Uber');
+                setDialogContent(["This will generate a reminder/notification for you 2 hours before your appointment."
+                    , "This option doesn't book an Uber for you, please use the link to go to Uber app or website"]);
+                setOpen(true);
+                break;
+            case 'Taxi':
+                setDialogTitle('Reminder for Taxi');
+                setDialogContent(["This will generate a reminder/notification for you 2 hours before your appointment."
+                    , "This option doesn't book a taxi for you. Please call your local company if you want to book a taxi in advance"]);
+                setOpen(true);
+                break;
+            case 'Caregiver':
+                setDialogTitle('Reminder for Caregiver');
+                setDialogContent(["This will send a text message, 2 hours before your appointment, to the caregiver you selected on your profile."
+                    , "If you need to update this information, go to profile page"]);
+                setOpen(true);
+                break;
+            default:
         }
 
-        console.log(appointment.clinic )
+
+        handleChange(event);
+    }
+
     return (
         <div>
             <Grid container spacing={3}>
@@ -52,26 +50,26 @@ function AppointmentTab({appointment,handleChange,type}) {
                     <TextField
                         className="mt-8 mb-16"
                         label="Clinic"
-                        id={(appointment.clinic|| type != 'new') ? 'clinic.companyName' : 'clinicName'}
-                        name={(appointment.clinic || type != 'new')  ? 'clinic.companyName' : 'clinicName'}
+                        id={(appointment.clinic || type != 'new') ? 'clinic.companyName' : 'clinicName'}
+                        name={(appointment.clinic || type != 'new') ? 'clinic.companyName' : 'clinicName'}
                         disabled={appointment.clinic}
-                        value={(!appointment.clinic || type == 'new')? appointment.clinicName : appointment.clinic?.companyName}
+                        value={(!appointment.clinic || type == 'new') ? appointment.clinicName : appointment.clinic?.companyName}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
                     />
                     {
-                        (appointment.providerName || type == 'new') && 
-                    <TextField
-                        className="mt-8 mb-16"
-                        label="Provider Name"
-                        id={'providerName'}
-                        name={'providerName'}
-                        value={appointment.providerName}
-                        onChange={handleChange}
-                        variant="outlined"
-                        fullWidth
-                    />}
+                        (appointment.providerName || type == 'new') &&
+                        <TextField
+                            className="mt-8 mb-16"
+                            label="Provider Name"
+                            id={'providerName'}
+                            name={'providerName'}
+                            value={appointment.providerName}
+                            onChange={handleChange}
+                            variant="outlined"
+                            fullWidth
+                        />}
                     <TextField
                         className="mt-8 mb-16"
                         id="comments"
@@ -97,50 +95,86 @@ function AppointmentTab({appointment,handleChange,type}) {
                             label="Receive Notifications"
                         />
                     </Grid>
-                    <FormControlLabel
-                        control={<Switch checked={appointment.caregiverAppointment} onChange={handleChange} id="caregiverAppointment"
-                            name="caregiverAppointment" />}
-                        label="Notify Caregiver"
-                    />
+                    <Grid item xs={8}>
+                        <FormControlLabel
+                            control={<Switch checked={appointment.caregiverAppointment} onChange={handleChange} id="caregiverAppointment"
+                                name="caregiverAppointment" />}
+                            label="Notify Caregiver"
+                        />
+                    </Grid>
+                    <Grid item xs={8}>
+                        {appointment.provider.telemedicine &&
+                            <FormControlLabel
+                                control={<Switch checked={appointment.telemedicine} onChange={handleChange} id="telemedicine"
+                                    name="telemedicine" />}
+                                label="Appointment Telemedicine"
+                            />
+                        }
+                    </Grid>
                 </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id="scheduleDate"
-                        name="scheduleDate"
-                        label="Upcoming Appointment"
-                        type="datetime-local"
-                        variant="outlined"
-                        value={appointment.scheduleDate}
-                        onChange={handleChange}
-                        className="mt-8 mb-16"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
 
-                    <FormControlLabel
-                        control={<Switch checked={appointment.includeTravelTime} onChange={handleChange} id="includeTravelTime"
-                            name="includeTravelTime" />}
-                        label="Include travel time?"
-                    />
-                    {
-                        appointment.includeTravelTime && (
-                            <div>
-                                <FormControl id="meansTransport" className="mt-8 mb-16" component="fieldset">
-                                    <FormLabel component="legend">Means of transport</FormLabel>
-                                    <RadioGroup aria-label="gender" id="meansTransport" name="meansTransport" value={appointment.meansTransport} onChange={handleMeansTranportChange}>
-                                        <FormControlLabel value="Own" control={<Radio />} label="Own Transportation" />
-                                        <FormControlLabel value="Uber" control={<Radio />} label="Uber" />
-                                        <FormControlLabel value="Taxi" control={<Radio />} label="Taxi" />
-                                        <FormControlLabel value="Caregiver" control={<Radio />} label="Caregiver - Transportation" />
-                                    </RadioGroup>
-                                </FormControl>
+                {
+                    <Grid item xs={2} >
+                        <TextField
+                            id="scheduleDate"
+                            name="scheduleDate"
+                            label="Upcoming Appointment"
+                            type="datetime-local"
+                            variant="outlined"
+                            value={appointment.scheduleDate}
+                            onChange={handleChange}
+                            className="mt-8 mb-16"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        {
+                            !appointment.telemedicine &&
+                            (
+                                <FormControlLabel
 
-                                <AlertTransportsDialog open={open} title={dialogTitle} content={dialogContent} setOpen={setOpen}></AlertTransportsDialog>
-                            </div>
-                        )
-                    }
-                </Grid>
+                                    control={<Switch checked={appointment.includeTravelTime}
+                                        onChange={handleChange}
+                                        id="includeTravelTime"
+                                        name="includeTravelTime" />}
+                                    label="Include travel time?"
+                                />
+                            )}
+
+                        {
+                            appointment.includeTravelTime && (
+                                <div>
+                                    <FormControl id="meansTransport" className="mt-8 mb-16" component="fieldset">
+                                        <FormLabel component="legend">Means of transport</FormLabel>
+                                        <RadioGroup aria-label="gender" id="meansTransport" name="meansTransport" value={appointment.meansTransport} onChange={handleMeansTranportChange}>
+                                            <FormControlLabel value="Own" control={<Radio />} label="Own Transportation" />
+                                            <FormControlLabel value="Uber" control={<Radio />} label="Uber" />
+                                            <FormControlLabel value="Taxi" control={<Radio />} label="Taxi" />
+                                            <FormControlLabel value="Caregiver" control={<Radio />} label="Caregiver - Transportation" />
+                                        </RadioGroup>
+                                    </FormControl>
+
+                                    <AlertTransportsDialog open={open} title={dialogTitle} content={dialogContent} setOpen={setOpen}></AlertTransportsDialog>
+                                </div>
+                            )
+                        }
+
+                        {
+                            appointment.telemedicine && appointment.provider.telemedicine &&
+                            <TextField
+                                id="telemedicineTools"
+                                name="telemedicineTool"
+                                label="Telemedicine Tool"
+                                type="text"
+                                disabled={'true'}
+                                variant="outlined"
+                                value={appointment.provider.telemedicineTool}
+                                className="mt-8 mb-16"
+                            />
+                        }
+
+                    </Grid>
+                }
             </Grid>
         </div>
     );
