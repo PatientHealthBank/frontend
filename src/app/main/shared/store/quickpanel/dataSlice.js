@@ -9,19 +9,40 @@ export const getNotifications = createAsyncThunk('quickPanel/data/getData', asyn
 	const { user } = getState().auth;
 	dispatch(openLoading());
 
-	const response = await phbApi().get(`/notification/list/${user.currentUser.id}`);
-	const data = await response.data;
-	dispatch(closeLoading());
-
-	return data;
+	return await phbApi()
+		.get(`/notification/list/${user.currentUser.id}`)
+		.then(response => {
+			dispatch(closeLoading());
+			return response.data;
+		})
+		.catch(error => {
+			dispatch(closeLoading());
+		});
 });
 
+export const checkRead = createAsyncThunk('quickPanel/data/checkRead', async (params, { getState, dispatch }) => {
+	const { user } = getState().auth;
+	dispatch(openLoading());
+	console.error('params', params);
+	return await phbApi()
+		.patch(`/notification/${params}`)
+		.then(response => {
+			dispatch(closeLoading());
+			if (response.data) {
+				dispatch(getNotifications());
+			}
+		})
+		.catch(error => {
+			dispatch(closeLoading());
+		});
+});
 const dataSlice = createSlice({
 	name: 'quickPanel/data',
 	initialState: null,
 	reducers: {},
 	extraReducers: {
-		[getNotifications.fulfilled]: (state, action) => action.payload
+		[getNotifications.fulfilled]: (state, action) => action.payload,
+		[checkRead.pending]: (state, action) => action.payload
 	}
 });
 

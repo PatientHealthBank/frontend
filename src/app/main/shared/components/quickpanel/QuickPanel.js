@@ -16,9 +16,8 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import reducer from '../../store/quickpanel';
-import { getNotifications } from '../../store/quickpanel/dataSlice';
+import { getNotifications, checkRead } from '../../store/quickpanel/dataSlice';
 import { toggleQuickPanel } from '../../store/quickpanel/stateSlice';
-import { useDebounce } from '@fuse/hooks';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -176,120 +175,131 @@ function QuickPanel(props) {
 	}, [dispatch]);
 
 	return (
-		 (
-			<>
-				<Drawer
-					classes={{ paper: classes.root }}
-					open={state}
-					anchor="right"
-					onClose={ev => dispatch(toggleQuickPanel())}
-				>
-					<FuseScrollbars>
-						<ListSubheader component="div">Today</ListSubheader>
+		<>
+			<Drawer
+				classes={{ paper: classes.root }}
+				open={state}
+				anchor="right"
+				onClose={ev => dispatch(toggleQuickPanel())}
+			>
+				<FuseScrollbars>
+					<ListSubheader component="div">Today</ListSubheader>
 
-						<div className="mb-0 py-16 px-24">
-							<Typography className="mb-12 text-32" color="textSecondary">
-								{moment().format('dddd')}
+					<div className="mb-0 py-16 px-24">
+						<Typography className="mb-12 text-32" color="textSecondary">
+							{moment().format('dddd')}
+						</Typography>
+						<div className="flex">
+							<Typography className="leading-none text-32" color="textSecondary">
+								{moment().format('DD')}
 							</Typography>
-							<div className="flex">
-								<Typography className="leading-none text-32" color="textSecondary">
-									{moment().format('DD')}
-								</Typography>
-								<Typography className="leading-none text-16" color="textSecondary">
-									th
-								</Typography>
-								<Typography className="leading-none text-32" color="textSecondary">
-									{moment().format('MMMM')}
-								</Typography>
-							</div>
+							<Typography className="leading-none text-16" color="textSecondary">
+								th
+							</Typography>
+							<Typography className="leading-none text-32" color="textSecondary">
+								{moment().format('MMMM')}
+							</Typography>
 						</div>
-						<Divider />
-						<List>
-							<ListSubheader component="div">Notifications</ListSubheader>
-							 {( notifications && notifications.data.length == 0 && <span className=" text-red-600" align="center"> &nbsp;&nbsp;Notifications not found</span>)}
-							{ notifications && notifications.data.map(n => (
-								<ListItem button onClick={() => handleClickOpen(n.text)}>
-									<ListItemIcon className="min-w-40 text-red-600">
+					</div>
+					<Divider />
+					<List>
+						<ListSubheader component="div">Notifications</ListSubheader>
+						{notifications && notifications.data.length == 0 && (
+							<span className=" text-red-600" align="center">
+								&nbsp;&nbsp;Notifications not found
+							</span>
+						)}
+						{notifications &&
+							notifications.data.map(n => (
+								<ListItem button >
+									<ListItemIcon className="min-w-40 text-red-600" onClick={() => handleClickOpen(n.text)}>
 										<Icon>notifications</Icon>
 									</ListItemIcon>
 									<ListItemText
+									onClick={() => handleClickOpen(n.text)}
 										classes={{ primary: classes.listItemText }}
 										className="text-red-600"
 										primary={n.text}
 									/>
+									<span
+										onClick={() => {
+											dispatch(checkRead(n.id));
+										}}
+										class="material-icons"
+										style={{ float: 'right' }}
+									>
+										close
+									</span>
 								</ListItem>
 							))}
-						</List>
-					</FuseScrollbars>
-				</Drawer>
-				<Dialog
-					fullWidth
-					maxWidth={maxWidth}
-					open={open}
-					onClose={handleClose}
-					aria-labelledby="max-width-dialog-title"
-				>
-					<DialogTitle id="max-width-dialog-title">{title}</DialogTitle>
-					<DialogContent>
-						<DialogContentText>
-							Next Appointment: Dr. Smith – Cardiologist October/15/2020
-						</DialogContentText>
+					</List>
+				</FuseScrollbars>
+			</Drawer>
+			<Dialog
+				fullWidth
+				maxWidth={maxWidth}
+				open={open}
+				onClose={handleClose}
+				aria-labelledby="max-width-dialog-title"
+			>
+				<DialogTitle id="max-width-dialog-title">{title}</DialogTitle>
+				<DialogContent>
+					<DialogContentText>Next Appointment: Dr. Smith – Cardiologist October/15/2020</DialogContentText>
 
-						<form className={classes.ratingSize} noValidate>
-							<Typography className="mb-8" component="legend">
-								How do you feel ?
-							</Typography>
+					<form className={classes.ratingSize} noValidate>
+						<Typography className="mb-8" component="legend">
+							How do you feel ?
+						</Typography>
 
-							<StyledRating
-								color={color}
-								name="customized-icons"
-								defaultValue={rating}
-								onChange={(event, newValue) => {
-									onRatingChange(newValue);
-								}}
-								getLabelText={value => customIcons[value].label}
-								IconContainerComponent={IconContainer}
+						<StyledRating
+							color={color}
+							name="customized-icons"
+							defaultValue={rating}
+							onChange={(event, newValue) => {
+								onRatingChange(newValue);
+							}}
+							getLabelText={value => customIcons[value].label}
+							IconContainerComponent={IconContainer}
+						/>
+
+						<FormControlLabel
+							// className={classes.formControlLabel}
+							control={<Switch checked={explainMore} onChange={handleExplainMore} />}
+							label="Do you want to explain a bit more?"
+						/>
+						{explainMore && (
+							<TextField
+								className="mt-16 mb-16"
+								id="othersObservation"
+								name="othersObservation"
+								// onChange={handleChange}
+								label="Explanation?"
+								type="text"
+								// value={form.othersObservation}
+								multiline
+								rows={5}
+								variant="outlined"
+								fullWidth
 							/>
-
-							<FormControlLabel
-								// className={classes.formControlLabel}
-								control={<Switch checked={explainMore} onChange={handleExplainMore} />}
-								label="Do you want to explain a bit more?"
-							/>
-							{explainMore && (
-								<TextField
-									className="mt-16 mb-16"
-									id="othersObservation"
-									name="othersObservation"
-									// onChange={handleChange}
-									label="Explanation?"
-									type="text"
-									// value={form.othersObservation}
-									multiline
-									rows={5}
-									variant="outlined"
-									fullWidth
-								/>
-							)}
-							<Button
-								className="whitespace-no-wrap normal-case float-right"
-								variant="contained"
-								color="secondary"
-								// disabled={!canBeSubmitted()}
-								onClick={handleClose}
-							>
-								Send Answer
-							</Button>
-						</form>
-					</DialogContent>
-					<DialogActions>
-						<Button onClick={handleClose} color="primary">
-							Close
+						)}
+						<Button
+							className="whitespace-no-wrap normal-case float-right"
+							variant="contained"
+							color="secondary"
+							// disabled={!canBeSubmitted()}
+							onClick={handleClose}
+						>
+							Send Answer
 						</Button>
-					</DialogActions>
-				</Dialog>
-			</>
-		)
+					</form>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleClose} color="primary">
+						Close
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</>
 	);
 }
 
