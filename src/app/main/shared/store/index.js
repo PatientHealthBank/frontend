@@ -5,8 +5,7 @@ import appointments from './appointmenWidgetSlice';
 import careTeam from './careTeamWidgetSlice';
 import appointmentTest from './appointmentTestSlice';
 import familyMembers from './FamilyMemberWidgetSlice';
-
-import medicalHistory from './medicalHistorySlice'
+import medicalHistory from './medicalHistorySlice';
 const reducer = combineReducers({
 	widgets,
 	careTeam,
