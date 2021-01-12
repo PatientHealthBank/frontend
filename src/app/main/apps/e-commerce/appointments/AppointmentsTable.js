@@ -128,13 +128,13 @@ function AppointmentTable(props) {
 	// }
 	const columns = [
 		{
-			id: 'appointment',
-			title: 'Appointment',
+			id: 'doctorname',
+			title: 'Doctor name',
 			colspan: 2,
 		},
 		{
-			id: 'doctorname',
-			title: 'Doctor name',
+			id: 'appointment',
+			title: 'Appointment',
 		},
 		{
 			id: 'patient',
@@ -222,11 +222,11 @@ function AppointmentTable(props) {
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
-											{t(row.specialty.description)}
+											{t(row.provider.name)}
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
-											{t(row.provider.name)}
+											{t(row.specialty.description)}
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
