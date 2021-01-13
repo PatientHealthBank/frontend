@@ -75,6 +75,11 @@ const useStyles = makeStyles(theme => ({
 				opacity: 1
 			}
 		}
+	},
+	providerImage: {
+		'&:hover': {
+			opacity: 0.5
+		}
 	}
 }));
 
@@ -106,10 +111,11 @@ function Member(props) {
 	const user = useSelector(({ auth }) => auth.user.currentUser);
 	const theme = useTheme();
 	const classes = useStyles(props);
-	const { form, handleChange, setForm } = useForm(null);
+	const { form, handleChange, setForm } = useForm();
 	const routeParams = useParams();
 	const [specialties, setSpecialties] = React.useState([]);
 	const [clinicalInterest, setClinicalInterest] = React.useState([]);
+	const [preview, setPreview] = React.useState("");
 
 	useDeepCompareEffect(() => {
 		findSpecialties();
@@ -118,12 +124,14 @@ function Member(props) {
 			const { membersId } = routeParams;
 			if (membersId === 'new') {
 				dispatch(newMember());
-			} 
-			else if(membersId === 'providerProfile') {
+				console.log("new")
+			}
+			else if (membersId === 'providerProfile') {
 				dispatch(getMember(user.id));
 			}
 			else {
 				dispatch(getMember(routeParams.membersId));
+				console.log("else")
 			}
 		}
 
@@ -138,7 +146,7 @@ function Member(props) {
 			findClinicalInterest(form.specialty.join());
 		}
 
-	}, [form, member, setForm]);
+	}, [form, member, setForm]);	
 
 	React.useEffect(() => {
 		findSpecialties();
@@ -163,7 +171,16 @@ function Member(props) {
 			dispatch(updateMember(member));
 		}
 	}
-
+	const clickInputImage = (event) => {
+		var name = document.getElementById('select-file');
+		name.click();
+	}
+	const handleFileChange = (event) => {
+		console.log(form.imageUrl);
+		const objectUrl = URL.createObjectURL(event.target.files[0])
+   		setPreview(objectUrl)
+		setForm({...form,[event.target.name]:event.target.files[0]})
+	}
 	return (
 		<FusePageCarded
 			classes={{
@@ -174,20 +191,19 @@ function Member(props) {
 				form && (
 					<div className="flex flex-1 w-full items-center justify-between">
 						<div className="flex flex-col items-start max-w-full">
-							{user.role=="provider" && 
-							(<Typography
-								className="normal-case flex items-center sm:mb-12"
-								component={Link}
-								role="button"
-								to="."
-								color="inherit"
-							>
-								<Icon className="text-20">
-									{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
-								</Icon>
-								<span className="mx-4">Members</span>
-							</Typography>)}
-
+							{user.role == "provider" &&
+								(<Typography
+									className="normal-case flex items-center sm:mb-12"
+									component={Link}
+									role="button"
+									to="."
+									color="inherit"
+								>
+									<Icon className="text-20">
+										{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
+									</Icon>
+									<span className="mx-4">Members</span>
+								</Typography>)}
 							<div className="flex items-center max-w-full">
 								<div className="flex flex-col min-w-0 mx-8 sm:mc-16">
 									<FuseAnimate animation="transition.slideLeftIn" delay={300}>
@@ -220,6 +236,26 @@ function Member(props) {
 									<Typography className="text-16 sm:text-20 truncate mb-16">
 										{'Basic Info'}
 									</Typography>
+										<button>
+											<img
+												key="1"
+												// style={{ display: "inline" }}
+												className={"w-128 m-4 rounded-4" + classes.providerImage}
+												src={preview || form.imageUrl}
+												onClick={clickInputImage}
+											/>
+										</button>
+										<TextField
+											className="mb-16"
+											type='file'
+											id="select-file"
+											variant="outlined"
+											name={"photoURL"}
+											onChange={handleFileChange}
+											style={{ display: 'none' }}
+											autoFocus
+											fullWidth
+										/>
 									<TextField
 										className="mb-16"
 										required
