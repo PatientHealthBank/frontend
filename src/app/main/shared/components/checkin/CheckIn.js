@@ -6,7 +6,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import React, { useState } from 'react';
 import {  withStyles } from '@material-ui/core/styles';
 import { orange, red } from '@material-ui/core/colors';
-import CancelDialog from './CancelDialog'
+import CancelDialog from '../CancelDialog'
 import CheckInDialog from './CheckInDialog'
 
 

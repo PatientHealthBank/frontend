@@ -28,7 +28,7 @@ import phbApi from '../../../../services/phbApi';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import {
-	KeyboardTimePicker
+    KeyboardTimePicker
 } from '@material-ui/pickers';
 
 const useStyles = makeStyles(theme => ({
@@ -75,28 +75,33 @@ const useStyles = makeStyles(theme => ({
 				opacity: 1
 			}
 		}
+	},
+	providerImage: {
+		'&:hover': {
+			opacity: 0.5
+		}
 	}
 }));
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
-	PaperProps: {
-		style: {
-			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-			width: 250,
-		},
-	},
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
 };
 
 const PrimaryButton = withStyles((theme) => ({
-	root: {
-		color: "#ffffff",
-		backgroundColor: '#24aae0',
-		'&:hover': {
-			backgroundColor: '#1d8ab5',
-		},
-	},
+    root: {
+        color: "#ffffff",
+        backgroundColor: '#24aae0',
+        '&:hover': {
+            backgroundColor: '#1d8ab5',
+        },
+    },
 }))(Button);
 
 
@@ -106,20 +111,21 @@ function Member(props) {
 	const user = useSelector(({ auth }) => auth.user.currentUser);
 	const theme = useTheme();
 	const classes = useStyles(props);
-	const { form, handleChange, setForm } = useForm(null);
+	const { form, handleChange, setForm } = useForm();
 	const routeParams = useParams();
 	const [specialties, setSpecialties] = React.useState([]);
 	const [clinicalInterest, setClinicalInterest] = React.useState([]);
+	const [preview, setPreview] = React.useState("");
 
-	useDeepCompareEffect(() => {
-		findSpecialties();
+    useDeepCompareEffect(() => {
+        findSpecialties();
 
 		function updateMemberState() {
 			const { membersId } = routeParams;
 			if (membersId === 'new') {
 				dispatch(newMember());
-			} 
-			else if(membersId === 'providerProfile') {
+			}
+			else if (membersId === 'providerProfile') {
 				dispatch(getMember(user.id));
 			}
 			else {
@@ -127,33 +133,33 @@ function Member(props) {
 			}
 		}
 
-		updateMemberState();
-	}, [dispatch, routeParams]);
+        updateMemberState();
+    }, [dispatch, routeParams]);
 
-	useEffect(() => {
-		if ((member && !form) || (member && form && member.id !== form.id)) {
-			setForm(member);
-		}
-		if (form && form.specialty) {
-			findClinicalInterest(form.specialty.join());
-		}
+    useEffect(() => {
+        if ((member && !form) || (member && form && member.id !== form.id)) {
+            setForm(member);
+        }
+        if (form && form.specialty) {
+            findClinicalInterest(form.specialty.join());
+        }
 
-	}, [form, member, setForm]);
+	}, [form, member, setForm]);	
 
-	React.useEffect(() => {
-		findSpecialties();
-	}, []);
+    React.useEffect(() => {
+        findSpecialties();
+    }, []);
 
-	var findSpecialties = () => {
-		phbApi().get('/specialty/List').then(res => {
-			setSpecialties(res.data)
-		});
-	}
-	var findClinicalInterest = (value) => {
-		phbApi().get('/clinicalinterest/BySpecialties', { params: { specialty: value } }).then(res => {
-			setClinicalInterest(res.data);
-		});
-	}
+    var findSpecialties = () => {
+        phbApi().get('/specialty/List').then(res => {
+            setSpecialties(res.data)
+        });
+    }
+    var findClinicalInterest = (value) => {
+        phbApi().get('/clinicalinterest/BySpecialties', { params: { specialty: value } }).then(res => {
+            setClinicalInterest(res.data);
+        });
+    }
 
 	function handleSave(member) {
 		const { membersId } = routeParams;
@@ -163,7 +169,16 @@ function Member(props) {
 			dispatch(updateMember(member));
 		}
 	}
-
+	const clickInputImage = (event) => {
+		var name = document.getElementById('select-file');
+		name.click();
+	}
+	const handleFileChange = (event) => {
+		console.log(form.imageUrl);
+		const objectUrl = URL.createObjectURL(event.target.files[0])
+   		setPreview(objectUrl)
+		setForm({...form,[event.target.name]:event.target.files[0]})
+	}
 	return (
 		<FusePageCarded
 			classes={{
@@ -174,20 +189,19 @@ function Member(props) {
 				form && (
 					<div className="flex flex-1 w-full items-center justify-between">
 						<div className="flex flex-col items-start max-w-full">
-							{user.role=="provider" && 
-							(<Typography
-								className="normal-case flex items-center sm:mb-12"
-								component={Link}
-								role="button"
-								to="."
-								color="inherit"
-							>
-								<Icon className="text-20">
-									{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
-								</Icon>
-								<span className="mx-4">Members</span>
-							</Typography>)}
-
+							{user.role == "provider" &&
+								(<Typography
+									className="normal-case flex items-center sm:mb-12"
+									component={Link}
+									role="button"
+									to="."
+									color="inherit"
+								>
+									<Icon className="text-20">
+										{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
+									</Icon>
+									<span className="mx-4">Members</span>
+								</Typography>)}
 							<div className="flex items-center max-w-full">
 								<div className="flex flex-col min-w-0 mx-8 sm:mc-16">
 									<FuseAnimate animation="transition.slideLeftIn" delay={300}>
@@ -220,6 +234,26 @@ function Member(props) {
 									<Typography className="text-16 sm:text-20 truncate mb-16">
 										{'Basic Info'}
 									</Typography>
+										<button>
+											<img
+												key="1"
+												// style={{ display: "inline" }}
+												className={"w-128 m-4 rounded-4" + classes.providerImage}
+												src={preview || form.imageUrl}
+												onClick={clickInputImage}
+											/>
+										</button>
+										<TextField
+											className="mb-16"
+											type='file'
+											id="select-file"
+											variant="outlined"
+											name={"photoURL"}
+											onChange={handleFileChange}
+											style={{ display: 'none' }}
+											autoFocus
+											fullWidth
+										/>
 									<TextField
 										className="mb-16"
 										required
@@ -247,320 +281,348 @@ function Member(props) {
 													<Icon className="text-20" color="action">
 														email
 													</Icon>
-												</InputAdornment>
-											)
-										}}
-										variant="outlined"
-										required
-									/>
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        variant="outlined"
+                                        required
+                                    />
 
-									<TextField
-										className="mb-16"
-										id="phone"
-										fullWidth
-										name="phone"
-										type="text"
-										label="Phone"
-										value={form.phone}
-										onChange={handleChange}
-										variant="outlined"
-										required
-									/>
-									<Grid container spacing={3}>
-										<Grid item xs={6}>
-											<TextField
-												className="mb-16"
-												id="licenseNumber"
-												fullWidth
-												name="licenseNumber"
-												type="text"
-												label="LicenseNumber"
-												value={form.licenseNumber}
-												onChange={handleChange}
-												variant="outlined"
-												required
-											/>
-										</Grid>
-										<Grid item xs={6}>
-											<TextField
-												className="mb-16"
-												id="taxId"
-												fullWidth
-												name="taxId"
-												type="text"
-												label="TaxId"
-												value={form.taxId}
-												onChange={handleChange}
-												variant="outlined"
-												required
-											/>
-										</Grid>
-									</Grid>
+                                    <TextField
+                                        className="mb-16"
+                                        id="phone"
+                                        fullWidth
+                                        name="phone"
+                                        type="text"
+                                        label="Phone"
+                                        value={form.phone}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        required
+                                    />
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                className="mb-16"
+                                                id="licenseNumber"
+                                                fullWidth
+                                                name="licenseNumber"
+                                                type="text"
+                                                label="LicenseNumber"
+                                                value={form.licenseNumber}
+                                                onChange={handleChange}
+                                                variant="outlined"
+                                                required
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                className="mb-16"
+                                                id="taxId"
+                                                fullWidth
+                                                name="taxId"
+                                                type="text"
+                                                label="TaxId"
+                                                value={form.taxId}
+                                                onChange={handleChange}
+                                                variant="outlined"
+                                                required
+                                            />
+                                        </Grid>
+                                    </Grid>
 
-									<Grid container spacing={3}>
-										<Grid item xs={6}>
-											<FormControl fullWidth variant="outlined" className="mb-16">
-												<InputLabel htmlFor="outlined-age-native-simple">Gender</InputLabel>
-												<Select
-													native
-													id="genderId"
-													name="genderId"
-													value={form.genderId}
-													onChange={handleChange}
-													label="Gender"
-													inputProps={{
-														name: 'genderId',
-														id: 'outlined-age-native-simple',
-													}}
-												>
-													<option aria-label="None" value="" />
-													<option value={1}>Male</option>
-													<option value={2}>Female</option>
-													<option value={3}>Others</option>
-												</Select>
-											</FormControl>
-										</Grid>
-										<Grid item xs={6}>
-											<TextField
-												className="mb-16"
-												id="npi"
-												fullWidth
-												name="npi"
-												type="text"
-												label="NPI"
-												value={form.npi}
-												onChange={handleChange}
-												variant="outlined"
-												required
-											/>
-										</Grid>
-									</Grid>
-									<Typography className="text-16 sm:text-20 truncate mb-16">
-										{'Appointments'}
-									</Typography>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={6}>
+                                            <FormControl fullWidth variant="outlined" className="mb-16">
+                                                <InputLabel htmlFor="outlined-age-native-simple">Gender</InputLabel>
+                                                <Select
+                                                    native
+                                                    id="genderId"
+                                                    name="genderId"
+                                                    value={form.genderId}
+                                                    onChange={handleChange}
+                                                    label="Gender"
+                                                    inputProps={{
+                                                        name: 'genderId',
+                                                        id: 'outlined-age-native-simple',
+                                                    }}
+                                                >
+                                                    <option aria-label="None" value="" />
+                                                    <option value={1}>Male</option>
+                                                    <option value={2}>Female</option>
+                                                    <option value={3}>Others</option>
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                className="mb-16"
+                                                id="npi"
+                                                fullWidth
+                                                name="npi"
+                                                type="text"
+                                                label="NPI"
+                                                value={form.npi}
+                                                onChange={handleChange}
+                                                variant="outlined"
+                                                required
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Typography className="text-16 sm:text-20 truncate mb-16">
+                                        {'Appointments'}
+                                    </Typography>
 
-									<Grid container spacing={3}>
-										<Grid item xs={6}>
-											<TextField
-												className="mb-16"
-												id="startJob"
-												fullWidth
-												name="startJob"
-												type="time"
-												label="Start Job"
-												value={form.startJob}
-												onChange={handleChange}
-												variant="outlined"
-												required
-											/>
-										</Grid>
-										<Grid item xs={6}>
-											<TextField
-												className="mb-16"
-												id="endJob"
-												fullWidth
-												name="endJob"
-												type="time"
-												label="End Job"
-												value={form.endJob}
-												onChange={handleChange}
-												variant="outlined"
-												required
-											/>
-										</Grid>
-									</Grid>
-									<Grid container spacing={3}>
-										<Grid item xs={6}>
-											<TextField
-												className="mb-16"
-												id="appointmentInterval"
-												fullWidth
-												name="appointmentInterval"
-												type="number"
-												label="Appointment Interval"
-												value={form.appointmentInterval}
-												onChange={handleChange}
-												variant="outlined"
-												required
-											/>
-										</Grid>
-										<Grid item xs={6}>
-											<FormControlLabel
-												control={<Switch checked={form.telemedicine} onChange={handleChange} id="telemedicine"
-													name="telemedicine" />}
-												label="Telemedicine"
-											/>
-										</Grid>
-									</Grid>
-									<Typography className="text-16 sm:text-20 truncate mb-16">
-										{'Specialties'}
-									</Typography>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                className="mb-16"
+                                                id="startJob"
+                                                fullWidth
+                                                name="startJob"
+                                                type="time"
+                                                label="Start Job"
+                                                value={form.startJob}
+                                                onChange={handleChange}
+                                                variant="outlined"
+                                                required
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                className="mb-16"
+                                                id="endJob"
+                                                fullWidth
+                                                name="endJob"
+                                                type="time"
+                                                label="End Job"
+                                                value={form.endJob}
+                                                onChange={handleChange}
+                                                variant="outlined"
+                                                required
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                className="mb-16"
+                                                id="appointmentInterval"
+                                                fullWidth
+                                                name="appointmentInterval"
+                                                type="number"
+                                                label="Appointment Interval"
+                                                value={form.appointmentInterval}
+                                                onChange={handleChange}
+                                                variant="outlined"
+                                                required
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <FormControlLabel
+                                                control={<Switch checked={form.telemedicine} onChange={handleChange} id="telemedicine"
+                                                    name="telemedicine" />}
+                                                label="Telemedicine"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            {
+                                                form.telemedicine &&
 
-									<Grid container spacing={3}>
-										<Grid item xs={6}>
-											<FormControl fullWidth variant="outlined" className="mb-16">
-												<InputLabel htmlFor="outlined-specialty-chip-label">Specialty</InputLabel>
-												<Select
-													id="specialty"
-													name="specialty"
-													value={form.specialty}
-													onChange={handleChange}
-													label="Specialty"
-													inputProps={{
-														name: 'specialty',
-														id: 'outlined-specialty-chip-label',
-													}}
-													multiple
-													renderValue={(selected) => (
-														<div className={classes.chips}>
-															{selected.map((value) => (
-																<Chip key={value} label={specialties.find(x => x.id === value)?.description} className={classes.chip} />
-															))}
-														</div>
-													)}
-													MenuProps={MenuProps}
-												>
-													{specialties.map((specialty) => (
-														<MenuItem key={specialty.id} value={specialty.id}>
-															<Checkbox checked={form.specialty?.indexOf(specialty.id) > -1} />
-															<ListItemText primary={specialty.description} />
-														</MenuItem>
-													))}
-												</Select>
-											</FormControl>
-										</Grid>
+                                                <FormControl fullWidth variant="outlined" className="mb-16">
+                                                    <InputLabel htmlFor="outlined-age-native-simple">Telemedicine Tool</InputLabel>
+                                                    <Select
+                                                        native
+                                                        id="telemedicineTool"
+                                                        name="telemedicineTool"
+                                                        value={form.telemedicineTool}
+                                                        onChange={handleChange}
+                                                        label="Telemedicine Tool"
+                                                        inputProps={{
+                                                            name: 'telemedicineTool',
+                                                            id: 'outlined-age-native-simple',
+                                                        }}
+                                                    >
+                                                        <option aria-label="None" value="" />
+                                                        <option value={'Skype'}>Skype</option>
+                                                        <option value={'Google Meet'}>Google Meet</option>
+                                                        <option value={'Zoom'}>Zoom</option>
+                                                        <option value={'Discord'}>Discord</option>
+                                                        <option value={'Other'}>Other</option>
+                                                    </Select>
+                                                </FormControl>
+                                            }
+                                        </Grid>
+                                    </Grid>
+                                    <Typography className="text-16 sm:text-20 truncate mb-16">
+                                        {'Specialties'}
+                                    </Typography>
 
-										<Grid item xs={6}>
-											<FormControl fullWidth variant="outlined" className="mb-16">
-												<InputLabel htmlFor="outlined-clinicalInterest-chip-label">Clinical Interest</InputLabel>
-												<Select
-													id="clinicalInterest"
-													name="clinicalInterest"
-													value={form.clinicalInterest}
-													onChange={handleChange}
-													label="Clinical Interest"
-													inputProps={{
-														name: 'clinicalInterest',
-														id: 'outlined-clinicalInterest-chip-label',
-													}}
-													multiple
-													renderValue={(selected) => (
-														<div className={classes.chips}>
-															{selected.map((value) => (
-																<Chip key={value} label={clinicalInterest.find(x => x.id === value)?.description} className={classes.chip} />
-															))
-															}
-														</div>
-													)}
-													MenuProps={MenuProps}
-												>
-													{clinicalInterest.map((cliInterest) => (
-														<MenuItem key={cliInterest.id} value={cliInterest.id}>
-															<Checkbox checked={form.clinicalInterest.indexOf(cliInterest.id) > -1} />
-															<ListItemText primary={cliInterest.description} />
-														</MenuItem>
-													))}
-												</Select>
-											</FormControl>
-										</Grid>
-									</Grid>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={6}>
+                                            <FormControl fullWidth variant="outlined" className="mb-16">
+                                                <InputLabel htmlFor="outlined-specialty-chip-label">Specialty</InputLabel>
+                                                <Select
+                                                    id="specialty"
+                                                    name="specialty"
+                                                    value={form.specialty}
+                                                    onChange={handleChange}
+                                                    label="Specialty"
+                                                    inputProps={{
+                                                        name: 'specialty',
+                                                        id: 'outlined-specialty-chip-label',
+                                                    }}
+                                                    multiple
+                                                    renderValue={(selected) => (
+                                                        <div className={classes.chips}>
+                                                            {selected.map((value) => (
+                                                                <Chip key={value} label={specialties.find(x => x.id === value)?.description} className={classes.chip} />
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                    MenuProps={MenuProps}
+                                                >
+                                                    {specialties.map((specialty) => (
+                                                        <MenuItem key={specialty.id} value={specialty.id}>
+                                                            <Checkbox checked={form.specialty?.indexOf(specialty.id) > -1} />
+                                                            <ListItemText primary={specialty.description} />
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
 
-									<TextField
-										className="mb-16"
-										id="description"
-										fullWidth
-										name="description"
-										type="text"
-										label="Description"
-										value={form.description}
-										onChange={handleChange}
-										variant="outlined"
-										required
-										multiline
-										rows={5}
-									/>
-								</Grid>
-								<Grid item xs={4}>
-									<Typography className="text-16 sm:text-20 truncate mb-8">
-										{'Address'}
-									</Typography>
+                                        <Grid item xs={6}>
+                                            <FormControl fullWidth variant="outlined" className="mb-16">
+                                                <InputLabel htmlFor="outlined-clinicalInterest-chip-label">Clinical Interest</InputLabel>
+                                                <Select
+                                                    id="clinicalInterest"
+                                                    name="clinicalInterest"
+                                                    value={form.clinicalInterest}
+                                                    onChange={handleChange}
+                                                    label="Clinical Interest"
+                                                    inputProps={{
+                                                        name: 'clinicalInterest',
+                                                        id: 'outlined-clinicalInterest-chip-label',
+                                                    }}
+                                                    multiple
+                                                    renderValue={(selected) => (
+                                                        <div className={classes.chips}>
+                                                            {selected.map((value) => (
+                                                                <Chip key={value} label={clinicalInterest.find(x => x.id === value)?.description} className={classes.chip} />
+                                                            ))
+                                                            }
+                                                        </div>
+                                                    )}
+                                                    MenuProps={MenuProps}
+                                                >
+                                                    {clinicalInterest.map((cliInterest) => (
+                                                        <MenuItem key={cliInterest.id} value={cliInterest.id}>
+                                                            <Checkbox checked={form.clinicalInterest.indexOf(cliInterest.id) > -1} />
+                                                            <ListItemText primary={cliInterest.description} />
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
 
-									<TextField
-										className="mt-8 mb-16"
-										required
-										label="Address Line 1"
-										id="addressLine1"
-										name="addressLine1"
-										value={form.addressLine1}
-										onChange={handleChange}
-										variant="outlined"
-										fullWidth
-									/>
-									<TextField
-										className="mb-16"
-										required
-										label="Address Line 2"
-										id="addressLine2"
-										name="addressLine2"
-										value={form.addressLine2}
-										onChange={handleChange}
-										variant="outlined"
-										fullWidth
-									/>
-									<TextField
-										className="mb-16"
-										required
-										label="Country"
-										id="country"
-										name="country"
-										value={form.country}
-										onChange={handleChange}
-										variant="outlined"
-										fullWidth
-									/>
-									<TextField
-										className="mb-16"
-										required
-										label="City"
-										id="city"
-										name="city"
-										value={form.city}
-										onChange={handleChange}
-										variant="outlined"
-										fullWidth
-									/>
-									<TextField
-										className="mb-16"
-										required
-										label="State"
-										id="state"
-										name="state"
-										value={form.state}
-										onChange={handleChange}
-										variant="outlined"
-										fullWidth
-									/>
-									<TextField
-										className="mb-16"
-										required
-										label="ZipCode"
-										id="zipCode"
-										name="zipCode"
-										value={form.zipCode}
-										onChange={handleChange}
-										variant="outlined"
-										fullWidth
-									/>
-								</Grid>
-							</Grid>
-						</div>
+                                    <TextField
+                                        className="mb-16"
+                                        id="description"
+                                        fullWidth
+                                        name="description"
+                                        type="text"
+                                        label="Description"
+                                        value={form.description}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        required
+                                        multiline
+                                        rows={5}
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Typography className="text-16 sm:text-20 truncate mb-8">
+                                        {'Address'}
+                                    </Typography>
 
-					</ div>
-				) : (<FuseLoading></FuseLoading>)
-			}
-			innerScroll
-		/>
-	);
+                                    <TextField
+                                        className="mt-8 mb-16"
+                                        required
+                                        label="Address Line 1"
+                                        id="addressLine1"
+                                        name="addressLine1"
+                                        value={form.addressLine1}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        className="mb-16"
+                                        required
+                                        label="Address Line 2"
+                                        id="addressLine2"
+                                        name="addressLine2"
+                                        value={form.addressLine2}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        className="mb-16"
+                                        required
+                                        label="Country"
+                                        id="country"
+                                        name="country"
+                                        value={form.country}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        className="mb-16"
+                                        required
+                                        label="City"
+                                        id="city"
+                                        name="city"
+                                        value={form.city}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        className="mb-16"
+                                        required
+                                        label="State"
+                                        id="state"
+                                        name="state"
+                                        value={form.state}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                    <TextField
+                                        className="mb-16"
+                                        required
+                                        label="ZipCode"
+                                        id="zipCode"
+                                        name="zipCode"
+                                        value={form.zipCode}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        fullWidth
+                                    />
+                                </Grid>
+                            </Grid>
+                        </div>
+
+                    </ div>
+                ) : (<FuseLoading></FuseLoading>)
+            }
+            innerScroll
+        />
+    );
 }
 
 export default withReducer('MembersApp', reducer)(Member);

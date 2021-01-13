@@ -18,11 +18,14 @@ import { withRouter, useParams } from 'react-router-dom';
 import NoteFormList from './checklist/NoteFormList';
 import NoteFormLabelMenu from './NoteFormLabelMenu';
 import NoteFormUploadImage from './NoteFormUploadImage';
+import Moment from 'react-moment'
+import { useTranslation } from "react-i18next";
 
 function NoteFormSpecialty(props) {
+	const { t } = useTranslation();
+
 	const [showList, setShowList] = useState(false);
 	const labels = useSelector(({ notesApp }) => notesApp.labels.entities);
-
 	const routeParams = useParams();
 	const { form: noteForm, handleChange, setForm } = useForm(
 		_.merge(
@@ -188,7 +191,7 @@ function NoteFormSpecialty(props) {
 								))}
 							{noteForm.time && (
 								<Typography color="textSecondary" className="text-12 mt-8 mx-4">
-									Edited: {moment(noteForm.time).format('MMM DD YY, h:mm A')}
+									Edited:<Moment date={noteForm.time} />
 								</Typography>
 							)}
 						</div>

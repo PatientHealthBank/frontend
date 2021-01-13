@@ -15,9 +15,10 @@ import withReducer from 'app/store/withReducer';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import reducer from './store';
-import { getData } from './store/dataSlice';
-import { toggleQuickPanel } from './store/stateSlice';
+import reducer from '../../store/quickpanel';
+import { getNotifications, checkRead } from '../../store/quickpanel/dataSlice';
+import { toggleQuickPanel } from '../../store/quickpanel/stateSlice';
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -41,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 		display: 'flex',
 		flexDirection: 'column',
 		'& > * + *': {
-			marginTop: theme.spacing(1),
+			marginTop: theme.spacing(1)
 		},
 		'& .MuiSvgIcon-root': {
 			width: '3em',
@@ -49,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 		}
 	},
 	listItemText: {
-		fontSize: '1.2em',//Insert your required size
+		fontSize: '1.2em' //Insert your required size
 	}
 }));
 
@@ -59,13 +60,12 @@ function IconContainer(props) {
 }
 
 IconContainer.propTypes = {
-	value: PropTypes.number.isRequired,
+	value: PropTypes.number.isRequired
 };
-
 
 const useStyle = makeStyles({
 	rating: {
-		"& .MuiRating-iconFilled ": {
+		'& .MuiRating-iconFilled ': {
 			color: ({ color }) => `${color}`
 		}
 	}
@@ -82,15 +82,19 @@ const StyledRating = ({
 	onChange
 }) => {
 	const classes = useStyle({ color });
-	return <Rating className={classes.rating}
-		name={name}
-		defaultValue={defaultValue}
-		getLabelText={getLabelText}
-		IconContainerComponent={IconContainerComponent}
-		onChange={onChange}
-	>{children}</Rating>;
+	return (
+		<Rating
+			className={classes.rating}
+			name={name}
+			defaultValue={defaultValue}
+			getLabelText={getLabelText}
+			IconContainerComponent={IconContainerComponent}
+			onChange={onChange}
+		>
+			{children}
+		</Rating>
+	);
 };
-
 
 const customIcons = {
 	1: {
@@ -112,45 +116,48 @@ const customIcons = {
 	5: {
 		icon: <SentimentVerySatisfiedIcon />,
 		label: 'Very Satisfied'
-	},
+	}
 };
 
 function QuickPanel(props) {
 	const dispatch = useDispatch();
+	const notifications = useSelector(({ quickPanel }) => quickPanel.data);
 	const state = useSelector(({ quickPanel }) => quickPanel.state);
 
+	console.error('teste');
+
+	console.error('notificacoes', notifications);
 	const classes = useStyles();
 	const [rating, setRating] = useState(1);
-	const [color, setColor] = useState("#123123");;
+	const [color, setColor] = useState('#123123');
 
-	const onRatingChange = (value) => {
+	const onRatingChange = value => {
 		if (value === 1) {
-			setColor("#ff2111")
+			setColor('#ff2111');
 		}
 		if (value === 2) {
-			setColor("#ff8511")
+			setColor('#ff8511');
 		}
 		if (value === 3) {
-			setColor("#ffda00")
+			setColor('#ffda00');
 		}
 		if (value === 4) {
-			setColor("#90d83a")
+			setColor('#90d83a');
 		}
 		if (value === 5) {
-			setColor("#1fd418")
+			setColor('#1fd418');
 		}
-		setRating(value)
-
-	}
+		setRating(value);
+	};
 
 	const [explainMore, setExplainMore] = React.useState(true);
 
 	const [title, setTitle] = React.useState('');
 	const [open, setOpen] = React.useState(false);
-	// eslint-disable-next-line 
+	// eslint-disable-next-line
 	const [maxWidth, setMaxWidth] = React.useState('sm');
 
-	const handleClickOpen = (text) => {
+	const handleClickOpen = text => {
 		setTitle(text);
 		setOpen(true);
 	};
@@ -159,12 +166,12 @@ function QuickPanel(props) {
 		setOpen(false);
 	};
 
-	const handleExplainMore = (event) => {
+	const handleExplainMore = event => {
 		setExplainMore(event.target.checked);
 	};
 
 	useEffect(() => {
-		dispatch(getData());
+		dispatch(getNotifications());
 	}, [dispatch]);
 
 	return (
@@ -188,7 +195,7 @@ function QuickPanel(props) {
 							</Typography>
 							<Typography className="leading-none text-16" color="textSecondary">
 								th
-						</Typography>
+							</Typography>
 							<Typography className="leading-none text-32" color="textSecondary">
 								{moment().format('MMMM')}
 							</Typography>
@@ -197,18 +204,34 @@ function QuickPanel(props) {
 					<Divider />
 					<List>
 						<ListSubheader component="div">Notifications</ListSubheader>
-						<ListItem button onClick={() => handleClickOpen('How do you feel since your last appointment ?')}>
-							<ListItemIcon className="min-w-40 text-red-600">
-								<Icon>notifications</Icon>
-							</ListItemIcon>
-							<ListItemText classes={{ primary: classes.listItemText }} className="text-red-600" primary="How do you feel since your last appointment ?" />
-						</ListItem>
-						<ListItem button onClick={() => handleClickOpen('How satisfied are you with your treatment ?')}>
-							<ListItemIcon className="min-w-40 text-red-600">
-								<Icon>notifications</Icon>
-							</ListItemIcon>
-							<ListItemText classes={{ primary: classes.listItemText }} className="text-red-600" primary="How satisfied are you with your treatment ?" />
-						</ListItem>
+						{notifications && notifications.data.length == 0 && (
+							<span className=" text-red-600" align="center">
+								&nbsp;&nbsp;Notifications not found
+							</span>
+						)}
+						{notifications &&
+							notifications.data.map(n => (
+								<ListItem button >
+									<ListItemIcon className="min-w-40 text-red-600" onClick={() => handleClickOpen(n.text)}>
+										<Icon>notifications</Icon>
+									</ListItemIcon>
+									<ListItemText
+									onClick={() => handleClickOpen(n.text)}
+										classes={{ primary: classes.listItemText }}
+										className="text-red-600"
+										primary={n.text}
+									/>
+									<span
+										onClick={() => {
+											dispatch(checkRead(n.id));
+										}}
+										class="material-icons"
+										style={{ float: 'right' }}
+									>
+										close
+									</span>
+								</ListItem>
+							))}
 					</List>
 				</FuseScrollbars>
 			</Drawer>
@@ -221,12 +244,12 @@ function QuickPanel(props) {
 			>
 				<DialogTitle id="max-width-dialog-title">{title}</DialogTitle>
 				<DialogContent>
-					<DialogContentText>
-						Next Appointment: Dr. Smith – Cardiologist October/15/2020
-				    </DialogContentText>
+					<DialogContentText>Next Appointment: Dr. Smith – Cardiologist October/15/2020</DialogContentText>
 
 					<form className={classes.ratingSize} noValidate>
-						<Typography className="mb-8" component="legend">How do you feel ?</Typography>
+						<Typography className="mb-8" component="legend">
+							How do you feel ?
+						</Typography>
 
 						<StyledRating
 							color={color}
@@ -235,7 +258,7 @@ function QuickPanel(props) {
 							onChange={(event, newValue) => {
 								onRatingChange(newValue);
 							}}
-							getLabelText={(value) => customIcons[value].label}
+							getLabelText={value => customIcons[value].label}
 							IconContainerComponent={IconContainer}
 						/>
 
@@ -244,19 +267,21 @@ function QuickPanel(props) {
 							control={<Switch checked={explainMore} onChange={handleExplainMore} />}
 							label="Do you want to explain a bit more?"
 						/>
-						{explainMore && <TextField
-							className="mt-16 mb-16"
-							id="othersObservation"
-							name="othersObservation"
-							// onChange={handleChange}
-							label="Explanation?"
-							type="text"
-							// value={form.othersObservation}
-							multiline
-							rows={5}
-							variant="outlined"
-							fullWidth
-						/>}
+						{explainMore && (
+							<TextField
+								className="mt-16 mb-16"
+								id="othersObservation"
+								name="othersObservation"
+								// onChange={handleChange}
+								label="Explanation?"
+								type="text"
+								// value={form.othersObservation}
+								multiline
+								rows={5}
+								variant="outlined"
+								fullWidth
+							/>
+						)}
 						<Button
 							className="whitespace-no-wrap normal-case float-right"
 							variant="contained"
@@ -265,13 +290,13 @@ function QuickPanel(props) {
 							onClick={handleClose}
 						>
 							Send Answer
-							</Button>
+						</Button>
 					</form>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary">
 						Close
-				</Button>
+					</Button>
 				</DialogActions>
 			</Dialog>
 		</>

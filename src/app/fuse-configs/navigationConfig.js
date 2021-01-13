@@ -134,7 +134,7 @@ const navigationConfig = [
 				url: '/provider/calendar'
 			},
 			{
-				id: 'members',
+				id: 'Profile',
 				title: 'Profile',
 				type: 'item',
 				icon: 'people',

@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import CheckIn from '../components/CheckIn';
+import CheckIn from '../components/checkin/CheckIn';
 import withReducer from 'app/store/withReducer';
 import reducer from '../store';
 import { getMedicalHistory } from '../store/medicalHistorySlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, useDeepCompareEffect, useDebounce } from '@fuse/hooks';
+import { useTranslation } from "react-i18next";
 
 import Card from '@material-ui/core/Card';
 import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-
+import Moment from 'react-moment'
 function MedicalHistoryWidget(props) {
-	
+	const { t } = useTranslation();
+
 	const dispatch = useDispatch();
 	const medicalHistory = useSelector(({ MedicalHistoryWidgetApp }) => MedicalHistoryWidgetApp.medicalHistory);
 	const [data, setData] = useState(medicalHistory);
@@ -52,7 +54,7 @@ function MedicalHistoryWidget(props) {
 						{medicalHistory.map(row => (
 							<tr key={row.id}>
 								<td className="text-right">{row.intakeForm.description}</td>
-								<td className="text-right">{new Date(row.creationDate).toLocaleDateString()}</td>
+								<td className="text-right"><Moment date={row.creationDate}/></td>
 								<td className="text-right">{row.pending ? 'Pending' : new Date(row.answerdate).toLocaleDateString()}</td>
 							</tr>
 						))}

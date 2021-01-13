@@ -3,7 +3,8 @@ import Hidden from '@material-ui/core/Hidden';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import NavbarMobileToggleButton from 'app/fuse-layouts/shared-components/NavbarMobileToggleButton';
-import QuickPanelToggleButton from 'app/fuse-layouts/shared-components/quickPanel/QuickPanelToggleButton';
+import QuickPanelToggleButton from 'app/main/shared/components/quickpanel/QuickPanelToggleButton';
+
 import UserMenu from 'app/fuse-layouts/shared-components/UserMenu';
 import clsx from 'clsx';
 import React from 'react';

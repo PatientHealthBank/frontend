@@ -14,6 +14,7 @@ import { blue } from '@material-ui/core/colors';
 function CheckInDialog({ open, setOpen, confirm, setCheckInDone, specialty, date, title }) {
 	const handleClose = () => {
 		setOpen(false);
+		
 	};
 
 	return (

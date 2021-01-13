@@ -2,7 +2,7 @@ import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { toggleQuickPanel } from './store/stateSlice';
+import { toggleQuickPanel } from '../../store/quickpanel/stateSlice';
 
 function QuickPanelToggleButton(props) {
 	const dispatch = useDispatch();

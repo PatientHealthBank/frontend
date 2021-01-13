@@ -24,6 +24,23 @@ export const saveMember = createAsyncThunk('MembersApp/member/saveMember', async
 export const updateMember = createAsyncThunk('MembersApp/member/updateMember', async (member, { getState, dispatch }) => {
 	dispatch(openLoading());
 	var user = getState().auth.user;
+	console.log(member)
+	if(member.photoURL){
+		if(member.imageUrl){
+			await phbApi().delete("/Invoices/file?imageName="+member.imageUrl);
+		}
+		var formData = new FormData();
+		formData.append("file", member.photoURL);
+		await phbApi().post("/Invoices/file", formData, { headers: {
+			'Content-Type': 'multipart/form-data'}
+		}).then(res => {
+			member.imageUrl = "https://phbbucket.s3.us-east-2.amazonaws.com/profileImages/"+res.data;
+		}).
+		catch(err => {
+			dispatch(closeLoading());
+			return err;
+		});
+	}
 	const response = await phbApi().put('/provider/' + user.currentUser.id, member);
 	const data = await response.data;
 	dispatch(closeLoading());

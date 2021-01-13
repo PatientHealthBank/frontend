@@ -16,9 +16,12 @@ import TableRow from '@material-ui/core/TableRow';
 import { useDeepCompareEffect } from '@fuse/hooks';
 import { selectFamilyMembers, geFamilyMembers } from '../store/FamilyMemberWidgetSlice';
 import reducer from '../store';
+import Moment from 'react-moment'
+import { useTranslation } from "react-i18next";
 
 function FamilyMembersWidget(props) {
 	const dispatch = useDispatch();
+	const { t } = useTranslation();
 
 	const familyMembers = useSelector(selectFamilyMembers);
 	useDeepCompareEffect(() => {
@@ -58,7 +61,7 @@ function FamilyMembersWidget(props) {
 									<TableCell align="center">{member.address}</TableCell>
 									<TableCell align="center">{member.phone}</TableCell>
 									<TableCell align="center">{member.relationship}</TableCell>
-									<TableCell align="center">{member.birthdate}</TableCell>
+									<TableCell align="center"> <Moment date={member.birthdate}/></TableCell>
 								</TableRow>
 							))}
 						</TableBody>

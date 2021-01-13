@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import phbApi from 'app/services/phbApi'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
+//TO DO : Separa esse slice para widget e component pois este slice esta sendo consumido tanto pelo componente quando o widget
 
 export const listMedicines = () => async (dispatch, getState) => {
     dispatch(openLoading())
