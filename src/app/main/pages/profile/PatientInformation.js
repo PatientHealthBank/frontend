@@ -145,7 +145,7 @@ function PatientInformation() {
         <>
             <div className="p-16 sm:p-24">
                 <div>
-                <PatientInformationWidget patientInformation={patientInformation} editPatientInformation={ EditPatientInformation } currentFile={currentFile} />
+                    <PatientInformationWidget patientInformation={patientInformation} editPatientInformation={ EditPatientInformation } currentFile={currentFile} />
 
                     <AddressInformationWidget addresstInformation={addressInformation} registerNewAddresstInformation={RegisterNewAddresstInformation} editAddresstInformation={EditAddresstInformation} deleteAddresstInformation={DeleteAddresstInformation} />
 
