@@ -8,8 +8,11 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import React from 'react';
+import { useTranslation } from "react-i18next";
 
 function VaccinesListWidget(props) {
+	const { t } = useTranslation();
+
 	return (
 		<Paper className="w-full rounded-8 shadow-1">
 			<div className="flex items-center justify-between px-16 h-64 border-b-1">
@@ -27,6 +30,8 @@ function VaccinesListWidget(props) {
 						</TableRow>
 					</TableHead>
 					<TableBody>
+						{/* TODO passar campos tipo data para moment
+						 */}
 						{props.widget.table.rows.map(row => (
 							<TableRow key={row.id}>
 								{row.cells.map(cell => {

@@ -20,19 +20,21 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import MemberDialog from './MemberDialog'
 import PrimaryIconButton from '../../Components/PrimaryIconButton'
 import Icon from '@material-ui/core/Icon';
+import Moment from 'react-moment'
 import { WindowScroller } from 'react-virtualized';
 import phbApi from 'app/services/phbApi';
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 function createData(companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, id) {
 	return { companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl, id };
 }
 
-Array.prototype.remove = function(from, to) {
+Array.prototype.remove = function (from, to) {
 	var rest = this.slice((to || from) + 1 || this.length);
 	this.length = from < 0 ? this.length + from : from;
 	return this.push.apply(this, rest);
-  };
+};
 
 const invoiceRows = [];
 
@@ -71,6 +73,8 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
+	const { t } = useTranslation();
+
 	const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
 	const createSortHandler = (property) => (event) => {
 		onRequestSort(event, property);
@@ -218,10 +222,10 @@ const useStyles = makeStyles((theme) => ({
 function InvoicesTable(props) {
 
 
-	props.invoiceRows.map(function(value, i) {
+	props.invoiceRows.map(function (value, i) {
 		invoiceRows[i] = createData(value.companyName, value.serviceDate, value.serviceValue, value.registerServiceProvider, value.fileUrl, value.id);
 	});
-	
+
 	const classes = useStyles();
 	const [order, setOrder] = React.useState('asc');
 	const [open, setOpen] = React.useState(false);
@@ -242,27 +246,27 @@ function InvoicesTable(props) {
 		});
 		setSelected([]);
 		setSelectedRow({});
-		setRows(rows.filter((x,i) => !selected.includes(i)));
-		
+		setRows(rows.filter((x, i) => !selected.includes(i)));
+
 	}
 
 	const handleDelFile = (id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl) => {
 
-			props.DeleteInvoicesFiles(id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl);
+		props.DeleteInvoicesFiles(id, companyName, serviceDate, serviceValue, registerServiceProvider, fileUrl);
 	}
 
 	const handleDownload = (fileUrl) => {
 
 		props.DownloadInvoiceFile(fileUrl);
-}
-	
+	}
+
 	const handleAdd = (row) => {
 		setRows([...rows, row])
 		setSelectedRow({})
-		
+
 	}
 	const handleEdit = (row) => {
-		var newRows = rows.map((x,i) => {
+		var newRows = rows.map((x, i) => {
 			if (i === selected[0]) {
 				return row
 			}
@@ -279,172 +283,174 @@ function InvoicesTable(props) {
 		setTitle(titleModal)
 		if (titleModal === "Edit") {
 
-			var file = rows.find((x,i) => selected.includes(i));
+			var file = rows.find((x, i) => selected.includes(i));
 
 			setCurrentFile(file.fileUrl);
-			setSelectedRow(rows.find((x,i) => selected.includes(i)))
-		}			
-			setOpen(true)
+			setSelectedRow(rows.find((x, i) => selected.includes(i)))
+		}
+		setOpen(true)
 	}
 
-		const handleRequestSort = (event, property) => {
-			const isAsc = orderBy === property && order === 'asc';
-			setOrder(isAsc ? 'desc' : 'asc');
-			setOrderBy(property);
-		};
+	const handleRequestSort = (event, property) => {
+		const isAsc = orderBy === property && order === 'asc';
+		setOrder(isAsc ? 'desc' : 'asc');
+		setOrderBy(property);
+	};
 
-		const handleSelectAllClick = (event) => {
-			if (event.target.checked) {
-				const newSelecteds = rows.map((n,i) => i);
-				setSelected(newSelecteds);
-				return;
-			}
-			setSelected([]);
-		};
+	const handleSelectAllClick = (event) => {
+		if (event.target.checked) {
+			const newSelecteds = rows.map((n, i) => i);
+			setSelected(newSelecteds);
+			return;
+		}
+		setSelected([]);
+	};
 
-		const handleClick = (event, name) => {
-			const selectedIndex = selected.indexOf(name);
-			let newSelected = [];
+	const handleClick = (event, name) => {
+		const selectedIndex = selected.indexOf(name);
+		let newSelected = [];
 
-			if (selectedIndex === -1) {
-				newSelected = newSelected.concat(selected, name);
-			} else if (selectedIndex === 0) {
-				newSelected = newSelected.concat(selected.slice(1));
-			} else if (selectedIndex === selected.length - 1) {
-				newSelected = newSelected.concat(selected.slice(0, -1));
-			} else if (selectedIndex > 0) {
-				newSelected = newSelected.concat(
-					selected.slice(0, selectedIndex),
-					selected.slice(selectedIndex + 1),
-				);
-			}
-
-			setSelected(newSelected);
-		};
-
-		const handleChangePage = (event, newPage) => {
-			setPage(newPage);
-		};
-
-		const handleChangeRowsPerPage = (event) => {
-			setRowsPerPage(parseInt(event.target.value, 10));
-			setPage(0);
-		};
-
-		const isSelected = (name) => {
-			return selected.indexOf(name) !== -1;
+		if (selectedIndex === -1) {
+			newSelected = newSelected.concat(selected, name);
+		} else if (selectedIndex === 0) {
+			newSelected = newSelected.concat(selected.slice(1));
+		} else if (selectedIndex === selected.length - 1) {
+			newSelected = newSelected.concat(selected.slice(0, -1));
+		} else if (selectedIndex > 0) {
+			newSelected = newSelected.concat(
+				selected.slice(0, selectedIndex),
+				selected.slice(selectedIndex + 1),
+			);
 		}
 
-		const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+		setSelected(newSelected);
+	};
 
-		return (
-			<div className={classes.root}>
-				<MemberDialog title={title} open={open} setOpen={setOpen}
-					handleDelFile={props.DeleteInvoicesFiles}
-					handleEdit={props.UpdateInvoices}
-					handleAdd={props.RegisterNewInvoices}
-					handleDownload={props.DownloadInvoiceFile}
-					member={selectedRow}
-					setMember={setSelectedRow} 
-					currentFile={currentFile}
-				/>
-				<Paper className={classes.paper}>
-					<EnhancedTableToolbar
-						handleEdit={handleEdit}
-						handleAdd={handleAdd}
-						numSelected={selected.length}
-						handleDelete={handleDelete}
-						handleOpenModal={handleOpenModal}
+	const handleChangePage = (event, newPage) => {
+		setPage(newPage);
+	};
 
-					/>
-					<TableContainer>
-						<Table
-							className={classes.table}
-							aria-labelledby="tableTitle"
-							size={dense ? 'small' : 'medium'}
-							aria-label="enhanced table"
-						>
-							<EnhancedTableHead
+	const handleChangeRowsPerPage = (event) => {
+		setRowsPerPage(parseInt(event.target.value, 10));
+		setPage(0);
+	};
 
-								classes={classes}
-								numSelected={selected.length}
-								order={order}
-								orderBy={orderBy}
-								onSelectAllClick={handleSelectAllClick}
-								onRequestSort={handleRequestSort}
-								rowCount={rows.length}
-							/>
-
-							<TableBody>
-								{stableSort(rows, getComparator(order, orderBy))
-									.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-									.map((row, index) => {
-										const isItemSelected = isSelected(index);
-										const labelId = `enhanced-table-checkbox-${index}`;
-										return (
-											<TableRow
-												hover
-												onClick={(event) => handleClick(event, index)}
-												role="checkbox"
-												aria-checked={isItemSelected}
-												tabIndex={-1}
-												key={index}
-												selected={isItemSelected}
-											>
-												<TableCell padding="checkbox">
-													<Checkbox
-														checked={isItemSelected}
-														inputProps={{ 'aria-labelledby': labelId }}
-													/>
-												</TableCell>
-												<TableCell component="th" id={labelId} scope="row" padding="none">
-													{row.companyName}
-												</TableCell>
-												<TableCell >{row.serviceDate}</TableCell>
-												<TableCell >{row.serviceValue}</TableCell>
-												<TableCell >{row.registerServiceProvider}</TableCell>
-												<TableCell>
-													<IconButton  
-													style={ row.fileUrl ? {} : {display: 'none', padding: '25px'}}
-													title={row.fileUrl} 
-													onClick={(event) => handleDownload(row.fileUrl)}
-													className={"w-2/12 p-8 min-h-420 h-420 align-top "}
-													>
-														<Icon style={{color: 'green'}}>insert_drive_file</Icon>
-													</IconButton>
-													<IconButton 
-													 style={ row.fileUrl ? {} : {display: 'none', padding: '25px'}}
-													 title="Delete File" 
-													 onClick={(event) => handleDelFile(row.id, row.companyName, new Date(row.serviceDate), parseFloat(row.serviceValue), row.registerServiceProvider, row.fileUrl,)}
-													 className={"w-2/12 p-8 min-h-420 h-420 align-top "}
-													 >
-														<Icon style={{color: 'red'}}>clear</Icon>
-													</IconButton>
-												</TableCell>
-											</TableRow>
-										);
-									})}
-								{emptyRows > 0 && (
-									<TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-										<TableCell colSpan={6} />
-									</TableRow>
-								)}
-							</TableBody>
-						</Table>
-					</TableContainer>
-					<TablePagination
-						rowsPerPageOptions={[10, 20, 50]}
-						component="div"
-						count={rows.length}
-						rowsPerPage={rowsPerPage}
-						page={page}
-						onChangePage={handleChangePage}
-						onChangeRowsPerPage={handleChangeRowsPerPage}
-					/>
-				</Paper>
-			</div>
-		);
+	const isSelected = (name) => {
+		return selected.indexOf(name) !== -1;
 	}
 
+	const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-	export default InvoicesTable;
+	return (
+		<div className={classes.root}>
+			<MemberDialog title={title} open={open} setOpen={setOpen}
+				handleDelFile={props.DeleteInvoicesFiles}
+				handleEdit={props.UpdateInvoices}
+				handleAdd={props.RegisterNewInvoices}
+				handleDownload={props.DownloadInvoiceFile}
+				member={selectedRow}
+				setMember={setSelectedRow}
+				currentFile={currentFile}
+			/>
+			<Paper className={classes.paper}>
+				<EnhancedTableToolbar
+					handleEdit={handleEdit}
+					handleAdd={handleAdd}
+					numSelected={selected.length}
+					handleDelete={handleDelete}
+					handleOpenModal={handleOpenModal}
+
+				/>
+				<TableContainer>
+					<Table
+						className={classes.table}
+						aria-labelledby="tableTitle"
+						size={dense ? 'small' : 'medium'}
+						aria-label="enhanced table"
+					>
+						<EnhancedTableHead
+
+							classes={classes}
+							numSelected={selected.length}
+							order={order}
+							orderBy={orderBy}
+							onSelectAllClick={handleSelectAllClick}
+							onRequestSort={handleRequestSort}
+							rowCount={rows.length}
+						/>
+
+						<TableBody>
+							{stableSort(rows, getComparator(order, orderBy))
+								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+								.map((row, index) => {
+									const isItemSelected = isSelected(index);
+									const labelId = `enhanced-table-checkbox-${index}`;
+									return (
+										<TableRow
+											hover
+											onClick={(event) => handleClick(event, index)}
+											role="checkbox"
+											aria-checked={isItemSelected}
+											tabIndex={-1}
+											key={index}
+											selected={isItemSelected}
+										>
+											<TableCell padding="checkbox">
+												<Checkbox
+													checked={isItemSelected}
+													inputProps={{ 'aria-labelledby': labelId }}
+												/>
+											</TableCell>
+											<TableCell component="th" id={labelId} scope="row" padding="none">
+												{row.companyName}
+											</TableCell>
+											<TableCell >
+												<Moment date={row.serviceDate} />
+											</TableCell>
+											<TableCell >{row.serviceValue}</TableCell>
+											<TableCell >{row.registerServiceProvider}</TableCell>
+											<TableCell>
+												<IconButton
+													style={row.fileUrl ? {} : { display: 'none', padding: '25px' }}
+													title={row.fileUrl}
+													onClick={(event) => handleDownload(row.fileUrl)}
+													className={"w-2/12 p-8 min-h-420 h-420 align-top "}
+												>
+													<Icon style={{ color: 'green' }}>insert_drive_file</Icon>
+												</IconButton>
+												<IconButton
+													style={row.fileUrl ? {} : { display: 'none', padding: '25px' }}
+													title="Delete File"
+													onClick={(event) => handleDelFile(row.id, row.companyName, new Date(row.serviceDate), parseFloat(row.serviceValue), row.registerServiceProvider, row.fileUrl,)}
+													className={"w-2/12 p-8 min-h-420 h-420 align-top "}
+												>
+													<Icon style={{ color: 'red' }}>clear</Icon>
+												</IconButton>
+											</TableCell>
+										</TableRow>
+									);
+								})}
+							{emptyRows > 0 && (
+								<TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+									<TableCell colSpan={6} />
+								</TableRow>
+							)}
+						</TableBody>
+					</Table>
+				</TableContainer>
+				<TablePagination
+					rowsPerPageOptions={[10, 20, 50]}
+					component="div"
+					count={rows.length}
+					rowsPerPage={rowsPerPage}
+					page={page}
+					onChangePage={handleChangePage}
+					onChangeRowsPerPage={handleChangeRowsPerPage}
+				/>
+			</Paper>
+		</div>
+	);
+}
+
+
+export default InvoicesTable;

@@ -19,7 +19,8 @@ import TestDialog from '../dialogs/TestDialog';
 import BackupIcon from '@material-ui/icons/Backup';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
-import moment from 'moment';
+import Moment from 'react-moment';
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(theme => ({
 	typeIcon: {
@@ -82,6 +83,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function AppointmentTestResult(props) {
+	const { t } = useTranslation();
+
 	const dispatch = useDispatch();
 	const files = useSelector(state => state.AppointmentsApp.appointmentTest.files);
 
@@ -137,7 +140,9 @@ function AppointmentTestResult(props) {
 									<TableCell className="text-center">
 										{item.size === '' ? '-' : item.size}
 									</TableCell>
-									<TableCell >{moment(item.createDate).format("YYYY-MM-DD")}</TableCell>
+									<TableCell >
+										<Moment Date={item.createDate} />
+									</TableCell>
 									<TableCell>
 										<Tooltip title="Delete">
 											<IconButton onClick={ev => handleDelete(item)} aria-label="delete">

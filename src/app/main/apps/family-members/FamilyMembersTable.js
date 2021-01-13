@@ -317,7 +317,7 @@ function FamilyMembersTable(props) {
 		}
 
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
+		// ToDo passar o date pro moment
 		return (
 			<div className={classes.root}>
 				<MemberDialog title={title} open={open} setOpen={setOpen}
