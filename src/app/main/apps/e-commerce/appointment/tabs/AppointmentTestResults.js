@@ -138,7 +138,7 @@ function AppointmentTestResult(props) {
 									<TableCell>{item.name}</TableCell>
 									<TableCell >{item.type}</TableCell>
 									<TableCell className="text-center">
-										{item.size === '' ? '-' : item.size}
+										{item.size === '' ? '-' : item.size} MB
 									</TableCell>
 									<TableCell >
 										<Moment Date={item.createDate} />
