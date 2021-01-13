@@ -238,7 +238,7 @@ function AppointmentTable(props) {
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
-										<Moment date={row.createDate}/>
+										<Moment  date={row.createDate}/>
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>

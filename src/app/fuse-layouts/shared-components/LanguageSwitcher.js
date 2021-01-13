@@ -33,12 +33,12 @@ function LanguageSwitcher({ primary }) {
 	const languageSettings = {
 		br: {
 			locale: 'br',
-			globalFormat: 'DD/MM/YYYY',
+			globalFormat: 'DD/MM/YYYY HH:mm',
 			globalTimezone: "America/Sao_Paulo"
 		},
 		en: {
 			locale: 'us',
-			globalFormat: 'MM/DD/YYYY',
+			globalFormat: 'MM/DD/YYYY HH:mm',
 			globalTimezone: "America/Los_Angeles"
 		}
 	}
