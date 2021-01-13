@@ -7,13 +7,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { getAppointments, selectAppointments } from '../store/appointmentsSlice';
 import AppointmentsTableHead from './AppointmentsTableHead';
 import AppointmentPriority from './AppointmentPriority';
-import CheckIn from '../../dashboards/main/widgets/CheckIn';
 import { useTranslation } from "react-i18next";
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -129,13 +128,13 @@ function AppointmentTable(props) {
 	// }
 	const columns = [
 		{
-			id: 'appointment',
-			title: 'Appointment',
+			id: 'doctorname',
+			title: 'Doctor name',
 			colspan: 2,
 		},
 		{
-			id: 'doctorname',
-			title: 'Doctor name',
+			id: 'appointment',
+			title: 'Appointment',
 		},
 		{
 			id: 'patient',
@@ -223,11 +222,14 @@ function AppointmentTable(props) {
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
-											{t(row.specialty.description)}
+											{t(row.provider.name)}
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
-											{t(row.provider.name)}
+											{t(row.specialty.description)}
+											{row.telemedicine &&
+												<Icon title="Appointment Telemedicine" style={{ marginLeft: '10px', marginTop: '20px', display: "inline-flex", color: 'green' }}>camera_alt</Icon>
+											}
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>

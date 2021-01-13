@@ -1,12 +1,12 @@
 import Grid from '@material-ui/core/Grid';
 import React from 'react';
-import MedicinesListWidget from './widgets/medicines/MedicinesListWidget';
-import NewMedicinesWidget from './widgets/medicines/NewMedicinesWidget';
+import MedicinesListWidget from '../../shared/widgets/medicines/MedicinesListWidget';
+import NewMedicinesWidget from '../../shared/widgets/medicines/NewMedicinesWidget';
 import { useDispatch, useSelector } from 'react-redux';
 import withReducer from 'app/store/withReducer';
 import reducer from './store';
 import phbApi from 'app/services/phbApi'
-import {listMedicines} from './store/medicinesSlice'
+import {listMedicines} from '../../shared/store/medicinesSlice'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
 

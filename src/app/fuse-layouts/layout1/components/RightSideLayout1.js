@@ -1,4 +1,4 @@
-import QuickPanel from 'app/fuse-layouts/shared-components/quickPanel/QuickPanel';
+import QuickPanel from 'app/main/shared/components/quickpanel/QuickPanel';
 
 import React from 'react';
 

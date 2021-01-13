@@ -155,6 +155,13 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'person',
 				url: '/pages/profile'
+			},
+			{
+				id: 'intakeform',
+				title: 'Intakeform',
+				type: 'item',
+				icon: 'person',
+				url: '/admin-intake-form'
 			}
 		]
 	}

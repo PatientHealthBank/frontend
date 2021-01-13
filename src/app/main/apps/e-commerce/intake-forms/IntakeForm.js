@@ -79,7 +79,6 @@ function IntakeForm(props) {
                 acc[item.question.description] = { value: item.answer, id: item.id }
                 return acc
             }, {})
-            console.log(responses)
             setState(responses)
         }
     },[intakeForm.answers]);

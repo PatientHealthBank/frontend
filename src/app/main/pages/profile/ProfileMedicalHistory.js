@@ -9,7 +9,7 @@ import phbApi from 'app/services/phbApi'
 import { useSelector , useDispatch} from 'react-redux';
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 import {setIntakeForm} from './store/intakeFormSlice'
-import IntakeFormDialog from './widgets/IntakeFormDialog'
+import IntakeFormDialog from '../../shared/widgets/IntakeFormDialog'
 import { withRouter } from 'react-router-dom';
 
 

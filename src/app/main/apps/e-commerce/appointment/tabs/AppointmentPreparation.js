@@ -8,7 +8,7 @@ import reducer from 'app/main/pages/profile/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 import { setIntakeForm } from 'app/main/pages/profile/store/intakeFormSlice'
-import IntakeFormDialog from 'app/main/pages/profile/widgets/IntakeFormDialog'
+import IntakeFormDialog from 'app/main/shared/widgets/IntakeFormDialog'
 import { withRouter } from 'react-router-dom';
 import phbApi from 'app/services/phbApi'
 import withReducer from 'app/store/withReducer';

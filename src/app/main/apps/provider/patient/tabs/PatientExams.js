@@ -39,54 +39,52 @@ function PatientExams(props) {
                     backup
             </Icon>
             </Typography>
-            <FuseAnimate animation="transition.slideUpIn" delay={300}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell className="hidden sm:table-cell">Type</TableCell>
-                            <TableCell className="hidden sm:table-cell">Owner</TableCell>
-                            <TableCell className="text-center hidden sm:table-cell">Size</TableCell>
-                            <TableCell className="hidden sm:table-cell">Modified</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {props.exams.map(item => {
-                            return (
-                                <TableRow
-                                    key={item.id}
-                                    hover
-                                    // onClick={event => dispatch(setSelectedItem(item.id))}
-                                    // selected={item.id === selectedItemId}
-                                    className="cursor-pointer"
-                                >
-                                    <TableCell className="max-w-64 w-64 p-0 text-center">
-                                        <Icon className={clsx(classes.typeIcon, item.type)} />
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell className="max-w-64 w-64 p-0 text-center"> </TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell className="hidden sm:table-cell">Type</TableCell>
+                        <TableCell className="hidden sm:table-cell">Owner</TableCell>
+                        <TableCell className="text-center hidden sm:table-cell">Size</TableCell>
+                        <TableCell className="hidden sm:table-cell">Modified</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {props.exams.map(item => {
+                        return (
+                            <TableRow
+                                key={item.id}
+                                hover
+                                // onClick={event => dispatch(setSelectedItem(item.id))}
+                                // selected={item.id === selectedItemId}
+                                className="cursor-pointer"
+                            >
+                                <TableCell className="max-w-64 w-64 p-0 text-center">
+                                    <Icon className={clsx(classes.typeIcon, item.type)} />
+                                </TableCell>
+                                <TableCell>{item.name}</TableCell>
+                                <TableCell className="hidden sm:table-cell">{item.type}</TableCell>
+                                <TableCell className="hidden sm:table-cell">{item.owner}</TableCell>
+                                <TableCell className="text-center hidden sm:table-cell">
+                                    {item.size === '' ? '-' : item.size}
+                                </TableCell>
+                                <TableCell className="hidden sm:table-cell">{item.modified}</TableCell>
+                                <Hidden lgUp>
+                                    <TableCell>
+                                        <IconButton
+                                            onClick={ev => props.pageLayout.current.toggleRightSidebar()}
+                                            aria-label="open right sidebar"
+                                        >
+                                            <Icon>info</Icon>
+                                        </IconButton>
                                     </TableCell>
-                                    <TableCell>{item.name}</TableCell>
-                                    <TableCell className="hidden sm:table-cell">{item.type}</TableCell>
-                                    <TableCell className="hidden sm:table-cell">{item.owner}</TableCell>
-                                    <TableCell className="text-center hidden sm:table-cell">
-                                        {item.size === '' ? '-' : item.size}
-                                    </TableCell>
-                                    <TableCell className="hidden sm:table-cell">{item.modified}</TableCell>
-                                    <Hidden lgUp>
-                                        <TableCell>
-                                            <IconButton
-                                                onClick={ev => props.pageLayout.current.toggleRightSidebar()}
-                                                aria-label="open right sidebar"
-                                            >
-                                                <Icon>info</Icon>
-                                            </IconButton>
-                                        </TableCell>
-                                    </Hidden>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </FuseAnimate>
+                                </Hidden>
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </Table>
         </div>
     );
 }

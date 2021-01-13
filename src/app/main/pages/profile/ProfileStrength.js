@@ -7,7 +7,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
-import { getStrength } from './store/strengthSlice'
+import { getStrength } from '../../shared/store/strengthWidgetSlice'
 
 import { useDispatch, useSelector } from 'react-redux';
 

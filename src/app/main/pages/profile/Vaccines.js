@@ -1,6 +1,6 @@
 import React from 'react';
-import ImmunizationListWidget from './widgets/vaccines/ImmunizationListWidget';
-import NewImmunizationWidget from './widgets/vaccines/NewImmunizationWidget';
+import ImmunizationListWidget from '../../shared/widgets/vaccines/ImmunizationListWidget';
+import NewImmunizationWidget from '../../shared/widgets/vaccines/NewImmunizationWidget';
 import Grid from '@material-ui/core/Grid';
 import phbApi from 'app/services/phbApi'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from "react-i18next";
 import withReducer from 'app/store/withReducer';
 import reducer from './store';
-import {listVaccines} from './store/vaccinesSlice'
+import {listVaccines} from '../../shared/store/vaccinesSlice'
 
 function Vaccines() {
 	const { t } = useTranslation();
