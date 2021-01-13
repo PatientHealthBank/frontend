@@ -87,7 +87,6 @@ function AppointmentPreparation(props) {
 	const updateIntakeFormList = () => {
 		dispatch(openLoading())
 		phbApi().get("patient/Intakeform/" + user.currentUser.id).then(res => {
-			console.log(res.data)
 			setIntakeForms(res.data.filter(item => item.appointmentId == props.preparation.id))
 			dispatch(closeLoading())
 		}).catch(err => {
@@ -125,7 +124,6 @@ function AppointmentPreparation(props) {
 	}
 	return (
 		<div>
-
 			<div>
 				<div className="flex justify-center sm:justify-start flex-wrap -mx-8">
 					<label

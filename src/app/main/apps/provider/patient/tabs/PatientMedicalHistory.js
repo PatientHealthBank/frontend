@@ -8,6 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import clsx from 'clsx';
 import React from 'react';
+import Icon from '@material-ui/core/Icon';
+import moment from 'moment';
+import { useSelector, useDispatch } from 'react-redux';
+import { setIntakeForm } from 'app/main/pages/profile/store/intakeFormSlice'
+import { getPatientIntakeForms } from '../../store/patientSlice';
+import { withRouter } from 'react-router-dom';
 
 
 const useStyles = makeStyles(theme => ({
@@ -61,74 +67,21 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const list = {
-    featuredImageId: 'assets/images/avatars/doctor2.png',
-    images: [
-        {
-            id: 0,
-            url: 'assets/images/etc/intakeForms.png',
-            type: 'image'
-        },
-        {
-            id: 1,
-            url: 'assets/images/etc/sampleFilePreview.jpg',
-            type: 'image'
-        }
-    ]
-};
-
-const allergies = [
-    {
-        id: '1',
-        description: 'Amoxicillin',
-        age: '20'
-    },
-    {
-        id: '2',
-        description: 'Penicillin',
-        age: '20'
-    },
-    {
-        id: '3',
-        description: 'Milk',
-        age: '21'
-    },
-    {
-        id: '4',
-        description: 'Peanuts',
-        age: '8'
-    }
-];
-
-const vaccines = [
-    {
-        id: '1',
-        description: 'Hepatitis B',
-        date: '10/02/2016',
-        location: 'Brazil'
-    },
-    {
-        id: '2',
-        description: 'Yellow Fever',
-        date: '10/05/2012',
-        location: 'Brazil'
-    },
-    {
-        id: '3',
-        description: 'Diphtheria',
-        date: '24/08/2017',
-        location: 'Brazil'
-    },
-    {
-        id: '4',
-        description: 'Tetanus',
-        date: '13/06/2010',
-        location: 'Brazil'
-    }
-];
 function PatientMedicalHistory(props) {
 
+    const intakeForms = useSelector(({ providerApp }) => providerApp.patient.intakeForms);
     const classes = useStyles(props);
+    const dispatch = useDispatch()
+
+    const handleIntakeForm = (intakeForm) => {
+        dispatch(setIntakeForm(intakeForm))
+        props.history.push("/intake-form")
+    }
+
+
+    React.useEffect(() => {
+        dispatch(getPatientIntakeForms(props.patientId));
+    }, [])
 
     return (
         <div className="md:flex max-w-full">
@@ -155,10 +108,10 @@ function PatientMedicalHistory(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {allergies.map(row => (
+                                {props.allergies.map(row => (
                                     <tr key={row.id}>
-                                        <td className="text-left">{row.description}</td>
-                                        <td className="text-left">{row.age}</td>
+                                        <td className="text-left">{row.allergicTo}</td>
+                                        <td className="text-left">{row.ageOfOnset}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -192,11 +145,11 @@ function PatientMedicalHistory(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {vaccines.map(row => (
+                                {props.vaccines.map(row => (
                                     <tr key={row.id}>
                                         <td className="text-left">{row.description}</td>
                                         <td className="text-left">{row.location}</td>
-                                        <td className="text-left">{row.date}</td>
+                                        <td className="text-left">{moment(row.date).format('YYYY-MM-DD')}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -207,20 +160,23 @@ function PatientMedicalHistory(props) {
                 </Card>
             </div>
             <div className="flex justify-center sm:justify-start flex-wrap -mx-8">
-                {list.images && list.images.map((media, i) => (
+                {intakeForms && intakeForms.map((media, i) => (
                     <div
-                        style={{ backgroundColor: i % 2 === 0 ? "#f0020257" : "#DEFFBD" }}
+                        style={{ backgroundColor: media.pending == 0 ? "#DEFFBD" : "#f0020257" }}
+                        // onClick={() => setFeaturedImage(media.id)}
+                        // onKeyDown={() => setFeaturedImage(media.id)}
                         role="button"
                         tabIndex={0}
+                        onClick={() => handleIntakeForm(media)}
                         className={clsx(
                             classes.productImageItem,
-                            'flex items-center justify-center relative flex-col w-128 h-128 rounded-8 mx-8 mb-16 overflow-hidden cursor-pointer shadow-1 hover:shadow-5',
-                            media.id === list.featuredImageId && 'featured'
+                            'flex items-center justify-center relative flex-col w-128 h-128 rounded-8 mx-8 mb-16 overflow-hidden cursor-pointer shadow-1 hover:shadow-5'
+                            // media.id === form.featuredImageId && 'featured'
                         )}
                         key={media.id}
                     >
-                        <div style={{ fontWeight: '700' }} >	Medical History</div>
-                        <img className="max-w-none" style={{ height: '84%', width: '84%' }} src={media.url} alt="product" />
+                        <div style={{ fontWeight: '700' }} >{media.intakeForm.description}</div>
+                        <Icon>format_align_justify </Icon>
                     </div>
                 ))}
             </div>
@@ -228,4 +184,4 @@ function PatientMedicalHistory(props) {
     );
 }
 
-export default PatientMedicalHistory;
+export default withRouter(PatientMedicalHistory);

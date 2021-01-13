@@ -13,324 +13,6 @@ import Paper from '@material-ui/core/Paper';
 
 function PatientProfile(props) {
     const theme = useTheme();
-    const [currentRange, setCurrentRange] = useState('TW');
-    const supporting = {
-        created: {
-            label: 'Bicycle crunch',
-            count: {
-                '2W': 48,
-                LW: 46,
-                TW: '54 Minutes'
-            },
-            chart: {
-                '2W': {
-                    datasets: [
-                        {
-                            label: 'Minutes',
-                            data: [5, 8, 5, 6, 7, 8, 7],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                LW: {
-                    datasets: [
-                        {
-                            label: 'Minutes',
-                            data: [6, 3, 7, 5, 5, 4, 7],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                TW: {
-                    datasets: [
-                        {
-                            label: 'Minutes',
-                            data: [3, 2, 1, 4, 8, 8, 4],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    maintainAspectRatio: false,
-                    scales: {
-                        xAxes: [
-                            {
-                                display: false
-                            }
-                        ],
-                        yAxes: [
-                            {
-                                display: false
-                            }
-                        ]
-                    }
-                }
-            }
-        },
-        closed: {
-            label: 'Street Walking',
-            count: {
-                '2W': 27,
-                LW: 31,
-                TW: '26 Minutes'
-            },
-            chart: {
-                TW: {
-                    datasets: [
-                        {
-                            label: 'Minutes',
-                            data: [6, 3, 7, 5, 5, 4, 7],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                '2W': {
-                    datasets: [
-                        {
-                            label: 'Created',
-                            data: [3, 2, 1, 4, 8, 8, 4],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                LW: {
-                    datasets: [
-                        {
-                            label: 'Created',
-                            data: [6, 5, 4, 5, 7, 4, 7],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    maintainAspectRatio: false,
-                    scales: {
-                        xAxes: [
-                            {
-                                display: false
-                            }
-                        ],
-                        yAxes: [
-                            {
-                                display: false
-                            }
-                        ]
-                    }
-                }
-            }
-        },
-        reOpened: {
-            label: 'Pushups',
-            count: {
-                '2W': 4,
-                LW: 5,
-                TW: '33 Times'
-            },
-            chart: {
-                '2W': {
-                    datasets: [
-                        {
-                            label: 'Times',
-                            data: [6, 3, 7, 5, 5, 4, 7],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                LW: {
-                    datasets: [
-                        {
-                            label: 'Created',
-                            data: [5, 7, 8, 8, 6, 4, 1],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                TW: {
-                    datasets: [
-                        {
-                            label: 'Times',
-                            data: [3, 2, 1, 4, 8, 8, 4],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                TW2: [
-                    {
-                        name: 'RE-OPENED',
-                        series: [
-                            {
-                                name: 'Mon',
-                                value: 3
-                            },
-                            {
-                                name: 'Tue',
-                                value: 2
-                            },
-                            {
-                                name: 'Wed',
-                                value: 1
-                            },
-                            {
-                                name: 'Thu',
-                                value: 4
-                            },
-                            {
-                                name: 'Fri',
-                                value: 8
-                            },
-                            {
-                                name: 'Sat',
-                                value: 8
-                            },
-                            {
-                                name: 'Sun',
-                                value: 4
-                            }
-                        ]
-                    }
-                ],
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    maintainAspectRatio: false,
-                    scales: {
-                        xAxes: [
-                            {
-                                display: false
-                            }
-                        ],
-                        yAxes: [
-                            {
-                                display: false
-                            }
-                        ]
-                    }
-                }
-            }
-        },
-        wontFix: {
-            label: "Single-leg deadlifts",
-            count: {
-                '2W': 6,
-                LW: 3,
-                TW: '4 Times'
-            },
-            chart: {
-                '2W': {
-                    datasets: [
-                        {
-                            label: 'Created',
-                            data: [5, 7, 4, 6, 5, 3, 2],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                LW: {
-                    datasets: [
-                        {
-                            label: 'Created',
-                            data: [6, 3, 7, 5, 5, 4, 7],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                TW: {
-                    datasets: [
-                        {
-                            label: 'Times',
-                            data: [6, 5, 4, 5, 7, 4, 7],
-                            fill: true,
-                            backgroundColor: '#42BFF7',
-                            pointRadius: 0,
-                            pointHitRadius: 20,
-                            borderWidth: 0
-                        }
-                    ],
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    maintainAspectRatio: false,
-                    scales: {
-                        xAxes: [
-                            {
-                                display: false
-                            }
-                        ],
-                        yAxes: [
-                            {
-                                display: false
-                            }
-                        ]
-                    }
-                }
-            }
-        }
-    }
 
     const activities = [
         {
@@ -355,9 +37,6 @@ function PatientProfile(props) {
         }
     ]
 
-    function handleChangeRange(range) {
-        setCurrentRange(range);
-    }
     return (
         <div className="md:flex max-w-full">
             <div className="flex flex-col md:w-400  md:ltr:pr-32 md:rtl:pl-32">
@@ -428,20 +107,24 @@ function PatientProfile(props) {
                             <thead>
                                 <tr>
                                     <th className="text-left">
-                                        <Typography className="font-bold text-15">Description</Typography>
+                                        <Typography className="font-bold text-15">Name</Typography>
                                     </th>
                                     <th className="text-left">
-                                        <Typography className="font-bold text-15">Quantity</Typography>
+                                        <Typography className="font-bold text-15">Frequency</Typography>
+                                    </th>
+                                    <th className="text-left">
+                                        <Typography className="font-bold text-15">Dosage</Typography>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* {props.patient.medicines.map(row => (
+                                {props.patient.medicines.map(row => (
                                     <tr key={row.id}>
-                                        <td className="text-left">{row.description}</td>
-                                        <td className="text-left">{row.quantity}</td>
+                                        <td className="text-left">{row.name}</td>
+                                        <td className="text-left">{row.frequency}</td>
+                                        <td className="text-left">{row.dosage}</td>
                                     </tr>
-                                ))} */}
+                                ))}
                             </tbody>
                         </table>
                     </CardContent>
@@ -457,7 +140,7 @@ function PatientProfile(props) {
                         </Toolbar>
                     </AppBar>
                     <div className="flex w-full flex-wrap p-8">
-                        <div className="w-full md:w-1/3 p-12">
+                        <div className="w-full p-12">
                             <div className="p-16 px-4 flex flex-row items-center justify-between">
                                 <Typography className="h1 px-12">List your activities</Typography>
                             </div>
@@ -465,15 +148,23 @@ function PatientProfile(props) {
                             <table className="simple clickable">
                                 <thead>
                                     <tr>
-                                        <th aria-label="title" >Activities</th>
-                                        <th className="text-right">Minutes</th>
+                                        <th className="text-left">
+                                            <Typography className="font-bold text-15">Activities</Typography>
+                                        </th>
+                                        <th className="text-left">
+                                            <Typography className="font-bold text-15">Initial Date</Typography>
+                                        </th>
+                                        <th className="text-left">
+                                            <Typography className="font-bold text-15">Final Date</Typography>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {activities.map(row => (
-                                        <tr key={row.title}>
-                                            <td>{row.title}</td>
-                                            <td className="text-right">{row.clicks}</td>
+                                    {props.patient.activities.map(row => (
+                                        <tr key={row.id}>
+                                            <td>{row.description}</td>
+                                            <td>{row.initialDate}</td>
+                                            <td>{row.finalDate}</td>
                                         </tr>
                                     ))}
                                 </tbody>

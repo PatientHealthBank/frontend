@@ -93,15 +93,14 @@ const AlwaysScrollToBottom = () => {
 function Patient(props) {
 	const dispatch = useDispatch();
 	const patient = useSelector(({ providerApp }) => providerApp.patient);
+	const providerId = useSelector(({ auth }) => auth.user.currentUser.id);
 
 	const theme = useTheme();
 
 	const classes = useStyles(props);
 	const [tabValue, setTabValue] = useState(0);
-	const [comments, setComments] = useState(dummyData);
-	const [comment, setComment] = useState("");
 	// eslint-disable-next-line
-	const { form, handleChange, setForm } = useForm(null);
+	const { form, setForm } = useForm(null);
 	const [specialtyDescription, setSpecialty] = React.useState("Specialty")
 	const routeParams = useParams();
 
@@ -144,7 +143,7 @@ function Patient(props) {
 	// function canBeSubmitted() {
 	// 	return form.clinic && form.clinic.length > 0 && !_.isEqual(patient, form);
 	// }
-	
+
 	if ((!patient || (patient && routeParams.patientId != patient.id)) && routeParams.patientId !== 'new') {
 		return <FuseLoading />;
 	}
@@ -174,7 +173,7 @@ function Patient(props) {
 
 							<div className="flex items-center max-w-full">
 								<FuseAnimate animation="transition.expandIn" delay={300}>
-									{form.PhotoURL? (
+									{form.PhotoURL ? (
 										<img
 											className="w-32 sm:w-48 rounded"
 											src={form.PhotoURL}
@@ -233,12 +232,12 @@ function Patient(props) {
 			content={
 				form && (
 					<div className="p-16 sm:p-24">
-						{tabValue === 0 && <PatientProfile patient={form} />} 
-						{tabValue === 1 && <PatientMedicalHistory />}
-						{/* {tabValue === 2 && <PatientExams exams={form.exams} />}
-						{tabValue === 3 && <PatientTreatments treatments={form.treatments} />}
-						{tabValue === 4 && <PatientVideoLibrary videos={form.videoLibrary} />}
-						{tabValue === 5 && <PatientAppointments appointments={form.appointments} />} */}
+						{tabValue === 0 && <PatientProfile patient={form} />}
+						{tabValue === 1 && <PatientMedicalHistory patientId={form.id} vaccines={form.immunizations} allergies={form.allergies} />}
+						{tabValue === 2 && <PatientExams patientId={form.id} />}
+						{/*{tabValue === 3 && <PatientTreatments treatments={form.treatments} />}
+						{tabValue === 4 && <PatientVideoLibrary videos={form.videoLibrary} />} */}
+						{tabValue === 5 && <PatientAppointments patientId={form.id} providerId={providerId}/>}
 					</div>
 				)
 			}
@@ -248,76 +247,3 @@ function Patient(props) {
 }
 
 export default withReducer('providerApp', reducer)(Patient);
-
-const dummyData = [
-	{
-		message: "I want to check, the pain that i have been feeling, and ai justs don’t know what’s happening ....",
-		date: "2020-01-19 08:22 pm",
-		user: 1
-	},
-	{
-		message: "I checked the new exams and they're all OK",
-		date: "2020-01-20 04:30 pm",
-
-		user: 2
-	},
-	{
-		message: "This should be in left again",
-		date: "2020-01-20 01:20 pm",
-
-		user: 2
-	},
-	{
-		message: "I realized that the pain are strong when i climb the stairs....",
-		date: "2020-01-21 02:20 pm",
-		user: 1
-	},
-	{
-		message: "I want to check, the pain that i have been feeling, and ai justs don’t know what’s happening ....",
-		date: "2020-01-23 09:20 am",
-
-		user: 1
-	},
-	{
-		message: "I checked the new exams and they're all OK",
-		date: "2020-01-23 09:20 am",
-
-		user: 2
-	},
-	{
-		message: "This should be in left again",
-		date: "2020-01-23 09:20 am",
-
-		user: 2
-	},
-	{
-		message: "I realized that the pain are strong when i climb the stairs....",
-		date: "2020-01-23 09:20 am",
-
-		user: 1
-	},
-	{
-		message: "I want to check, the pain that i have been feeling, and ai justs don’t know what’s happening ....",
-		date: "2020-01-23 09:20 am",
-
-		user: 1
-	},
-	{
-		message: "I checked the new exams and they're all OK",
-		date: "2020-01-23 09:20 am",
-
-		user: 2
-	},
-	{
-		message: "This should be in left again",
-		date: "2020-01-23 09:20 am",
-
-		user: 2
-	},
-	{
-		message: "I realized that the pain are strong when i climb the stairs....",
-		date: "2020-01-23 09:20 am",
-
-		user: 1
-	}
-];
