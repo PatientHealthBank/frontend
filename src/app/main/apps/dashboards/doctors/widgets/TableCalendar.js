@@ -34,6 +34,8 @@ function TableCalendar(props) {
     const today = new Date();
     const user = useSelector(({ auth }) => auth.user);
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const token = localStorage.getItem('jwt_access_token');
+
     Date.prototype.addDays = function (days) {
         var date = new Date(this.valueOf());
         date.setDate(date.getDate() + days);
@@ -93,8 +95,8 @@ function TableCalendar(props) {
         }
 
         dispatch(setConfirmAppointment(modelConfirmAppointment))
-
-        if(!user.role.lenght){
+        
+        if(!token){
             props.history.push('/login')
         }
         else{

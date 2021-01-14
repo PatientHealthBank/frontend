@@ -77,7 +77,7 @@ function LanguageSwitcher({ primary }) {
 					alt={currentLanguage.title}
 				/>
 
-				<Typography className="mx-4 font-bold" color={primary ?? "textSecondary"}>
+				<Typography className="mx-4 font-bold" color={primary ?? "#FFF"}>
 					{currentLanguage.id}
 				</Typography>
 			</Button>
