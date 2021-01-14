@@ -11,6 +11,8 @@ import intakeForm from './intakeFormSlice';
 import patientInformation from './patientInformationSlice';
 import insurancePlan from './insurancePlanSlice';
 import addressInformation from './addressInformationSlice';
+import caregiverInformation from './caregiverInformationSlice';
+
 
 const reducer = combineReducers({
 	intakeForm,
@@ -23,7 +25,8 @@ const reducer = combineReducers({
 	emergencyContact,
 	patientInformation,
 	insurancePlan,
-	addressInformation
+	addressInformation,
+	caregiverInformation
 });
 
 export default reducer;

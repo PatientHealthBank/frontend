@@ -4,8 +4,9 @@ import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
-import { useTranslation } from "react-i18next";
-import { listVaccines } from '../store/vaccinesSlice'
+import { useTranslation } from 'react-i18next';
+import { listVaccines } from '../store/vaccinesSlice';
+import Moment from 'react-moment';
 import { useDispatch, useSelector } from 'react-redux';
 import withReducer from 'app/store/withReducer';
 import reducer from '../../pages/profile/store';
@@ -13,14 +14,14 @@ import reducer from '../../pages/profile/store';
 function ImmunizationWidget(props) {
 	const { t } = useTranslation();
 	const { vaccines } = useSelector(({ ProfilesApp }) => ProfilesApp);
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 	React.useEffect(() => {
 		if (vaccines.length == 0) {
-			dispatch(listVaccines())
+			dispatch(listVaccines());
 		}
-	}, [])
+	}, []);
 	return (
-		<Card className="w-full rounded-8 shadow-1" style={{ height: '359px' }} >
+		<Card className="w-full rounded-8 shadow-1" style={{ height: '359px' }}>
 			<div className="p-16 px-4 flex flex-row items-center justify-between">
 				<Typography className="h1 px-12">{t('My Vaccines')}</Typography>
 
@@ -43,15 +44,15 @@ function ImmunizationWidget(props) {
 						{vaccines.map(row => (
 							<tr key={row.id}>
 								<td className="text-right">{row.description}</td>
-								<td className="text-right">{new Date(row.date).toLocaleDateString()}</td>
+								<td className="text-right">
+									<Moment date={row.date} />
+								</td>
 								<td className="text-right">{t(row.location)}</td>
 							</tr>
 						))}
 					</tbody>
 				</table>
 			</div>
-
-
 
 			<Divider className="card-divider w-full" />
 		</Card>

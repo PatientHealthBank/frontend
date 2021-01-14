@@ -34,24 +34,25 @@ function LanguageSwitcher({ primary }) {
 		br: {
 			locale: 'br',
 			globalFormat: 'DD/MM/YYYY HH:mm',
-			globalTimezone: "America/Sao_Paulo"
+			globalTimezone: 'America/Sao_Paulo'
 		},
 		en: {
 			locale: 'us',
 			globalFormat: 'MM/DD/YYYY HH:mm',
-			globalTimezone: "America/Los_Angeles"
+			globalTimezone: 'America/Los_Angeles'
 		}
-	}
-
-	console.log('current language', currentLanguage)
-	Moment.globalLocale = languageSettings[currentLanguage.id].locale;
-	Moment.globalFormat = languageSettings[currentLanguage.id].globalFormat;
-	Moment.globalTimezone = languageSettings[currentLanguage.id].globalTimezone;
-	Moment.globalLocal = true;
-	Moment.globalElement = 'span';
-	Moment.globalFilter = (d) => {
-		return d.toUpperCase();
 	};
+	if (currentLanguage && currentLanguageId) {
+		console.log('current language', currentLanguage);
+		Moment.globalLocale = languageSettings[currentLanguage.id].locale;
+		Moment.globalFormat = languageSettings[currentLanguage.id].globalFormat;
+		Moment.globalTimezone = languageSettings[currentLanguage.id].globalTimezone;
+		Moment.globalLocal = true;
+		Moment.globalElement = 'span';
+		Moment.globalFilter = d => {
+			return d.toUpperCase();
+		};
+	}
 	const [menu, setMenu] = useState(null);
 
 	const langMenuClick = event => {
@@ -77,7 +78,7 @@ function LanguageSwitcher({ primary }) {
 					alt={currentLanguage.title}
 				/>
 
-				<Typography className="mx-4 font-bold" color={primary ?? "#FFF"}>
+				<Typography className="mx-4 font-bold" color={primary ?? 'textSecondary'}>
 					{currentLanguage.id}
 				</Typography>
 			</Button>

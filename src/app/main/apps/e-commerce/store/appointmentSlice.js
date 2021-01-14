@@ -15,12 +15,12 @@ export const getAppointment = createAsyncThunk('eCommerceApp/appointment/getAppo
 export const updateAppointment = createAsyncThunk('eCommerceApp/appointment/updateAppointment', async (appointment, { dispatch }) => {
 	try {
 		dispatch(openLoading())
-		console.log(appointment)
+		
 		var response
 		if(appointment.id){
 			response = await phbApi().put('/appointment', appointment);
 		}
-		else{
+		else {
 			response = await phbApi().post('/appointment/new', appointment);
 		}
 		const data = await response.data;
@@ -58,6 +58,7 @@ const appointmentSlice = createSlice({
 					scheduleDate: new Date().toISOString(),
 					firstAppointment: false,
 					includeTravelTime: false,
+					telemedicine: false,
 					caregiverAppointment: false,
 					notifications: false,
 					name: '',

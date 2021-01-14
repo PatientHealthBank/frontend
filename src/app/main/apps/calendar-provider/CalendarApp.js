@@ -245,12 +245,12 @@ function CalendarApp(props) {
 	return (
 		<div className={clsx(classes.root, 'flex flex-col flex-auto relative')}>
 			<div ref={headerEl} />
+			
 			<DragAndDropCalendar
 				className="flex flex-1 container"
 				selectable
 				localizer={localizer}
 				events={events.filter(x=>{
-					console.log(checkedA, checkedB)
 					if(checkedA && checkedB){
 						return true
 					}
@@ -280,7 +280,9 @@ function CalendarApp(props) {
 				components={{
 					toolbar: _props => {
 						return headerEl.current
-							? ReactDOM.createPortal(<CalendarHeader {..._props} handleChange={handleChange} />, headerEl.current)
+							? ReactDOM.createPortal(
+								<CalendarHeader {..._props} handleChange={handleChange}/>, headerEl.current
+							)
 							: null;
 					}
 				}}

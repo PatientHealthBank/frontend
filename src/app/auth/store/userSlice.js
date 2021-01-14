@@ -89,6 +89,7 @@ export const setUserData = user => async (dispatch, getState) => {
 		 */
 	if (user.role.includes('patient')) {
 		if (confirmAppointment == false || !confirmAppointment.jobDay) {
+
 			history.location.state = {
 				redirectUrl: 'dashboard'
 			};
@@ -174,12 +175,13 @@ export const logoutUser = () => async (dispatch, getState) => {
 };
 
 export const setCurrentUser = currentUser => (dispatch, getState) => {
+
 	var state = getState().auth.user;
 	var newCurrentUser = currentUser;
 	var dependents = state.dependents.filter(dependent => dependent.id != newCurrentUser.id);
 	var oldCurrentUser = state.currentUser;
 	dependents.push(oldCurrentUser);
-	dispatch(setUser({ ...state, dependents, currentUser: newCurrentUser }));
+	dispatch(setUser({ ...state, dependents, currentUser: newCurrentUser, role: currentUser.type }));
 	dispatch(listVaccines());
 	dispatch(listAllergies());
 	dispatch(listMedicines());

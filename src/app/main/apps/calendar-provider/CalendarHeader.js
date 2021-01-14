@@ -13,7 +13,8 @@ import connect from 'react-redux/es/connect/connect';
 import { selectMainThemeDark } from 'app/store/fuse/settingsSlice';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-
+import Button from '@material-ui/core/Button';
+import {openNewEventDialog} from './store/eventsSlice';
 const GreenCheckbox = withStyles({
 	root: {
 		color: 'rgb(36 170 224)',
@@ -179,7 +180,25 @@ class CalendarHeader extends Toolbar {
 								<Typography variant="h6">My Appointments Calendar</Typography>
 							</FuseAnimate>
 						</div>
-
+						<div className="flex items-center my-16 sm:mb-0">
+						<Button
+								className="whitespace-no-wrap normal-case float-left"
+								variant="contained"
+								color="secondary"
+								onClick={() =>
+									this.props.dispatch(
+										openNewEventDialog({
+											start: moment(new Date(), 'MM/DD/YYYY'),
+											end: moment(new Date(), 'MM/DD/YYYY'),
+											eventType:4,
+											type:'block'
+										})
+									)
+								}
+							>
+								Block Calendar
+							</Button>
+						</div>
 
 						<div className="flex items-center">
 							{this.viewButtons()}

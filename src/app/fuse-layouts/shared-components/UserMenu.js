@@ -117,23 +117,30 @@ function UserMenu(props) {
 									<Divider />
 								</>
 							}
-							<MenuItem component={Link} to="/pages/profile" onClick={userMenuClose} role="button">
-								<ListItemIcon className="min-w-40">
-									<Icon>account_circle</Icon>
-								</ListItemIcon>
-								<ListItemText primary="My Profile" />
-							</MenuItem>
-							<MenuItem
-								onClick={() => {
-									dispatch(logoutUser());
-									userMenuClose();
-								}}
-							>
-								<ListItemIcon className="min-w-40">
-									<Icon>exit_to_app</Icon>
-								</ListItemIcon>
-								<ListItemText primary="Logout" />
-							</MenuItem>
+							{user.role != 'caregiver' && 
+									    <> 
+								<MenuItem component={Link} to="/pages/profile" onClick={userMenuClose} role="button">
+									
+											<ListItemIcon className="min-w-40">
+												<Icon>account_circle</Icon>
+											</ListItemIcon>
+											<ListItemText primary="My Profile" />
+									
+								</MenuItem>
+								</>
+							}
+								<MenuItem
+									onClick={() => {
+										dispatch(logoutUser());
+										userMenuClose();
+									}}
+								>
+									<ListItemIcon className="min-w-40">
+										<Icon>exit_to_app</Icon>
+									</ListItemIcon>
+									<ListItemText primary="Logout" />
+								</MenuItem>
+							
 						</>
 					)}
 			</Popover>
