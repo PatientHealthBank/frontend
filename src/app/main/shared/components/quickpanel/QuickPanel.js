@@ -15,9 +15,6 @@ import withReducer from 'app/store/withReducer';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import reducer from '../../store/quickpanel';
-import { getNotifications, checkRead } from '../../store/quickpanel/dataSlice';
-import { toggleQuickPanel } from '../../store/quickpanel/stateSlice';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -33,6 +30,9 @@ import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 import PropTypes from 'prop-types';
+import reducer from '../../store/quickpanel';
+import { toggleQuickPanel } from '../../store/quickpanel/stateSlice';
+import { getNotifications, checkRead } from '../../store/quickpanel/dataSlice';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -124,9 +124,7 @@ function QuickPanel(props) {
 	const notifications = useSelector(({ quickPanel }) => quickPanel.data);
 	const state = useSelector(({ quickPanel }) => quickPanel.state);
 
-	console.error('teste');
 
-	console.error('notificacoes', notifications);
 	const classes = useStyles();
 	const [rating, setRating] = useState(1);
 	const [color, setColor] = useState('#123123');
