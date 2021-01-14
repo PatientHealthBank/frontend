@@ -43,7 +43,7 @@ function EventDialog(props) {
 		/**
 		 * Dialog type: 'new'
 		 */
-		if (eventDialog.type === 'new') {
+		if (eventDialog.type === 'new'|| eventDialog.type==='block') {
 			setForm({
 				...defaultFormState,
 				...eventDialog.data,
@@ -72,7 +72,7 @@ function EventDialog(props) {
 	function handleSubmit(event) {
 		event.preventDefault();
 
-		if (eventDialog.type === 'new') {
+		if (eventDialog.type === 'new' || 'block') {
 			dispatch(addEvent(form));
 		} else {
 			dispatch(updateEvent(form));
@@ -99,7 +99,7 @@ function EventDialog(props) {
 			<AppBar position="static">
 				<Toolbar className="flex w-full">
 					<Typography variant="subtitle1" color="inherit">
-						{eventDialog.type === 'new' ? 'New Event' : 'Edit Event'}
+						{eventDialog.type==='block'?'New Date Block': eventDialog.type === 'new' ? 'New Event' : 'Edit Event'}
 					</Typography>
 				</Toolbar>
 			</AppBar>
