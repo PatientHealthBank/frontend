@@ -57,7 +57,12 @@ export default function AlertDialog({ open, setOpen, type, newCaregiverForm, new
 	const formRef = useRef(null);
 	const handleChange = (event) => {
         setCaregiverId(event.target.value);
+        
     };
+
+    const handleChecked = (event) => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+    }
 
 	function disableButton() {
 		setIsFormValid(false);
@@ -323,7 +328,7 @@ export default function AlertDialog({ open, setOpen, type, newCaregiverForm, new
                 control={
                     <Checkbox
                         checked={state.AcceptTerms}
-                        onChange={(event)=> {handleChange(event); enableButton(event.target.checked) }}
+                        onChange={(event)=> {handleChecked(event); enableButton(event.target.checked) }}
                         name="AcceptTerms"
                         color="primary"
                     />
