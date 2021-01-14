@@ -32,50 +32,55 @@ import {
 } from '@material-ui/pickers';
 
 const useStyles = makeStyles(theme => ({
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-        maxWidth: 300,
-    },
-    chips: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    chip: {
-        margin: 2,
-    },
-    memberImageFeaturedStar: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        color: orange[400],
-        opacity: 0
-    },
-    memberImageUpload: {
-        transitionProperty: 'box-shadow',
-        transitionDuration: theme.transitions.duration.short,
-        transitionTimingFunction: theme.transitions.easing.easeInOut
-    },
-    memberImageItem: {
-        transitionProperty: 'box-shadow',
-        transitionDuration: theme.transitions.duration.short,
-        transitionTimingFunction: theme.transitions.easing.easeInOut,
-        '&:hover': {
-            '& $memberImageFeaturedStar': {
-                opacity: 0.8
-            }
-        },
-        '&.featured': {
-            pointerEvents: 'none',
-            boxShadow: theme.shadows[3],
-            '& $memberImageFeaturedStar': {
-                opacity: 1
-            },
-            '&:hover $memberImageFeaturedStar': {
-                opacity: 1
-            }
-        }
-    }
+	formControl: {
+		margin: theme.spacing(1),
+		minWidth: 120,
+		maxWidth: 300,
+	},
+	chips: {
+		display: 'flex',
+		flexWrap: 'wrap',
+	},
+	chip: {
+		margin: 2,
+	},
+	memberImageFeaturedStar: {
+		position: 'absolute',
+		top: 0,
+		right: 0,
+		color: orange[400],
+		opacity: 0
+	},
+	memberImageUpload: {
+		transitionProperty: 'box-shadow',
+		transitionDuration: theme.transitions.duration.short,
+		transitionTimingFunction: theme.transitions.easing.easeInOut
+	},
+	memberImageItem: {
+		transitionProperty: 'box-shadow',
+		transitionDuration: theme.transitions.duration.short,
+		transitionTimingFunction: theme.transitions.easing.easeInOut,
+		'&:hover': {
+			'& $memberImageFeaturedStar': {
+				opacity: 0.8
+			}
+		},
+		'&.featured': {
+			pointerEvents: 'none',
+			boxShadow: theme.shadows[3],
+			'& $memberImageFeaturedStar': {
+				opacity: 1
+			},
+			'&:hover $memberImageFeaturedStar': {
+				opacity: 1
+			}
+		}
+	},
+	providerImage: {
+		'&:hover': {
+			opacity: 0.5
+		}
+	}
 }));
 
 const ITEM_HEIGHT = 48;
@@ -101,31 +106,32 @@ const PrimaryButton = withStyles((theme) => ({
 
 
 function Member(props) {
-    const dispatch = useDispatch();
-    const member = useSelector(({ MembersApp }) => MembersApp.member);
-    const user = useSelector(({ auth }) => auth.user.currentUser);
-    const theme = useTheme();
-    const classes = useStyles(props);
-    const { form, handleChange, setForm } = useForm(null);
-    const routeParams = useParams();
-    const [specialties, setSpecialties] = React.useState([]);
-    const [clinicalInterest, setClinicalInterest] = React.useState([]);
+	const dispatch = useDispatch();
+	const member = useSelector(({ MembersApp }) => MembersApp.member);
+	const user = useSelector(({ auth }) => auth.user.currentUser);
+	const theme = useTheme();
+	const classes = useStyles(props);
+	const { form, handleChange, setForm } = useForm();
+	const routeParams = useParams();
+	const [specialties, setSpecialties] = React.useState([]);
+	const [clinicalInterest, setClinicalInterest] = React.useState([]);
+	const [preview, setPreview] = React.useState("");
 
     useDeepCompareEffect(() => {
         findSpecialties();
 
-        function updateMemberState() {
-            const { membersId } = routeParams;
-            if (membersId === 'new') {
-                dispatch(newMember());
-            }
-            else if (membersId === 'providerProfile') {
-                dispatch(getMember(user.id));
-            }
-            else {
-                dispatch(getMember(routeParams.membersId));
-            }
-        }
+		function updateMemberState() {
+			const { membersId } = routeParams;
+			if (membersId === 'new') {
+				dispatch(newMember());
+			}
+			else if (membersId === 'providerProfile') {
+				dispatch(getMember(user.id));
+			}
+			else {
+				dispatch(getMember(routeParams.membersId));
+			}
+		}
 
         updateMemberState();
     }, [dispatch, routeParams]);
@@ -138,7 +144,7 @@ function Member(props) {
             findClinicalInterest(form.specialty.join());
         }
 
-    }, [form, member, setForm]);
+	}, [form, member, setForm]);	
 
     React.useEffect(() => {
         findSpecialties();
@@ -155,97 +161,125 @@ function Member(props) {
         });
     }
 
-    function handleSave(member) {
-        const { membersId } = routeParams;
-        if (membersId === 'new') {
-            dispatch(saveMember(member));
-        } else {
-            dispatch(updateMember(member));
-        }
-    }
-
-    return (
-        <FusePageCarded
-            classes={{
-                toolbar: 'p-0',
-                header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
-            }}
-            header={
-                form && (
-                    <div className="flex flex-1 w-full items-center justify-between">
-                        <div className="flex flex-col items-start max-w-full">
-                            {user.role == "provider" &&
-                                (<Typography
-                                    className="normal-case flex items-center sm:mb-12"
-                                    component={Link}
-                                    role="button"
-                                    to="."
-                                    color="inherit"
-                                >
-                                    <Icon className="text-20">
-                                        {theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
-                                    </Icon>
-                                    <span className="mx-4">Members</span>
-                                </Typography>)}
-
-                            <div className="flex items-center max-w-full">
-                                <div className="flex flex-col min-w-0 mx-8 sm:mc-16">
-                                    <FuseAnimate animation="transition.slideLeftIn" delay={300}>
-                                        <Typography className="text-16 sm:text-20 truncate">
-                                            {form.name ? `${form.name}` : 'New Member'}
-                                        </Typography>
-                                    </FuseAnimate>
-                                </div>
-                            </div>
-                        </div>
-                        <FuseAnimate animation="transition.slideRightIn" delay={300}>
-                            <PrimaryButton
-                                className="whitespace-no-wrap normal-case"
-                                color="secondary"
-                                // disabled={!canBeSubmitted()}
-                                onClick={() => handleSave(form)}
-                            >
-                                Save
+	function handleSave(member) {
+		const { membersId } = routeParams;
+		if (membersId === 'new') {
+			dispatch(saveMember(member));
+		} else {
+			dispatch(updateMember(member));
+		}
+	}
+	const clickInputImage = (event) => {
+		var name = document.getElementById('select-file');
+		name.click();
+	}
+	const handleFileChange = (event) => {
+		console.log(form.imageUrl);
+		const objectUrl = URL.createObjectURL(event.target.files[0])
+   		setPreview(objectUrl)
+		setForm({...form,[event.target.name]:event.target.files[0]})
+	}
+	return (
+		<FusePageCarded
+			classes={{
+				toolbar: 'p-0',
+				header: 'min-h-72 h-72 sm:h-136 sm:min-h-136'
+			}}
+			header={
+				form && (
+					<div className="flex flex-1 w-full items-center justify-between">
+						<div className="flex flex-col items-start max-w-full">
+							{user.role == "provider" &&
+								(<Typography
+									className="normal-case flex items-center sm:mb-12"
+									component={Link}
+									role="button"
+									to="."
+									color="inherit"
+								>
+									<Icon className="text-20">
+										{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
+									</Icon>
+									<span className="mx-4">Members</span>
+								</Typography>)}
+							<div className="flex items-center max-w-full">
+								<div className="flex flex-col min-w-0 mx-8 sm:mc-16">
+									<FuseAnimate animation="transition.slideLeftIn" delay={300}>
+										<Typography className="text-16 sm:text-20 truncate">
+											{form.name ? `${form.name}` : 'New Member'}
+										</Typography>
+									</FuseAnimate>
+								</div>
+							</div>
+						</div>
+						<FuseAnimate animation="transition.slideRightIn" delay={300}>
+							<PrimaryButton
+								className="whitespace-no-wrap normal-case"
+								color="secondary"
+								// disabled={!canBeSubmitted()}
+								onClick={() => handleSave(form)}
+							>
+								Save
 							</PrimaryButton>
-                        </FuseAnimate>
-                    </div>
-                )
-            }
-            content={
-                (form && (routeParams.membersId == "new" || form.name)) ? (
-                    <div className="p-16 sm:p-24">
-                        <div>
-                            <Grid container spacing={3}>
-                                <Grid item xs={4}>
-                                    <Typography className="text-16 sm:text-20 truncate mb-16">
-                                        {'Basic Info'}
-                                    </Typography>
-                                    <TextField
-                                        className="mb-16"
-                                        required
-                                        label="Full Name"
-                                        id="name"
-                                        name="name"
-                                        autoFocus
-                                        value={form.name}
-                                        onChange={handleChange}
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                    <TextField
-                                        className="mb-16"
-                                        id="email"
-                                        fullWidth
-                                        name="email"
-                                        type="text"
-                                        label="Email"
-                                        value={form.email}
-                                        onChange={handleChange}
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <Icon className="text-20" color="action">
-                                                        email
+						</FuseAnimate>
+					</div>
+				)
+			}
+			content={
+				(form && (routeParams.membersId == "new" || form.name)) ? (
+					<div className="p-16 sm:p-24">
+						<div>
+							<Grid container spacing={3}>
+								<Grid item xs={4}>
+									<Typography className="text-16 sm:text-20 truncate mb-16">
+										{'Basic Info'}
+									</Typography>
+										<button>
+											<img
+												key="1"
+												// style={{ display: "inline" }}
+												className={"w-128 m-4 rounded-4" + classes.providerImage}
+												src={preview || form.imageUrl}
+												onClick={clickInputImage}
+											/>
+										</button>
+										<TextField
+											className="mb-16"
+											type='file'
+											id="select-file"
+											variant="outlined"
+											name={"photoURL"}
+											onChange={handleFileChange}
+											style={{ display: 'none' }}
+											autoFocus
+											fullWidth
+										/>
+									<TextField
+										className="mb-16"
+										required
+										label="Full Name"
+										id="name"
+										name="name"
+										autoFocus
+										value={form.name}
+										onChange={handleChange}
+										variant="outlined"
+										fullWidth
+									/>
+									<TextField
+										className="mb-16"
+										id="email"
+										fullWidth
+										name="email"
+										type="text"
+										label="Email"
+										value={form.email}
+										onChange={handleChange}
+										InputProps={{
+											endAdornment: (
+												<InputAdornment position="end">
+													<Icon className="text-20" color="action">
+														email
 													</Icon>
                                                 </InputAdornment>
                                             )

@@ -189,7 +189,7 @@ console.log(caregiverInformation);
         <>
             <div className="p-16 sm:p-24">
                 <div>
-                <PatientInformationWidget patientInformation={patientInformation} editPatientInformation={ EditPatientInformation } currentFile={currentFile} />
+                    <PatientInformationWidget patientInformation={patientInformation} editPatientInformation={ EditPatientInformation } currentFile={currentFile} />
 
                     <CaregiverInformationWidget caregiverInformation={caregiverInformation} RegisterNewCaregiverInformation={RegisterNewCaregiverInformation} DeletelinkCaregiver={DeletelinkCaregiver} RegisterNewCaregiverLink={RegisterNewCaregiverLink}/>
 

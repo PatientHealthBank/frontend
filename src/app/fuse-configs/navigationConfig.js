@@ -134,7 +134,7 @@ const navigationConfig = [
 				url: '/provider/calendar'
 			},
 			{
-				id: 'members',
+				id: 'Profile',
 				title: 'Profile',
 				type: 'item',
 				icon: 'people',
@@ -161,7 +161,7 @@ const navigationConfig = [
 				title: 'Intakeform',
 				type: 'item',
 				icon: 'person',
-				url: '/admin-intake-form'
+				url: '/admin-intake-forms'
 			}
 		]
 	}

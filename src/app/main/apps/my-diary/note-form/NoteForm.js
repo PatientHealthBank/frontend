@@ -18,8 +18,12 @@ import NoteFormList from './checklist/NoteFormList';
 import NoteFormLabelMenu from './NoteFormLabelMenu';
 import NoteFormUploadImage from './NoteFormUploadImage';
 import { useSelector } from 'react-redux';
+import Moment from 'react-moment'
+import { useTranslation } from "react-i18next";
 
 function NoteForm(props) {
+	const { t } = useTranslation();
+
 	const [showList, setShowList] = useState(false);
 	const routeParams = useParams();
 	
@@ -177,7 +181,7 @@ function NoteForm(props) {
 								))}
 							{noteForm.time && (
 								<Typography color="textSecondary" className="text-12 mt-8 mx-4">
-									Edited: {moment(noteForm.time).format('MMM DD YY, h:mm A')}
+									Edited:<Moment date={noteForm.time} />
 								</Typography>
 							)}
 						</div>

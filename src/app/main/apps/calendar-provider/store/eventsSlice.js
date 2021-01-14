@@ -32,12 +32,10 @@ export const getEvents = createAsyncThunk('calendarApp/events/getEvents', async 
 
 export const addEvent = createAsyncThunk('calendarApp/events/addEvent', async (newEvent, { getState, dispatch }) => {
 	var user = getState().auth.user; 
-
 	newEvent.providerId = user.currentUser.id
-	newEvent.start = new Date(newEvent.start)
-	newEvent.end = new Date(newEvent.end)
+	newEvent.start = moment(new Date(newEvent.start)).format('YYYY-MM-DDTHH:mm') 
+    newEvent.end =  moment(new Date(newEvent.end)).format('YYYY-MM-DDTHH:mm')
 	newEvent.description = newEvent.desc
-
 	delete newEvent.id
 
 	const response = await phbApi().post('/event', 	newEvent);
@@ -85,13 +83,14 @@ const eventsSlice = createSlice({
 		openNewEventDialog: {
 			prepare: event => {
 				const payload = {
-					type: 'new',
+					type:event.type=='block'?event.type: 'new',
 					props: {
 						open: true
 					},
 					data: {
 						start: moment(event.start).format(dateFormat).toString(),
-						end: moment(event.end).format(dateFormat).toString()
+						end: moment(event.end).format(dateFormat).toString(),
+						eventType:event.eventType?event.eventType:3,
 					}
 				};
 				return { payload };

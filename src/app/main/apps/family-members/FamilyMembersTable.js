@@ -20,6 +20,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import MemberDialog from './MemberDialog'
 import PrimaryIconButton from '../../Components/PrimaryIconButton'
 import Icon from '@material-ui/core/Icon';
+import Moment from 'react-moment'
+import { useTranslation } from "react-i18next";
 
 function createData(name, address, phone, relationship, dateofBirth, id) {
 	return { name, address, phone, relationship, dateofBirth, id };
@@ -315,9 +317,10 @@ function FamilyMembersTable(props) {
 		const isSelected = (name) => {
 			return selected.indexOf(name) !== -1;
 		}
+		const { t } = useTranslation();
 
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
+		// ToDo passar o date pro moment
 		return (
 			<div className={classes.root}>
 				<MemberDialog title={title} open={open} setOpen={setOpen}
@@ -381,7 +384,7 @@ function FamilyMembersTable(props) {
 												<TableCell >{row.address}</TableCell>
 												<TableCell >{row.phone}</TableCell>
 												<TableCell >{row.relationship}</TableCell>
-												<TableCell>{new Date(row.dateofBirth).toLocaleDateString()}</TableCell>
+												<TableCell><Moment Date={row.dateofBirth} /></TableCell>
 											</TableRow>
 										);
 									})}
