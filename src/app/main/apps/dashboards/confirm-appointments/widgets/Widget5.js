@@ -132,7 +132,7 @@ function Widget5(props) {
 							<Button
 								style={{ height: '32px', float: 'right' }}
 								onClick={() => SaveAppointment()}
-								varian  t="contained"
+								variant="contained"
 								color="secondary"
 							>
 								Confirm
