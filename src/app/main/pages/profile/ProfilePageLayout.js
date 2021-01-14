@@ -35,6 +35,12 @@ function ProfilePage({ content, route }) {
     }
 
 	const pageLayout = useRef(null);
+
+	if(user.role == 'caregiver') {
+		return false;
+	}
+		
+
 	return (
 		<FusePageSimple
 			layout={1}
@@ -76,6 +82,7 @@ function ProfilePage({ content, route }) {
 					</Grid>
 				</div>
 			}
+
 			rightSidebarContent={
 				<FuseNavigation className={clsx('navigation')} navigation={ProfileNavigation.children} />
 			}
