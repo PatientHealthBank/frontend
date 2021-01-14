@@ -21,6 +21,11 @@ const AppointmentsAppConfig = {
 		{
 			path: '/apps/e-commerce',
 			component: () => <Redirect to="/apps/e-commerce/appointments" />
+		},
+		{
+			path: '/new-appointment',
+			component: React.lazy(() => import('../dashboards/home/Home'))
+
 		}
 	]
 };
