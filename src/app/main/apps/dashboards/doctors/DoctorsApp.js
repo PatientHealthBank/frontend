@@ -108,7 +108,7 @@ function DoctorsApp(props) {
 							animation: 'transition.slideUpBigIn'
 						}}
 					>
-						<div className="widget flex w-full p-12" style={{ padding: "10px" }}>
+						<div className="widget flex w-full p-12" >
 							<Widget5 
 								providers={providers} 
 								clinic={clinic} 

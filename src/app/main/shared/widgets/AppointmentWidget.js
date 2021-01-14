@@ -9,7 +9,7 @@ import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
-
+import Moment from 'react-moment'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,9 +17,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { useDeepCompareEffect } from '@fuse/hooks';
+import { useTranslation } from "react-i18next";
 
 function AppointmentWidget(props) {
 	const dispatch = useDispatch();
+	const { t } = useTranslation();
 
 	const appointments = useSelector(selectAppointmentsWidget);
 	const [data, setData] = useState(appointments);
@@ -65,7 +67,8 @@ function AppointmentWidget(props) {
 										<TableRow key={row.patient.name}>
 											<TableCell align="center">
 												{row.specialty.description}
-												<br /> {Date(row.scheduleDate)}
+												<br /> 
+												<Moment date={row.scheduleDate}/>
 											</TableCell>
 											<TableCell align="center">
 												{Date(row.scheduleDate) <= Date(row.createDate) ? (

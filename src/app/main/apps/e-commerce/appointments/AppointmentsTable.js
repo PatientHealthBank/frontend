@@ -20,6 +20,7 @@ import AppointmentDialog from './AppointmentDialog';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import { lighten, makeStyles } from '@material-ui/core/styles';
+import Moment from 'react-moment';
 
 
 
@@ -237,7 +238,7 @@ function AppointmentTable(props) {
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>
-											{new Date(row.createDate).toLocaleString()}
+										<Moment  date={row.createDate}/>
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(row)}>

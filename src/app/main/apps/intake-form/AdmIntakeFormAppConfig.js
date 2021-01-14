@@ -6,12 +6,20 @@ const AdmIntakeFormAppConfig = {
 	},
 	routes: [
 		{
-			path: '/admin-intake-form',
-			component: React.lazy(() => import('./AdmIntakeForm.js'))
+			path: '/admin-intake-forms',
+			component: React.lazy(() => import('./IntakeForm/IntakeForms.js'))
 		},
 		{
-			path: '/admin-question',
+			path: '/admin-intake-form',
+			component: React.lazy(() => import('./IntakeForm/IntakeForm.js'))
+		},
+		{
+			path: '/admin-question/:id?',
 			component: React.lazy(() => import('./question/Question.js'))
+		},
+		{
+			path: '/admin-questions/',
+			component: React.lazy(() => import('./question/Questions.js'))
 		}
 	]
 };

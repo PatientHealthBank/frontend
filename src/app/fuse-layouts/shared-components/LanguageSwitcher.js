@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { changeLanguage } from 'app/store/i18nSlice';
+import Moment from 'react-moment';
+var moment = require('moment-timezone');
 
 const languages = [
 	{
@@ -22,12 +24,34 @@ const languages = [
 	}
 ];
 
-function LanguageSwitcher({primary}) {
+function LanguageSwitcher({ primary }) {
+	Moment.globalMoment = moment;
 	const dispatch = useDispatch();
-
 	const currentLanguageId = useSelector(({ i18n }) => i18n.language);
 	const currentLanguage = languages.find(lng => lng.id === currentLanguageId);
 
+	const languageSettings = {
+		br: {
+			locale: 'br',
+			globalFormat: 'DD/MM/YYYY HH:mm',
+			globalTimezone: "America/Sao_Paulo"
+		},
+		en: {
+			locale: 'us',
+			globalFormat: 'MM/DD/YYYY HH:mm',
+			globalTimezone: "America/Los_Angeles"
+		}
+	}
+
+	console.log('current language', currentLanguage)
+	Moment.globalLocale = languageSettings[currentLanguage.id].locale;
+	Moment.globalFormat = languageSettings[currentLanguage.id].globalFormat;
+	Moment.globalTimezone = languageSettings[currentLanguage.id].globalTimezone;
+	Moment.globalLocal = true;
+	Moment.globalElement = 'span';
+	Moment.globalFilter = (d) => {
+		return d.toUpperCase();
+	};
 	const [menu, setMenu] = useState(null);
 
 	const langMenuClick = event => {
@@ -53,7 +77,7 @@ function LanguageSwitcher({primary}) {
 					alt={currentLanguage.title}
 				/>
 
-				<Typography className="mx-4 font-bold" color={primary ?? "textSecondary" }>
+				<Typography className="mx-4 font-bold" color={primary ?? "textSecondary"}>
 					{currentLanguage.id}
 				</Typography>
 			</Button>

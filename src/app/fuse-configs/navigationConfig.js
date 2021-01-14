@@ -161,7 +161,7 @@ const navigationConfig = [
 				title: 'Intakeform',
 				type: 'item',
 				icon: 'person',
-				url: '/admin-intake-form'
+				url: '/admin-intake-forms'
 			}
 		]
 	}

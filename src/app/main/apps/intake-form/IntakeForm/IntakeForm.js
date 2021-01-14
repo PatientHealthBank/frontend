@@ -10,7 +10,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
+import Tooltip from '@material-ui/core/Tooltip';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
@@ -26,9 +26,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
+import Checkbox from '@material-ui/core/Checkbox';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
 import Avatar from '@material-ui/core/Avatar';
 
@@ -111,60 +112,85 @@ const useStyles = makeStyles(theme => ({
 
 
 function Question(props) {
-	const routeParams = useParams()
-	const {id} = routeParams
 	const dispatch = useDispatch();
 	const theme = useTheme();
 
 	const classes = useStyles(props);
-	const [type, setType] = React.useState('');
 	const [title, setTitle] = React.useState('');
-	const [description, setDescription] = React.useState('');
-	const [value, setValue] = React.useState('');
-	const [options, setOptions] = React.useState([]);
+	const [questions, setQuestions] = React.useState([]);
+	const [selectedQuestions, setSelectedQuestions] = React.useState([]);
+
 	const [open, setOpen] = React.useState(false)
 
 
-	const addOption = () => {
-		setOptions([...options, { value, description }])
-		setValue("");
-		setDescription("")
-	}
-	const removeOption = (index) => {
-		var newOpt = [...options]
+
+	const removeQuestion = (index, question) => {
+		var newOpt = [...selectedQuestions]
 		newOpt.splice(index, 1)
-		setOptions(newOpt)
+		setQuestions([...questions, question])
+		setSelectedQuestions(newOpt)
 	}
 
+	const handleChange = (index, event) =>{
+		var newOpt = [...selectedQuestions]
+		newOpt[index].isRequired = event.target.checked
+		setSelectedQuestions(newOpt)
+	}
+	const addQuestion = (index, question) => {
+		var newOpt = [...questions]
+		newOpt.splice(index, 1)
+		setSelectedQuestions([...selectedQuestions, question])
+		setQuestions(newOpt)
+	}
 
+	const updateQuestionList = () => {
+		dispatch(openLoading())
+		phbApi().get('question').then(res => {
+			setQuestions(res.data)
+			dispatch(closeLoading())
+		}).catch(err => {
+			dispatch(closeLoading())
+		})
+	}
 
-	const handleChange = (event) => {
-		setType(event.target.value);
-	};
-	const isValidQuestion = ()=>{
-		if(type != 5 && type != 3){
-			console.log(title,type)
-			return title && type;
-		} 
-		else{
-			return title && type && options.length > 0;
+	React.useEffect(() => {
+		updateQuestionList()
+	}, [])
+
+	const getQuestionType = (typeId) => {
+
+		switch (typeId) {
+			case 1:
+				return "Checkbox"
+				break;
+			case 2:
+				return "TextField"
+				break;
+			case 3:
+				return "Select"
+				break;
+			case 4:
+				return "NumericField"
+				break;
+			case 5:
+				return "MultSelect"
+				break;
+
+			default:
+				break;
 		}
+	}
+	const isValidQuestion = ()=>{
+		return title && selectedQuestions.length > 0
 	}
 	const handleDialog=()=>{
 		setOpen(true)
 	}
-	const saveQuestion = async () => {
-		var res = await phbApi().post('intakeForm/question',{
+	const saveIntakeForm = async () => {
+		var res = await phbApi().post('intakeForm',{
 			description: title,
-			id,
-			questionType: type,
-			options
+			questions: selectedQuestions
 		})
-		setOptions([])
-		setValue('')
-		setDescription('')
-		setTitle('')
-		setType('')
 	}
 
 	const goBack = () => {
@@ -191,7 +217,7 @@ function Question(props) {
 								<Icon className="text-20">
 									{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
 								</Icon>
-								<span className="mx-4">Questions</span>
+								<span className="mx-4">IntakeForm</span>
 							</Typography>
 
 							<div className="flex items-center max-w-full">
@@ -221,60 +247,76 @@ function Question(props) {
 					<Grid container className={classes.root} spacing={2}>
 						<Grid item xs={12}>
 
-							<h3><strong>Basic Question Info</strong></h3>
+							<h2><strong>Basic IntakeForm Info</strong></h2>
 							<Divider></Divider>
 						</Grid>
 						<Grid item xs={2}>
 							<FormControl className={classes.formControl}>
-								<InputLabel id="demo-simple-select-label">Type</InputLabel>
-								<Select
-									labelId="demo-simple-select-label"
-									id="demo-simple-select"
-									value={type}
-									onChange={handleChange}
-								>
-									<MenuItem value={1}>Checkbox</MenuItem>
-									<MenuItem value={2}>TextField</MenuItem>
-									<MenuItem value={3}>Select</MenuItem>
-									<MenuItem value={4}>NumericField</MenuItem>
-									<MenuItem value={5}>MultSelect</MenuItem>
-								</Select>
+								<TextField id="outlined-basic" value={title} onChange={(e) => setTitle(e.target.value)} label="Description" variant="standard" />
 							</FormControl>
 						</Grid>
-						<Grid item xs={2}>
-							<FormControl className={classes.formControl}>
-								<TextField id="outlined-basic" value={title} onChange={(e) => setTitle(e.target.value)} label="Title" variant="standard" />
-							</FormControl>
-						</Grid>
-						{(type == 3 || type == 5) &&
-							<>
 								<Grid item xs={12}>
-									<h3><strong>Question Options</strong></h3>
+									<h2><strong>IntakeFormQuestions</strong></h2>
 									<Divider></Divider>
 								</Grid>
 								<Grid item xs={12}>
 									<Grid container className={classes.root} spacing={2}>
-										<Grid item xs={2}>
-											<FormControl className={classes.formControl}>
-												<TextField id="outlined-basic" value={description} onChange={(e) => setDescription(e.target.value)} label="Description" variant="standard" />
-											</FormControl>
-										</Grid>
-										<Grid item xs={2}>
-											<FormControl className={classes.formControl}>
-												<TextField id="outlined-basic" value={value} onChange={(e) => setValue(e.target.value)} label="Value" variant="standard" />
-											</FormControl>
-										</Grid>
-										<Grid item xs={1}>
-											{value && description &&
-												<FormControl className={classes.formControl}>
-													<Button onClick={() => addOption()} variant="contained" color="secondary" ><Icon>arrow_forward</Icon></Button>
-												</FormControl>
-											}
-										</Grid>
-										<Grid item xs={4}>
+										<Grid item xs={4} style={{ margin: '0 15px', border: '1px solid #e0e0e0' }}>
+										<h3 style={{textAlign:'center'}}><strong>Questions</strong></h3>
+										<Divider></Divider>
 
-											{options && options.length > 0 &&
-												<FormControl className={classes.formControl} style={{ margin: '0 15px', border: '1px solid #e0e0e0' }}>
+											{questions &&
+												<FormControl className={classes.formControl} >
+													<TableContainer>
+														<Table
+															className={classes.table}
+															aria-labelledby="tableTitle"
+															aria-label="enhanced table"
+														>
+
+															<TableHead>
+																<TableRow>
+																	<TableCell>
+																		Description
+																	</TableCell>
+																	<TableCell>
+																		Type
+																	</TableCell>
+																	<TableCell>
+																		Add Question
+																	</TableCell>
+																</TableRow>
+															</TableHead>
+															<TableBody>
+																{questions.map((item, i) => (
+																	<TableRow key={i}>
+																		<TableCell>
+																			{item.description}
+																		</TableCell>
+																		<TableCell>
+																			{getQuestionType(item.questionType)}
+																		</TableCell>
+																		<TableCell>
+																			<Tooltip>
+																				<Button onClick={() => addQuestion(i, item)}><Icon>add_circle_outline</Icon></Button>
+																				</Tooltip>
+																		</TableCell>
+																	</TableRow>
+																))}
+															</TableBody>
+														</Table>
+													</TableContainer>
+												</FormControl>}
+										</Grid>
+										<Grid item xs={2}>
+										<Divider orientation="vertical" flexItem />
+										</Grid>
+										<Grid item xs={4} style={{ margin: '0 15px', border: '1px solid #e0e0e0' }}>
+										<h3 style={{textAlign:'center'}}><strong>Selected Questions</strong></h3>
+										<Divider></Divider>
+
+											{selectedQuestions &&
+												<FormControl className={classes.formControl} >
 													<TableContainer>
 														<Table
 															className={classes.table}
@@ -290,22 +332,32 @@ function Question(props) {
 																	<TableCell>
 																		Value
 														</TableCell>
+														<TableCell>
+																		IsRequired
+														</TableCell>
 																	<TableCell>
 																		Remove
 														</TableCell>
 																</TableRow>
 															</TableHead>
 															<TableBody>
-																{options.map((item, i) => (
+																{selectedQuestions.map((item, i) => (
 																	<TableRow key={i}>
 																		<TableCell>
 																			{item.description}
 																		</TableCell>
 																		<TableCell>
-																			{item.value}
+																			{getQuestionType(item.questionType)}
 																		</TableCell>
 																		<TableCell>
-																			<Button onClick={() => removeOption(i)}><Icon>delete</Icon></Button>
+																		<Checkbox
+																			checked={item.isRequired}
+																			onChange={(event)=> handleChange(i,event)}
+																			inputProps={{ 'aria-label': 'primary checkbox' }}
+																		/>
+																		</TableCell>
+																		<TableCell>
+																			<Button onClick={() => removeQuestion(i, item)}><Icon>delete</Icon></Button>
 																		</TableCell>
 																	</TableRow>
 																))}
@@ -315,14 +367,15 @@ function Question(props) {
 												</FormControl>}
 										</Grid>
 									</Grid>
-								</Grid></>}
+								</Grid>
 
 					</Grid>
 					<ConfirmDialog
 						open={open}
 						setOpen={setOpen}
-						callBack={saveQuestion}
-						thenAction={()=>props.history.push('/admin-questions')}
+						callBack={saveIntakeForm}
+						thenAction={()=>props.history.push('/admin-intake-forms')}
+
 					/>
 				</div>
 				)

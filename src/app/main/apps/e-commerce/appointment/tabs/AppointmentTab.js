@@ -103,13 +103,13 @@ function AppointmentTab({ appointment, handleChange, type }) {
                         />
                     </Grid>
                     <Grid item xs={8}>
-                        {appointment.provider.telemedicine &&
-                            <FormControlLabel
-                                control={<Switch checked={appointment.telemedicine} onChange={handleChange} id="telemedicine"
-                                    name="telemedicine" />}
-                                label="Appointment Telemedicine"
-                            />
-                        }
+
+                        <FormControlLabel
+                            control={<Switch checked={appointment.telemedicine} onChange={handleChange} id="telemedicine"
+                                name="telemedicine" />}
+                            label="Appointment Telemedicine"
+                        />
+
                     </Grid>
                 </Grid>
 
@@ -142,7 +142,7 @@ function AppointmentTab({ appointment, handleChange, type }) {
                             )}
 
                         {
-                            appointment.includeTravelTime && (
+                            appointment.includeTravelTime && !appointment.telemedicine && (
                                 <div>
                                     <FormControl id="meansTransport" className="mt-8 mb-16" component="fieldset">
                                         <FormLabel component="legend">Means of transport</FormLabel>
@@ -160,7 +160,7 @@ function AppointmentTab({ appointment, handleChange, type }) {
                         }
 
                         {
-                            appointment.telemedicine && appointment.provider.telemedicine &&
+                            appointment.telemedicine && 
                             <TextField
                                 id="telemedicineTools"
                                 name="telemedicineTool"
@@ -168,7 +168,7 @@ function AppointmentTab({ appointment, handleChange, type }) {
                                 type="text"
                                 disabled={'true'}
                                 variant="outlined"
-                                value={appointment.provider.telemedicineTool}
+                                value={(!appointment.provider || type == 'new') ? '' : appointment.provider.telemedicineTool}
                                 className="mt-8 mb-16"
                             />
                         }

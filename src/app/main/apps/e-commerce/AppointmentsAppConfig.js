@@ -19,14 +19,6 @@ const AppointmentsAppConfig = {
 			component: React.lazy(() => import('./intake-forms/IntakeForm'))
 		},
 		{
-			path: '/apps/e-commerce/orders/:orderId',
-			component: React.lazy(() => import('./order/Order'))
-		},
-		{
-			path: '/apps/e-commerce/orders',
-			component: React.lazy(() => import('./orders/Orders'))
-		},
-		{
 			path: '/apps/e-commerce',
 			component: () => <Redirect to="/apps/e-commerce/appointments" />
 		}
