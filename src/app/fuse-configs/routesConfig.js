@@ -26,6 +26,7 @@ const routes = [
 	// The individual route configs which has auth option won't be overridden.
 	...FuseUtils.generateRoutesFromConfigs(routeConfigs, null),
 	{
+		auth : ['patient',''],
 		path: '/',
 		exact: true,
 		component: () => <Redirect to="/home" />

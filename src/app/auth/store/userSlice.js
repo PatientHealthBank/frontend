@@ -108,7 +108,8 @@ export const setUserData = user => async (dispatch, getState) => {
 		};
 	} else {
 		history.location.state = {
-			redirectUrl: 'pages/profile' // for example 'apps/academy'
+			redirectUrl: "admin-intakeforms" 
+
 		};
 	}
 	/*
