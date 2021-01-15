@@ -108,9 +108,7 @@ function AnalyticsDashboardApp(props) {
 		props.history.push(`/find-doctors/${id}?specialty=${specialty}&clinicalInterest=${clinicalInterest}`)
 	}
 
-	if (localStorage.getItem("covid")) {
-		localStorage.removeItem("covid", false)
-	}
+
 	return (
 		<div className="w-full">
 			<Widget1 loc={location}

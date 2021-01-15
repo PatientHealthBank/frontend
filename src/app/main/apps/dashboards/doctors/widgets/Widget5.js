@@ -20,9 +20,9 @@ function Widget5(props) {
 					>
 						<Paper className="w-full lg:w-1/2 md:w-full  shadow-1">
 							<div>
-								<div style={{ fontSize: '19px' }}>
-					
+								<div style={{ fontSize: '19px', padding: '10px' }}>
 									<strong>{provider.name}</strong>
+									<br></br>
 								</div>
 								<div className="items-center"></div>
 							</div>
@@ -56,25 +56,22 @@ function Widget5(props) {
 										)}
 									</div>
 									{provider.telemedicine && (
-										      <Tooltip title="Telemedicine" aria-label="Telemedicine">
-
-										<div 
-											style={{
-												color: 'green',
-												top: '0',
-												margin: '5px;',
-												marginTop:'5px;',
-												padding: '0px;',
-											}}
-										>
-											{' '}
-											<Icon>camera_alt</Icon> 
-										</div>
+										<Tooltip title="Telemedicine" aria-label="Telemedicine">
+											<div
+												style={{
+													color: 'green',
+													top: '0',
+													margin: '5px;',
+													marginTop: '5px;',
+													padding: '0px;'
+												}}
+											>
+												{' '}
+												<Icon>camera_alt</Icon>
+											</div>
 										</Tooltip>
 									)}
 								</div>
-								<div>
-									<br></br>
 									<div>
 										{specialty && (
 											<div>
@@ -92,7 +89,6 @@ function Widget5(props) {
 										</div>
 										<Rating name="read-only" precision={0.1} value={provider.rating} readOnly />
 									</div>
-								</div>
 							</div>
 						</Paper>
 						<Paper className="  overflow-auto">

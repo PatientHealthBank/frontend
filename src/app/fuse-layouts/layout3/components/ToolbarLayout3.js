@@ -7,6 +7,7 @@ import NavbarMobileToggleButton from 'app/fuse-layouts/shared-components/NavbarM
 import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import UserMenu from 'app/fuse-layouts/shared-components/UserMenu';
 import { selectToolbarTheme } from 'app/store/fuse/settingsSlice';
 import Button from '@material-ui/core/Button';
 import LanguageSwitcher from '../../shared-components/LanguageSwitcher';
@@ -43,13 +44,15 @@ function ToolbarLayout3(props) {
 	function handleRegister(){
 		props.history.push(`/register`);
 	}
+ 	const token = localStorage.getItem('jwt_access_token');
+
 	return (
 		<ThemeProvider theme={toolbarTheme}>
 			<AppBar
 				id="fuse-toolbar"
 				className={clsx(classes.root, 'flex relative z-10')}
 				color="default"
-				style={{ backgroundColor: toolbarTheme.palette.findAClininc.paper }}
+				style={{ backgroundColor: token ? "#24aae0" : toolbarTheme.palette.findAClininc.paper }}
 				elevation={2}
 			>
 				<Toolbar className="container p-0 lg:px-24 min-h-48 md:min-h-64">
@@ -67,31 +70,35 @@ function ToolbarLayout3(props) {
 
 					<div className="flex flex-1">
 					<Hidden mdDown>
-							<Button size="small" color="primary" className={classes.margin}>
+							<Button size="small" color="primary" style={{color: token ? '#FFF' : '#000' }} className={classes.margin}>
 							About
 							</Button>
-							<Button size="small" color="primary" className={classes.margin}>
+							<Button size="small" color="primary" style={{color: token ? '#FFF' : '#000' }}  className={classes.margin}>
 							Patients
 							</Button>
-							<Button size="small" color="primary" className={classes.margin}>
+							<Button size="small" color="primary" style={{color: token ? '#FFF' : '#000' }}  className={classes.margin}>
 							Healthcare Providers
 							</Button>
-							<Button size="small" color="primary" className={classes.margin}>
+							<Button size="small" color="primary" style={{color: token ? '#FFF' : '#000' }}  className={classes.margin}>
 							Contact Us
 							</Button>
 					</Hidden>
 					</div>
 
 					<div className="flex items-center px-8 md:px-0">
-						<LanguageSwitcher primary={"primary"}/>
+						<LanguageSwitcher primary={!token? "primary" : ""}/>
 
-
-						<Button size="small" color="primary" onClick={handleLogin} className={classes.margin}>
+						{!token ?
+							<><Button size="small" color="primary" onClick={handleLogin} className={classes.margin}>
 							Sign in
 							</Button>
+							
 							<ColorButton variant="contained" onClick={handleRegister} className={classes.margin}>
 								Sign Up
-							</ColorButton>
+							</ColorButton></>
+							:
+							<UserMenu />
+						}
 					</div>
 				</Toolbar>
 			</AppBar>

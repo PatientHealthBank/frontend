@@ -10,12 +10,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
+import Tooltip from '@material-ui/core/Tooltip';
 import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
+import MenuItem from '@material-ui/core/MenuItem';
+import Input from '@material-ui/core/Input';
+import Chip from '@material-ui/core/Chip';
 
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
@@ -28,8 +29,44 @@ import { useSelector } from 'react-redux';
 import phbApi from 'app/services/phbApi'
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+function getStyles(name, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
 const useStyles = makeStyles({
-    layoutRoot: {}
+    layoutRoot: {},
+    formControl: {
+
+        minWidth: 120,
+        maxWidth: 300,
+      },
+      chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+      },
+      chip: {
+        margin: 2,
+      },
+      noLabel: {
+      },
 });
 
 const intakeForm = {
@@ -83,13 +120,22 @@ function IntakeForm(props) {
         }
     },[intakeForm.answers]);
 
+    useEffect(() => {
+        return () => {dispatch(setIntakeForm({}))};
+      }, []);
+
     function goToAppointmens() {
         props.history.push(`/appointments`);
     }
     const handleChangeInput = (event, description, id) => {
-        console.log({ ...state, [description]: { value: event.target.value, id } })
         setState({ ...state, [description]: { value: event.target.value, id } })
     }
+
+    const handleChangeMultiple = (event, description, id) => {
+
+        setState({ ...state, [description]: { value : event.target.value.join(';'), id } })
+      };
+
     const handleChangeCheckBox = (event, description, id) => {
         console.log({ ...state, [description]: { value: event.target.checked ? "1" : "0", id } })
 
@@ -109,6 +155,15 @@ function IntakeForm(props) {
         })
 
     }
+    const isValidIntakeForm = () =>{
+        return !intakeForm?.questions?.some(item=> {
+            if(item.questionType != 1)
+                return item.required && !state[item.description]?.value 
+            else
+                return item.required && (!state[item.description]?.value ||(state[item.description]?.value == 0))
+            
+        })
+    }
 
     return (
         <FusePageCarded
@@ -122,13 +177,13 @@ function IntakeForm(props) {
                                 className="normal-case flex items-center sm:mb-12"
                                 component={Link}
                                 role="button"
-                                to="/appointments"
+                                onClick={()=>props.history.goBack()}
                                 color="inherit"
                             >
                                 <Icon className="text-20">
                                     {theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
                                 </Icon>
-                                <span className="mx-4">Appointments</span>
+                                <span className="mx-4">back</span>
                             </Typography>
 
                             <div className="flex items-center max-w-full">
@@ -143,6 +198,7 @@ function IntakeForm(props) {
                             className="whitespace-no-wrap normal-case"
                             variant="contained"
                             color="secondary"
+                            disabled={!isValidIntakeForm()}
                             onClick={saveIntakeForm}
                         >
                             Save
@@ -155,7 +211,7 @@ function IntakeForm(props) {
 
                         <div className="mt-8 mb-32" style={{ textAlign: 'center' }}>
                             <Typography variant="h4" className="text-blue-600">
-                                {intakeForm.intakeform.intakeForm.description}
+                                {intakeForm.intakeform.intakeForm.description} 
                             </Typography>
                         </div>
 
@@ -173,10 +229,52 @@ function IntakeForm(props) {
                             {intakeForm.questions.map(item =>
                             (
                                 <Grid key={item.id} item xs={4}>
-                                    {item.questionType != 1 && <Typography variant="h6" className="text-blue-600">
-                                        {item.description}
-                                    </Typography>}
-                                    {item.questionType == 3 ?
+                                    <Typography variant="h6" className="text-blue-600">
+                                        {item.description} {item.required && <Tooltip title="This field is required"><span>*</span></Tooltip>}
+                                    </Typography>
+                                    {item.questionType == 5 ?
+                                        (<FormControl fullWidth variant="outlined" className="mt-8 mb-16">
+                                            <InputLabel id={item.description}>{item.description}</InputLabel>
+                                            <Select
+                                              labelId={item.description}
+                                              id={item.description}
+                                              multiple
+                                              value={state[item.description]?.value.split(';') || []}
+                                              onChange={event => handleChangeMultiple(event, item.description, item.id)}
+                                              name={item.description}
+                                              input={<Input id="select-multiple-chip" />}
+                                              renderValue={(selected) => (
+                                                <div className={classes.chips}>
+                                                  {selected.map((value) => (
+                                                    <Chip key={value} label={value} className={classes.chip} />
+                                                  ))}
+                                                </div>
+                                              )}
+                                              MenuProps={MenuProps}
+                                            >
+                                              {item.options.map((item, i) => (
+                                                <MenuItem key={i} value={item.value} style={getStyles(item.value, item.description, theme)}>
+                                                  {item.description}
+                                                </MenuItem>
+                                              ))}
+                                            </Select>
+                                          </FormControl>
+                                        ):
+                                        item.questionType == 4 ? (
+                                            <TextField
+                                                className="mt-8 mb-16"
+                                                label={item.description}
+                                                id={item.description}
+                                                name={item.description}
+                                                type={'number'}
+                                                value={state[item.description]?.value}
+                                                onChange={event => handleChangeInput(event, item.description, item.id)}
+                                                variant="outlined"
+                                                fullWidth
+                                                autoFocus
+                                            />
+                                        ) :
+                                    item.questionType == 3 ?
                                         (
                                             <FormControl fullWidth variant="outlined" className="mt-8 mb-16">
                                              <InputLabel htmlFor="outlined-age-native-simple">{item.description}</InputLabel>
@@ -202,7 +300,6 @@ function IntakeForm(props) {
                                         item.questionType == 2 ? (
                                             <TextField
                                                 className="mt-8 mb-16"
-                                                required
                                                 label={item.description}
                                                 id={item.description}
                                                 name={item.description}

@@ -63,6 +63,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
+
 function Layout3(props) {
 	const config = useSelector(({ fuse }) => fuse.settings.current.layout.config);
 

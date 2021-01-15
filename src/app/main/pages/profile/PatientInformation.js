@@ -5,11 +5,15 @@ import withReducer from 'app/store/withReducer';
 import PatientInformationWidget from '../../shared/widgets/patient/PatientInformationWidget';
 import AddressInformationWidget from '../../shared/widgets/patient/AddressInformationWidget';
 import InsurancePlanWidget from '../../shared/widgets/patient/InsurancePlanWidget';
+import CaregiverInformationWidget from '../../shared/widgets/patient/CaregiverInformationWidget';
+
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { patientInfo } from './store/patientInformationSlice';
 import { addressInfo } from './store/addressInformationSlice';
 import { insurancePlanInfo } from './store/insurancePlanSlice';
+import { caregiverInfo } from './store/caregiverInformationSlice';
+
 
 function PatientInformation() {
     const user = useSelector(({ auth }) => auth.user);
@@ -18,14 +22,16 @@ function PatientInformation() {
     const patientInformation = useSelector(({ PatientInformationApp }) => PatientInformationApp.patientInformation);
     const addressInformation = useSelector(({ PatientInformationApp }) => PatientInformationApp.addressInformation);
     const insurancePlan = useSelector(({ PatientInformationApp }) => PatientInformationApp.insurancePlan);
+    const caregiverInformation = useSelector(({ PatientInformationApp }) => PatientInformationApp.caregiverInformation);
 
+console.log(caregiverInformation);
     useEffect(() => {
         dispatch(patientInfo());
         dispatch(addressInfo());
         dispatch(insurancePlanInfo());
+        dispatch(caregiverInfo());
     }, []);
     var currentFile = '';
-
 
     const EditPatientInformation = (name, birthdate, ssn, phone, email, photoURL, currentPhoto) => {
 
@@ -81,6 +87,32 @@ function PatientInformation() {
             })
     }
 
+    const RegisterNewCaregiverInformation = (fullName, email, password, startDate, endDate) => {
+
+        dispatch(openLoading())
+        phbApi().post("/Caregiver/register/", { FullName: fullName, Email: email, Password: password, StartDate: startDate, EndDate: endDate, PatientId: user.currentUser.id }).then(res => {
+            dispatch(closeLoading())
+            dispatch(caregiverInfo())
+        }).
+            catch(err => {
+                console.log(err);
+                dispatch(closeLoading())
+            })
+    }
+
+    const RegisterNewCaregiverLink = (caregiverId, startDate, endDate) => {
+
+        dispatch(openLoading())
+        phbApi().post("/Caregiver/link/", { CaregiverId: caregiverId, PatientId: user.currentUser.id, StartDate: startDate, EndDate: endDate}).then(res => {
+            dispatch(closeLoading())
+            dispatch(caregiverInfo())
+        }).
+            catch(err => {
+                console.log(err);
+                dispatch(closeLoading())
+            })
+    }
+
     const EditAddresstInformation = (id, addressTypeId, addressLine, country, city, state, zipCode) => {
         dispatch(openLoading())
         phbApi().post("/patient/address/edit", {Id: id, AddressTypeId: addressTypeId, AddressLine: addressLine, Country: country, City: city, State: state, ZipCode: zipCode }).then(res => {
@@ -98,6 +130,18 @@ function PatientInformation() {
         phbApi().delete("/patient/address/delete/" + id).then(res => {
             dispatch(closeLoading())
             dispatch(addressInfo())
+        }).
+            catch(err => {
+                console.log(err);
+                dispatch(closeLoading())
+            })
+    }
+
+    const DeletelinkCaregiver = (caregiverId) => {
+        dispatch(openLoading())
+        phbApi().delete("/Caregiver/delete/" + user.currentUser.id +'/'+caregiverId).then(res => {
+            dispatch(closeLoading())
+            dispatch(caregiverInfo())
         }).
             catch(err => {
                 console.log(err);
@@ -140,12 +184,14 @@ function PatientInformation() {
                 dispatch(closeLoading())
             })
     }
-
+    
     return (
         <>
             <div className="p-16 sm:p-24">
                 <div>
-                <PatientInformationWidget patientInformation={patientInformation} editPatientInformation={ EditPatientInformation } currentFile={currentFile} />
+                    <PatientInformationWidget patientInformation={patientInformation} editPatientInformation={ EditPatientInformation } currentFile={currentFile} />
+
+                    <CaregiverInformationWidget caregiverInformation={caregiverInformation} RegisterNewCaregiverInformation={RegisterNewCaregiverInformation} DeletelinkCaregiver={DeletelinkCaregiver} RegisterNewCaregiverLink={RegisterNewCaregiverLink}/>
 
                     <AddressInformationWidget addresstInformation={addressInformation} registerNewAddresstInformation={RegisterNewAddresstInformation} editAddresstInformation={EditAddresstInformation} deleteAddresstInformation={DeleteAddresstInformation} />
 

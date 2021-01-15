@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
 		marginRight: '5px'
 	},	
 	avatarMain: {
-		backgroundColor: '#FFF',
 		width: theme.spacing(5),
 		height: theme.spacing(5),
 		marginLeft: '5px'
@@ -55,10 +54,10 @@ function UserMenu(props) {
 		<>
 			<Button className="min-h-40 min-w-40 px-0 md:px-16 py-0 md:py-6" onClick={userMenuClick}>
 				<div className="hidden md:flex flex-col mx-4">
-					<Typography component="span" className="normal-case font-bold flex">
+					<Typography component="span" className="normal-case font-bold flex" style={{color:  '#fff'}}>
 						{user.currentUser.displayName}
 					</Typography>
-					<Typography className="text-11 capitalize text-left" color="textSecondary">
+					<Typography className="text-11 capitalize text-left" style={{color: '#fff'}}>
 						{user.role.toString()}
 						{(!user.role || (Array.isArray(user.role) && user.role.length === 0)) && 'Patient'}
 					</Typography>
@@ -68,7 +67,7 @@ function UserMenu(props) {
 
 					<Avatar className="md:mx-4" alt="user photo" src={photoUrl} />
 				) : (
-						<Avatar className={classes.avatarMain} >{user.currentUser.displayName[0]}</Avatar>
+						<Avatar className={classes.avatarMain} style={{backgroundColor: props.type == 2? '#222' : '#fff'}} >{user.currentUser.displayName[0]}</Avatar>
 					)}
 			</Button>
 
@@ -118,23 +117,30 @@ function UserMenu(props) {
 									<Divider />
 								</>
 							}
-							<MenuItem component={Link} to="/pages/profile" onClick={userMenuClose} role="button">
-								<ListItemIcon className="min-w-40">
-									<Icon>account_circle</Icon>
-								</ListItemIcon>
-								<ListItemText primary="My Profile" />
-							</MenuItem>
-							<MenuItem
-								onClick={() => {
-									dispatch(logoutUser());
-									userMenuClose();
-								}}
-							>
-								<ListItemIcon className="min-w-40">
-									<Icon>exit_to_app</Icon>
-								</ListItemIcon>
-								<ListItemText primary="Logout" />
-							</MenuItem>
+							{user.role != 'caregiver' && 
+									    <> 
+								<MenuItem component={Link} to="/pages/profile" onClick={userMenuClose} role="button">
+									
+											<ListItemIcon className="min-w-40">
+												<Icon>account_circle</Icon>
+											</ListItemIcon>
+											<ListItemText primary="My Profile" />
+									
+								</MenuItem>
+								</>
+							}
+								<MenuItem
+									onClick={() => {
+										dispatch(logoutUser());
+										userMenuClose();
+									}}
+								>
+									<ListItemIcon className="min-w-40">
+										<Icon>exit_to_app</Icon>
+									</ListItemIcon>
+									<ListItemText primary="Logout" />
+								</MenuItem>
+							
 						</>
 					)}
 			</Popover>
