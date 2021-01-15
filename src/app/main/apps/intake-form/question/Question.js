@@ -116,6 +116,7 @@ function Question(props) {
 	const dispatch = useDispatch();
 	const theme = useTheme();
 
+
 	const classes = useStyles(props);
 	const [type, setType] = React.useState('');
 	const [title, setTitle] = React.useState('');
@@ -197,7 +198,9 @@ function Question(props) {
 							<div className="flex items-center max-w-full">
 
 								<div className="flex flex-col min-w-0 mx-8 sm:mc-16">
-
+								<Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h5">
+										New Question
+									</Typography>
 								</div>
 							</div>
 						</div>
@@ -221,7 +224,7 @@ function Question(props) {
 					<Grid container className={classes.root} spacing={2}>
 						<Grid item xs={12}>
 
-							<h3><strong>Basic Question Info</strong></h3>
+							<h3><strong>Basic Info</strong></h3>
 							<Divider></Divider>
 						</Grid>
 						<Grid item xs={2}>

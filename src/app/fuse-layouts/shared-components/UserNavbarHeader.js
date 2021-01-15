@@ -26,6 +26,9 @@ const useStyles = makeStyles(theme => ({
 function UserNavbarHeader(props) {
 	const classes = useStyles();
 	const settings = useSelector(({ fuse }) => fuse.settings.current);
+	const userRole = useSelector(({ auth }) => auth.user.role);
+
+
 
 	return (
 		<AppBar
@@ -38,7 +41,7 @@ function UserNavbarHeader(props) {
 					{!settings.layout.config.navbar.folded && 
 					<>
 			<img className="username logo-icon" src="assets/images/logos/LogoReduzida.png" alt="Logo"/>
-
+			{userRole == 'patient' &&
 			<Button
 					component={Link}
 					to="/appointment/new"
@@ -49,6 +52,7 @@ function UserNavbarHeader(props) {
 					<span className="hidden sm:flex">New Appointment</span>
 					<span className="flex sm:hidden">New Appointment</span>
 				</Button>
+}
 				</>}
 		</AppBar>
 	);

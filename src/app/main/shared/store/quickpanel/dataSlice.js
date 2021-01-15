@@ -13,6 +13,7 @@ export const getNotifications = createAsyncThunk('quickPanel/data/getData', asyn
 		.get(`/notification/list/${user.currentUser.id}`)
 		.then(response => {
 			dispatch(closeLoading());
+			console.log(response.data)
 			return response.data;
 		})
 		.catch(error => {
@@ -38,7 +39,7 @@ export const checkRead = createAsyncThunk('quickPanel/data/checkRead', async (pa
 });
 const dataSlice = createSlice({
 	name: 'quickPanel/data',
-	initialState: null,
+	initialState: {data:[]},
 	reducers: {},
 	extraReducers: {
 		[getNotifications.fulfilled]: (state, action) => action.payload,

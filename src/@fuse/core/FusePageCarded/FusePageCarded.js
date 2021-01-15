@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 		position: 'relative',
 		flex: '1 0 auto',
 		height: 'auto',
-		backgroundColor: theme.palette.background.default
+		backgroundColor: theme.palette.background.content || theme.palette.background.default
 	},
 	innerScroll: {
 		flex: '1 1 auto',

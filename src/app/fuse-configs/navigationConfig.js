@@ -101,15 +101,7 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'people',
 				url: '/apps/clinic/members'
-			},
-			// {
-			// 	id: 'clinics',
-			// 	title: 'Clinic',
-			// 	translate: 'CLINICBRANCHES',
-			// 	type: 'item',
-			// 	icon: 'business',
-			// 	url: '/apps/clinics/clinics'
-			// }
+			}
 		]
 	},
 	{
@@ -155,13 +147,37 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'person',
 				url: '/pages/profile'
-			},
+			}
+		]
+	},
+	{
+		id: 'Admin',
+		title: 'Admin',
+		type: 'group',
+		auth:['admin'],
+		icon: 'pages',
+		children: [
 			{
 				id: 'intakeform',
-				title: 'Intakeform',
+				title: 'IntakeForm',
 				type: 'item',
-				icon: 'person',
+				icon: 'assignment',
 				url: '/admin-intake-forms'
+			},
+			{
+				id: 'question',
+				title: 'Question',
+				type: 'item',
+				icon: 'live_help',
+				url: '/admin-questions'
+			},	
+			{
+				id: 'clinic',
+				title: 'Clinic',
+				translate: 'CLINICBRANCHES',
+				type: 'item',
+				icon: 'business',
+				url: '/apps/clinic-main'
 			}
 		]
 	}

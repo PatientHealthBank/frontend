@@ -23,6 +23,7 @@ const themesConfig = {
 				contrastText: '#FFFFFF'
 			},
 			background: {
+				
 				header: '#F5F5FB',
 				paper: '#FFF',
 				default: '#F5F5FB'
@@ -443,6 +444,7 @@ const themesConfig = {
 				contrastText: '#FFFFFF'
 			},
 			background: {
+				content: '#191919', 
 				header: '#303030', 
 				paper: '#303030',
 				default: '#151515'
@@ -462,6 +464,12 @@ const themesConfig = {
 			findAClininc:{
 				paper: '#FFF',
 				default: '#FFF'
+			},
+			intakeForm: {
+				light: '#005980',
+				main: '#00658C',
+				dark: '#00658C',
+				contrastText: '#FFFFFF'
 			},
 			error: red
 		},
@@ -491,6 +499,7 @@ const themesConfig = {
 				contrastText: '#FFFFFF'
 			},
 			background: {
+				content: '#151515', 
 				header: '#00658C', 
 				paper: '#151515',
 				default: '#151515'
@@ -532,6 +541,7 @@ const themesConfig = {
 				contrastText: '#FFFFFF'
 			},
 			background: {
+				content: '#212529', 
 				paper: '#2A2E32',
 				default: '#212529'
 			},

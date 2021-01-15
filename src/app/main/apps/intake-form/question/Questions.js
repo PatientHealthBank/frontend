@@ -23,10 +23,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { openLoading, closeLoading } from 'app/fuse-layouts/shared-components/loadingModal/store/loadingSlice';
-import Avatar from '@material-ui/core/Avatar';
 
 
-const useStyles = makeStyles(theme => ({
+
+const useStyles = makeStyles(theme => {
+	console.log(theme)
+	
+	return ({
 	margin: {
 		margin: theme.spacing(1),
 	},
@@ -46,9 +49,13 @@ const useStyles = makeStyles(theme => ({
 		transitionProperty: 'box-shadow',
 		transitionDuration: theme.transitions.duration.short,
 		transitionTimingFunction: theme.transitions.easing.easeInOut,
+		backgroundColor:theme.palette.intakeForm.dark,
 		'&:hover': {
+			backgroundColor:theme.palette.intakeForm.light,
+			boxShadow: '0 0 20px black',
 			'& $productImageFeaturedStar': {
-				opacity: 0.8
+				opacity: 0.8,
+				
 			}
 		},
 		'&.featured': {
@@ -62,20 +69,16 @@ const useStyles = makeStyles(theme => ({
 			}
 		}
 	}
-}));
+})});
 
 function Question(props) {
 	const dispatch = useDispatch();
 	const theme = useTheme();
-
 	const classes = useStyles();
 	const [questions, setQuestions] = React.useState([]);
 
 	const [open, setOpen] = React.useState(false)
 	const [selectedQuestion, setSelectedQuestion] = React.useState({})
-
-
-
 
 	const updateQuestionList = () => {
 		dispatch(openLoading())
@@ -91,7 +94,7 @@ function Question(props) {
 		updateQuestionList()
 	}, [])
 
-	const setQuestionSelected = (question) =>{
+	const setQuestionSelected = (question) => {
 		setSelectedQuestion(question)
 		setOpen(true)
 	}
@@ -137,23 +140,11 @@ function Question(props) {
 				(
 					<div className="flex flex-1 w-full items-center justify-between">
 						<div className="flex flex-col items-start max-w-full">
-							<Typography
-								className="normal-case flex items-center sm:mb-12"
-								component={Link}
-								role="button"
-								onClick={goBack}
-								color="inherit"
-							>
-								<Icon className="text-20">
-									{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
-								</Icon>
-								<span className="mx-4">Questions</span>
-							</Typography>
-
 							<div className="flex items-center max-w-full">
-
-								<div className="flex flex-col min-w-0 mx-8 sm:mc-16">
-
+								<div className="flex items-center">
+									<Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h5">
+										Questions
+									</Typography>
 								</div>
 							</div>
 						</div>
@@ -170,7 +161,7 @@ function Question(props) {
 									htmlFor="button-file"
 									className={clsx(
 										classes.productImageUpload,
-										'flex items-center justify-center relative w-128 h-128 rounded-8 mx-8 mb-16 overflow-hidden cursor-pointer shadow-1 hover:shadow-5'
+										'flex items-center justify-center relative w-128 h-128 rounded-8 mx-8 mb-16 overflow-hidden cursor-pointer shadow-3 hover:shadow-10'
 									)}>
 									<Icon fontSize="large" color="action">
 										add_circle_outline
@@ -185,12 +176,12 @@ function Question(props) {
 										tabIndex={0}
 										className={clsx(
 											classes.productImageItem,
-											'flex items-center justify-center relative flex-col w-128 h-128 rounded-8 mx-8 mb-16 overflow-hidden cursor-pointer shadow-1 hover:shadow-5'
+											'flex items-center justify-center relative flex-col w-128 h-128 rounded-8 mx-8 mb-16 overflow-hidden cursor-pointer shadow-1'
 											// media.id === form.featuredImageId && 'featured'
 										)}
 										key={question.id}
 									>
-										<div style={{ fontWeight: '700', textAlign:'center' }} >{question.description}</div>
+										<div style={{ fontWeight: '700', textAlign: 'center' }} >{question.description}</div>
 										<div style={{ fontWeight: '400' }} >{getQuestionType(question.questionType)}</div>
 
 										<Icon>visibility </Icon>

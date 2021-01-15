@@ -220,12 +220,11 @@ function Question(props) {
 								<span className="mx-4">IntakeForm</span>
 							</Typography>
 
-							<div className="flex items-center max-w-full">
-
-								<div className="flex flex-col min-w-0 mx-8 sm:mc-16">
-
+							<div className="flex flex-col min-w-0 mx-8 sm:mc-16">
+								<Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h5">
+										New IntakeForm
+									</Typography>
 								</div>
-							</div>
 						</div>
 						<FuseAnimate animation="transition.slideRightIn" delay={300}>
 							<Button
@@ -247,7 +246,7 @@ function Question(props) {
 					<Grid container className={classes.root} spacing={2}>
 						<Grid item xs={12}>
 
-							<h2><strong>Basic IntakeForm Info</strong></h2>
+							<h2><strong>Basic Info</strong></h2>
 							<Divider></Divider>
 						</Grid>
 						<Grid item xs={2}>
@@ -256,7 +255,7 @@ function Question(props) {
 							</FormControl>
 						</Grid>
 								<Grid item xs={12}>
-									<h2><strong>IntakeFormQuestions</strong></h2>
+									<h2><strong>IntakeForm Questions</strong></h2>
 									<Divider></Divider>
 								</Grid>
 								<Grid item xs={12}>

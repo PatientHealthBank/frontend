@@ -46,9 +46,13 @@ const useStyles = makeStyles(theme => ({
 		transitionProperty: 'box-shadow',
 		transitionDuration: theme.transitions.duration.short,
 		transitionTimingFunction: theme.transitions.easing.easeInOut,
+		backgroundColor:theme.palette.intakeForm.dark,
 		'&:hover': {
+			backgroundColor:theme.palette.intakeForm.light,
+			boxShadow: '0 0 20px black',
 			'& $productImageFeaturedStar': {
-				opacity: 0.8
+				opacity: 0.8,
+				
 			}
 		},
 		'&.featured': {
@@ -137,23 +141,11 @@ function IntakeForm(props) {
 				(
 					<div className="flex flex-1 w-full items-center justify-between">
 						<div className="flex flex-col items-start max-w-full">
-							<Typography
-								className="normal-case flex items-center sm:mb-12"
-								component={Link}
-								role="button"
-								onClick={goBack}
-								color="inherit"
-							>
-								<Icon className="text-20">
-									{theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
-								</Icon>
-								<span className="mx-4">IntakeForms</span>
-							</Typography>
-
 							<div className="flex items-center max-w-full">
-
-								<div className="flex flex-col min-w-0 mx-8 sm:mc-16">
-
+								<div className="flex items-center">
+									<Typography className="hidden sm:flex mx-0 sm:mx-12" variant="h5">
+										IntakeForms
+									</Typography>
 								</div>
 							</div>
 						</div>
@@ -170,7 +162,7 @@ function IntakeForm(props) {
 									htmlFor="button-file"
 									className={clsx(
 										classes.productImageUpload,
-										'flex items-center justify-center relative w-128 h-128 rounded-8 mx-8 mb-16 overflow-hidden cursor-pointer shadow-1 hover:shadow-5'
+										'flex items-center justify-center relative w-128 h-128 rounded-8 mx-8 mb-16 overflow-hidden cursor-pointer shadow-4 hover:shadow-20'
 									)}>
 									<Icon fontSize="large" color="action">
 										add_circle_outline
@@ -185,7 +177,7 @@ function IntakeForm(props) {
 										tabIndex={0}
 										className={clsx(
 											classes.productImageItem,
-											'flex items-center justify-center relative flex-col w-128 h-128 rounded-8 mx-8 mb-16 overflow-hidden cursor-pointer shadow-1 hover:shadow-5'
+											'flex items-center justify-center relative flex-col w-128 h-128 rounded-8 mx-8 mb-16 overflow-hidden cursor-pointer shadow-1'
 											// media.id === form.featuredImageId && 'featured'
 										)}
 										key={intakeForm.id}
