@@ -10,6 +10,7 @@ import { useTheme } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import Paper from '@material-ui/core/Paper';
+import moment from 'moment';
 
 function PatientProfile(props) {
     const theme = useTheme();
@@ -50,16 +51,16 @@ function PatientProfile(props) {
                     </AppBar>
 
                     <CardContent>
-                        <div className="mb-8">
+                        {/* <div className="mb-8">
                             <Typography className="font-bold text-15">Gender</Typography>
                             <Typography>{props.patient.gender}</Typography>
-                        </div>
+                        </div> */}
 
                         <div className="mb-8">
                             <Grid container>
                                 <Grid item>
                                     <Typography className="font-bold text-15">Age</Typography>
-                                    <Typography>{props.patient.age}</Typography>
+                                    <Typography>{moment().diff(new Date(props.patient.birthdate), 'years',false)}</Typography>
                                 </Grid>
 
                                 <Grid className="ml-16" item>
@@ -76,7 +77,7 @@ function PatientProfile(props) {
 
                         <div className="mb-8">
                             <Typography className="font-bold text-15">Birthday</Typography>
-                            <Typography>{props.patient.birthday}</Typography>
+                            <Typography>{moment(props.patient.birthdate).format('MMMM Do YYYY')}</Typography>
                         </div>
 
                         <div>
@@ -163,8 +164,8 @@ function PatientProfile(props) {
                                     {props.patient.activities.map(row => (
                                         <tr key={row.id}>
                                             <td>{row.description}</td>
-                                            <td>{row.initialDate}</td>
-                                            <td>{row.finalDate}</td>
+                                            <td>{moment(row.initialDate).format('YYYY-MM-DD')}</td>
+                                            <td>{moment(row.finalDate).format('YYYY-MM-DD')}</td>
                                         </tr>
                                     ))}
                                 </tbody>

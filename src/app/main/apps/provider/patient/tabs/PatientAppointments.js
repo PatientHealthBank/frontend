@@ -7,6 +7,7 @@ import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPatientAppointments } from '../../store/patientSlice';
+import moment from 'moment';
 
 
 function PatientAppointments(props) {
@@ -55,7 +56,7 @@ function PatientAppointments(props) {
                                 </TableCell>
 
                                 <TableCell className="p-4 md:p-16" component="th" scope="row">
-                                    {item.scheduleDate}
+                                    {moment(item.scheduleDate).format('MMMM Do YYYY')}
                                 </TableCell>
                             </TableRow>
                         );

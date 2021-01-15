@@ -15,6 +15,7 @@ import PatientsTableHead from './PatientsTableHead';
 import TreatmentStatus from './TreatmentStatus';
 import { useTranslation } from "react-i18next";
 import { lighten, makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
 
 function PatientsTable(props) {
 	const { t } = useTranslation();
@@ -98,7 +99,7 @@ function PatientsTable(props) {
 		id: 'birthDate',
 		align: 'left',
 		disablePadding: false,
-		label: 'Birth date',
+		label: 'Age',
 		sort: true
 	},
 	{
@@ -172,9 +173,9 @@ function PatientsTable(props) {
 								// const isSelected = selected.indexOf(n.id) !== -1;
 								return (
 									<TableRow
-									// className="h-64 cursor-pointer"
-									// hover
-									// role="checkbox"
+									className="h-64 cursor-pointer"
+									hover
+									role="checkbox"
 									// aria-checked={isSelected}
 									// tabIndex={-1}
 									// key={n.id}
@@ -199,7 +200,7 @@ function PatientsTable(props) {
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(n)}>
-											{new Date(n.birthdate).toDateString()}
+											{moment().diff(new Date(n.birthdate), 'years',false)}
 										</TableCell>
 
 										<TableCell className="p-4 md:p-16" component="th" scope="row" onClick={event => handleClick(n)}>

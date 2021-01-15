@@ -27,8 +27,8 @@ import PatientProfile from './tabs/PatientProfile';
 import PatientTreatments from './tabs/PatientTreatments';
 import PatientVideoLibrary from './tabs/PatientVideoLibrary';
 import PatientMedicalHistory from './tabs/PatientMedicalHistory';
-
-
+import moment from 'moment';
+ 
 const useStyles = makeStyles(theme => ({
 	typeIcon: {
 		'&.PDF:before': {
@@ -172,11 +172,11 @@ function Patient(props) {
 							</Typography>
 
 							<div className="flex items-center max-w-full">
-								<FuseAnimate animation="transition.expandIn" delay={300}>
-									{form.PhotoURL ? (
+								
+									{/* {form.photoURL ? (
 										<img
 											className="w-32 sm:w-48 rounded"
-											src={form.PhotoURL}
+											src={form.photoURL}
 											alt="patientImage"
 										/>
 									) : (
@@ -185,8 +185,10 @@ function Patient(props) {
 												src="assets/images/ecommerce/patient-image-placeholder.png"
 												alt="patient"
 											/>
-										)}
-								</FuseAnimate>
+										)} */
+										}
+										
+								
 								<div className="flex flex-col min-w-0 mx-8 sm:mc-16">
 									<FuseAnimate animation="transition.slideLeftIn" delay={300}>
 										<Typography className="text-16 sm:text-20 truncate">
@@ -194,7 +196,7 @@ function Patient(props) {
 										</Typography>
 									</FuseAnimate>
 									<FuseAnimate animation="transition.slideLeftIn" delay={300}>
-										<Typography variant="caption">{`${form.gender}, ${form.age} years old`}</Typography>
+										<Typography variant="caption">{`${moment().diff(new Date(form.birthdate), 'years',false)} years old`}</Typography>
 									</FuseAnimate>
 								</div>
 							</div>
@@ -224,8 +226,8 @@ function Patient(props) {
 					<Tab className="h-64 normal-case" label="Profile" />
 					<Tab className="h-64 normal-case" label="Medical History" />
 					<Tab className="h-64 normal-case" label="Tests" />
-					<Tab className="h-64 normal-case" label="Treatments" />
-					<Tab className="h-64 normal-case" label="Video Library" />
+					{/* <Tab className="h-64 normal-case" label="Treatments" />
+					<Tab className="h-64 normal-case" label="Video Library" /> */}
 					<Tab className="h-64 normal-case" label="Appointments" />
 				</Tabs>
 			}
@@ -237,7 +239,7 @@ function Patient(props) {
 						{tabValue === 2 && <PatientExams patientId={form.id} />}
 						{/*{tabValue === 3 && <PatientTreatments treatments={form.treatments} />}
 						{tabValue === 4 && <PatientVideoLibrary videos={form.videoLibrary} />} */}
-						{tabValue === 5 && <PatientAppointments patientId={form.id} providerId={providerId}/>}
+						{tabValue === 3 && <PatientAppointments patientId={form.id} providerId={providerId}/>}
 					</div>
 				)
 			}
