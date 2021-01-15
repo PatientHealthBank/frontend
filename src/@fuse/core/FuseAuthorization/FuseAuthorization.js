@@ -59,7 +59,7 @@ class FuseAuthorization extends Component {
 			defaultRoute += "apps/clinic/appointment" 
 		}
 		else if(userRole == 'admin'){
-			defaultRoute += "admin-intakeforms" 
+			defaultRoute += "admin-intake-forms" 
 		}
 		const { pathname, state } = location;
 		const redirectUrl = state && state.redirectUrl ? state.redirectUrl : defaultRoute;

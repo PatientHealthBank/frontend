@@ -108,7 +108,7 @@ export const setUserData = user => async (dispatch, getState) => {
 		};
 	} else {
 		history.location.state = {
-			redirectUrl: "admin-intakeforms" 
+			redirectUrl: "admin-intake-forms" 
 
 		};
 	}
