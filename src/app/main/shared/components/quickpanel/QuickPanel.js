@@ -15,9 +15,7 @@ import withReducer from 'app/store/withReducer';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import reducer from '../../store/quickpanel';
-import { getNotifications, checkRead } from '../../store/quickpanel/dataSlice';
-import { toggleQuickPanel } from '../../store/quickpanel/stateSlice';
+import { useDeepCompareEffect } from '@fuse/hooks';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -33,6 +31,9 @@ import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 import PropTypes from 'prop-types';
+import reducer from '../../store/quickpanel';
+import { toggleQuickPanel } from '../../store/quickpanel/stateSlice';
+import { getNotifications, checkRead } from '../../store/quickpanel/dataSlice';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -124,9 +125,6 @@ function QuickPanel(props) {
 	const notifications = useSelector(({ quickPanel }) => quickPanel.data);
 	const state = useSelector(({ quickPanel }) => quickPanel.state);
 
-	console.error('teste');
-
-	console.error('notificacoes', notifications);
 	const classes = useStyles();
 	const [rating, setRating] = useState(1);
 	const [color, setColor] = useState('#123123');
@@ -170,136 +168,145 @@ function QuickPanel(props) {
 		setExplainMore(event.target.checked);
 	};
 
-	useEffect(() => {
-		dispatch(getNotifications());
+	useDeepCompareEffect(() => {
+		if (notifications && notifications.length === 0) {
+			dispatch(getNotifications());
+		}
 	}, [dispatch]);
 
 	return (
-		<>
-			<Drawer
-				classes={{ paper: classes.root }}
-				open={state}
-				anchor="right"
-				onClose={ev => dispatch(toggleQuickPanel())}
-			>
-				<FuseScrollbars>
-					<ListSubheader component="div">Today</ListSubheader>
+		notifications && (
+			<>
+				<Drawer
+					classes={{ paper: classes.root }}
+					open={state}
+					anchor="right"
+					onClose={ev => dispatch(toggleQuickPanel())}
+				>
+					<FuseScrollbars>
+						<ListSubheader component="div">Today</ListSubheader>
 
-					<div className="mb-0 py-16 px-24">
-						<Typography className="mb-12 text-32" color="textSecondary">
-							{moment().format('dddd')}
-						</Typography>
-						<div className="flex">
-							<Typography className="leading-none text-32" color="textSecondary">
-								{moment().format('DD')}
+						<div className="mb-0 py-16 px-24">
+							<Typography className="mb-12 text-32" color="textSecondary">
+								{moment().format('dddd')}
 							</Typography>
-							<Typography className="leading-none text-16" color="textSecondary">
-								th
-							</Typography>
-							<Typography className="leading-none text-32" color="textSecondary">
-								{moment().format('MMMM')}
-							</Typography>
+							<div className="flex">
+								<Typography className="leading-none text-32" color="textSecondary">
+									{moment().format('DD')}
+								</Typography>
+								<Typography className="leading-none text-16" color="textSecondary">
+									th
+								</Typography>
+								<Typography className="leading-none text-32" color="textSecondary">
+									{moment().format('MMMM')}
+								</Typography>
+							</div>
 						</div>
-					</div>
-					<Divider />
-					<List>
-						<ListSubheader component="div">Notifications</ListSubheader>
-						{notifications && notifications.data.length == 0 && (
-							<span className=" text-red-600" align="center">
-								&nbsp;&nbsp;Notifications not found
-							</span>
-						)}
-						{notifications &&
-							notifications.data.map(n => (
-								<ListItem button >
-									<ListItemIcon className="min-w-40 text-red-600" onClick={() => handleClickOpen(n.text)}>
-										<Icon>notifications</Icon>
-									</ListItemIcon>
-									<ListItemText
-									onClick={() => handleClickOpen(n.text)}
-										classes={{ primary: classes.listItemText }}
-										className="text-red-600"
-										primary={n.text}
-									/>
-									<span
-										onClick={() => {
-											dispatch(checkRead(n.id));
-										}}
-										class="material-icons"
-										style={{ float: 'right' }}
-									>
-										close
-									</span>
-								</ListItem>
-							))}
-					</List>
-				</FuseScrollbars>
-			</Drawer>
-			<Dialog
-				fullWidth
-				maxWidth={maxWidth}
-				open={open}
-				onClose={handleClose}
-				aria-labelledby="max-width-dialog-title"
-			>
-				<DialogTitle id="max-width-dialog-title">{title}</DialogTitle>
-				<DialogContent>
-					<DialogContentText>Next Appointment: Dr. Smith – Cardiologist October/15/2020</DialogContentText>
+						<Divider />
+						<List>
+							<ListSubheader component="div">Notifications</ListSubheader>
+							{notifications && notifications.data.length == 0 && (
+								<span className=" text-red-600" align="center">
+									&nbsp;&nbsp;Notifications not found
+								</span>
+							)}
+							{notifications &&
+								notifications.data.map(n => (
+									<ListItem button>
+										<ListItemIcon
+											className="min-w-40 text-red-600"
+											onClick={() => handleClickOpen(n.text)}
+										>
+											<Icon>notifications</Icon>
+										</ListItemIcon>
+										<ListItemText
+											onClick={() => handleClickOpen(n.text)}
+											classes={{ primary: classes.listItemText }}
+											className="text-red-600"
+											primary={n.text}
+										/>
+										<span
+											onClick={() => {
+												dispatch(checkRead(n.id));
+											}}
+											class="material-icons"
+											style={{ float: 'right' }}
+										>
+											close
+										</span>
+									</ListItem>
+								))}
+						</List>
+					</FuseScrollbars>
+				</Drawer>
+				<Dialog
+					fullWidth
+					maxWidth={maxWidth}
+					open={open}
+					onClose={handleClose}
+					aria-labelledby="max-width-dialog-title"
+				>
+					<DialogTitle id="max-width-dialog-title">{title}</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							Next Appointment: Dr. Smith – Cardiologist October/15/2020
+						</DialogContentText>
 
-					<form className={classes.ratingSize} noValidate>
-						<Typography className="mb-8" component="legend">
-							How do you feel ?
-						</Typography>
+						<form className={classes.ratingSize} noValidate>
+							<Typography className="mb-8" component="legend">
+								How do you feel ?
+							</Typography>
 
-						<StyledRating
-							color={color}
-							name="customized-icons"
-							defaultValue={rating}
-							onChange={(event, newValue) => {
-								onRatingChange(newValue);
-							}}
-							getLabelText={value => customIcons[value].label}
-							IconContainerComponent={IconContainer}
-						/>
-
-						<FormControlLabel
-							// className={classes.formControlLabel}
-							control={<Switch checked={explainMore} onChange={handleExplainMore} />}
-							label="Do you want to explain a bit more?"
-						/>
-						{explainMore && (
-							<TextField
-								className="mt-16 mb-16"
-								id="othersObservation"
-								name="othersObservation"
-								// onChange={handleChange}
-								label="Explanation?"
-								type="text"
-								// value={form.othersObservation}
-								multiline
-								rows={5}
-								variant="outlined"
-								fullWidth
+							<StyledRating
+								color={color}
+								name="customized-icons"
+								defaultValue={rating}
+								onChange={(event, newValue) => {
+									onRatingChange(newValue);
+								}}
+								getLabelText={value => customIcons[value].label}
+								IconContainerComponent={IconContainer}
 							/>
-						)}
-						<Button
-							className="whitespace-no-wrap normal-case float-right"
-							variant="contained"
-							color="secondary"
-							// disabled={!canBeSubmitted()}
-							onClick={handleClose}
-						>
-							Send Answer
+
+							<FormControlLabel
+								// className={classes.formControlLabel}
+								control={<Switch checked={explainMore} onChange={handleExplainMore} />}
+								label="Do you want to explain a bit more?"
+							/>
+							{explainMore && (
+								<TextField
+									className="mt-16 mb-16"
+									id="othersObservation"
+									name="othersObservation"
+									// onChange={handleChange}
+									label="Explanation?"
+									type="text"
+									// value={form.othersObservation}
+									multiline
+									rows={5}
+									variant="outlined"
+									fullWidth
+								/>
+							)}
+							<Button
+								className="whitespace-no-wrap normal-case float-right"
+								variant="contained"
+								color="secondary"
+								// disabled={!canBeSubmitted()}
+								onClick={handleClose}
+							>
+								Send Answer
+							</Button>
+						</form>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={handleClose} color="primary">
+							Close
 						</Button>
-					</form>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={handleClose} color="primary">
-						Close
-					</Button>
-				</DialogActions>
-			</Dialog>
-		</>
+					</DialogActions>
+				</Dialog>
+			</>
+		)
 	);
 }
 
